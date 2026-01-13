@@ -35,6 +35,7 @@
 </head>
 
 <body class="{{ Request::is('admin/*') ? 'admin-layout' : 'user-layout' }}">
+  @include('layouts.preloader')
 
   <!-- Sidenav -->
   <nav class="sidenav navbar navbar-vertical fixed-left navbar-expand-xs navbar-light bg-white" id="sidenav-main">

@@ -34,9 +34,8 @@
    <div class="page_wrapper">
 
       <!-- Preloader -->
-      <div id="preloader">
-         <div id="loader"></div>
-      </div>
+      <!-- Preloader -->
+      @include('layouts.preloader')
       @yield('content')
       @if (!request()->is('login') && !request()->is('register*') && !request()->is('blogs'))
          @include('frontend.layouts.footer')
