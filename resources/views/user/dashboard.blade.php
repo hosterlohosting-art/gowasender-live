@@ -2,7 +2,7 @@
 
 @section('head')
     <!-- Custom Header removed for cleaner look -->
-    <div class="header bg-white pb-4 pt-4 pt-md-6 border-bottom-0">
+    <div class="header bg-white pb-2 pt-3 pt-md-4 border-bottom-0">
         <div class="container-fluid">
             <div class="header-body">
                 <div class="row align-items-center py-2">
@@ -25,7 +25,7 @@
 @section('content')
 
     <!-- Welcome Section -->
-    <div class="row mb-5">
+    <div class="row mb-4">
         <div class="col-12">
             <div class="card shadow-lg border-0" style="background: linear-gradient(87deg, #5e72e4 0, #825ee4 100%) !important;">
                 <div class="card-body d-flex align-items-center py-4">
