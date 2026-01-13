@@ -143,10 +143,11 @@ function formatFeatureKey($key)
 
                 <!-- Desktop Menu -->
                 <div class="hidden lg:flex items-center space-x-10 text-sm font-semibold text-gray-600">
-                    <a href="/" class="text-brand-600 transition-colors">Home</a>
-                    <a href="#automation" class="hover:text-brand-600 transition-colors">Automation</a>
-                    <a href="#anti-ban" class="hover:text-brand-600 transition-colors">Safety</a>
-                    <a href="pricing.php" class="hover:text-brand-600 transition-colors">Pricing</a>
+                    <a href="{{ url('/') }}" class="text-brand-600 transition-colors">Home</a>
+                    <a href="{{ url('/features') }}" class="hover:text-brand-600 transition-colors">Features</a>
+                    <a href="{{ url('/pricing') }}" class="hover:text-brand-600 transition-colors">Pricing</a>
+                    <a href="{{ url('/about') }}" class="hover:text-brand-600 transition-colors">About</a>
+                    <a href="{{ url('/contact') }}" class="hover:text-brand-600 transition-colors">Contact</a>
                 </div>
 
                 <!-- Auth Buttons -->
