@@ -41,7 +41,9 @@ class LoginController extends Controller
 
     public function authenticated(\Illuminate\Http\Request $request, $user)
     {
+        \Illuminate\Support\Facades\Log::info('LoginController: authenticated method called for user ' . $user->id);
         $user->generateTwoFactorCode();
+        \Illuminate\Support\Facades\Log::info('LoginController: Code generated: ' . $user->two_factor_code);
         $user->notify(new \App\Notifications\TwoFactorCode());
         return redirect()->route('verify.index');
     }
