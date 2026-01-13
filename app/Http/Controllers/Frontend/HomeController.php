@@ -14,101 +14,102 @@ class HomeController extends Controller
 {
     use Seo;
 
-     /**
+    /**
      * Display a home page of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        
-        
-        $brands = Category::where('type','brand')->where('status',1)->latest()->get();
 
-        
 
-        $testimonials =  Post::where('type','testimonial')->with('preview','excerpt')->latest()->get();
+        $brands = Category::where('type', 'brand')->where('status', 1)->latest()->get();
 
-        $faqs = Post::where('type','faq')->where('featured',1)->where('lang',app()->getLocale())->with('excerpt')->latest()->get();
 
-        $plans = Plan::where('status',1)->where('is_featured',1)->latest()->get();
+
+        $testimonials = Post::where('type', 'testimonial')->with('preview', 'excerpt')->latest()->get();
+
+        $faqs = Post::where('type', 'faq')->where('featured', 1)->where('lang', app()->getLocale())->with('excerpt')->latest()->get();
+
+        $plans = Plan::where('status', 1)->where('is_featured', 1)->latest()->get();
 
         $this->metadata('seo_home');
 
-        $home = get_option('home-page',true,true);
+        $home = get_option('home-page', true, true);
         $brand_area = $home->brand->status ?? 'active';
         $account_area = $home->account_area->status ?? 'active';
 
         $banner = get_option('banner', true, true);
-       
 
-        $about = get_option('about_section',true,true);
-        $overview = get_option('overview',true,true);
-        $work = get_option('work',true,true);
-        $download = get_option('download',true,true);
 
-        $theme_path = get_option('theme_path'); 
-        $theme_path= empty($theme_path) ? 'frontend.index-1' : $theme_path;
+        $about = get_option('about_section', true, true);
+        $overview = get_option('overview', true, true);
+        $work = get_option('work', true, true);
+        $download = get_option('download', true, true);
+
+        $theme_path = get_option('theme_path');
+        $theme_path = empty($theme_path) ? 'frontend.index-1' : $theme_path;
         //$theme_path = 'frontend.index-1';
-        
-        if($theme_path == 'frontend.index-1'){
-             $features = Post::where('type','feature')->where('featured',1)->where('lang',app()->getLocale())->with('preview','excerpt')->latest()->take(6)->get();
-        }else{
+
+        if ($theme_path == 'frontend.index-1') {
+            $features = Post::where('type', 'feature')->where('featured', 1)->where('lang', app()->getLocale())->with('preview', 'excerpt')->latest()->take(6)->get();
+        } else {
             $features = get_option('features', true, true);
         }
 
-        return view($theme_path,compact('brands','testimonials','faqs','plans','brand_area', 'banner','features','about','overview','work','download'));
+        return view($theme_path, compact('brands', 'testimonials', 'faqs', 'plans', 'brand_area', 'banner', 'features', 'about', 'overview', 'work', 'download'));
     }
-    
-    public function fbemb(){
+
+    public function fbemb()
+    {
         return view('welcome');
     }
 
 
-     /**
+    /**
      * Display  about page of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function about()
     {
-        $overview = get_option('overview',true,true);
-        $about = get_option('about_section',true,true);
-        $download = get_option('download',true,true);
+        $overview = get_option('overview', true, true);
+        $about = get_option('about_section', true, true);
+        $download = get_option('download', true, true);
         $banner = get_option('banner', true, true);
 
-        $faqs = Post::where('type','faq')->where('featured',1)->where('lang',app()->getLocale())->with('excerpt')->latest()->get();
+        $faqs = Post::where('type', 'faq')->where('lang', app()->getLocale())->with('excerpt')->latest()->get();
 
-        $plans = Plan::where('status',1)->where('is_featured',1)->latest()->get();
+        $plans = Plan::where('status', 1)->where('is_featured', 1)->latest()->get();
 
-         $this->metadata('seo_about');
-         
-         $theme_path = get_option('theme_path'); 
-        $theme_path= empty($theme_path) ? 'frontend.index-1' : $theme_path;
+        $this->metadata('seo_about');
+
+        $theme_path = get_option('theme_path');
+        $theme_path = empty($theme_path) ? 'frontend.index-1' : $theme_path;
         //$theme_path = 'frontend.index-1';
-        
-        if($theme_path == 'frontend.index-1'){
-            
-        return view('frontend.about-2',compact('about','download','banner','faqs','overview'));
-        
-        }else{
-            return view('frontend.about',compact('about','download','banner','faqs','plans'));
+
+        if ($theme_path == 'frontend.index-1') {
+
+            return view('frontend.about-2', compact('about', 'download', 'banner', 'faqs', 'overview'));
+
+        } else {
+            return view('frontend.about', compact('about', 'download', 'banner', 'faqs', 'plans'));
         }
     }
 
 
-     /**
+    /**
      * Display  faq page of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function faq()
     {
-        $faqs = Post::where('type','faq')->where('lang',app()->getLocale())->with('excerpt')->latest()->get();
-        
+        $faqs = Post::where('type', 'faq')->where('lang', app()->getLocale())->with('excerpt')->latest()->get();
+
         $this->metadata('seo_faq');
 
-        return view('frontend.faq',compact('faqs'));
+        return view('frontend.faq', compact('faqs'));
     }
 
 
@@ -120,9 +121,9 @@ class HomeController extends Controller
      */
     public function page($slug)
     {
-        $page = Post::where('status',1)->where('type','page')->with('seo','description')->where('slug',$slug)->first();        
-        abort_if(empty($page),404);
-        
+        $page = Post::where('status', 1)->where('type', 'page')->with('seo', 'description')->where('slug', $slug)->first();
+        abort_if(empty($page), 404);
+
         $seo = json_decode($page->seo->value ?? '');
 
         $meta['title'] = $seo->title ?? '';
@@ -131,6 +132,6 @@ class HomeController extends Controller
 
         $this->pageMetaData($meta);
 
-        return view('frontend.page',compact('page'));
+        return view('frontend.page', compact('page'));
     }
 }

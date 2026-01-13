@@ -24,20 +24,20 @@ class PricingController extends Controller
      */
     public function index()
     {
-        $faqs = Post::where('type','faq')->where('featured',1)->where('lang',app()->getLocale())->with('excerpt')->latest()->get();
-        $plans = Plan::where('status',1)->latest()->get();
+        $faqs = Post::where('type', 'faq')->where('lang', app()->getLocale())->with('excerpt')->latest()->get();
+        $plans = Plan::where('status', 1)->latest()->get();
 
         $this->metadata('seo_pricing');
-        
-         $theme_path = get_option('theme_path'); 
-        $theme_path= empty($theme_path) ? 'frontend.index-1' : $theme_path;
-        //$theme_path = 'frontend.index-1';
-        
-        if($theme_path == 'frontend.index-1'){
 
-        return view('frontend.plans-2',compact('faqs','plans'));
-        }else{
-            return view('frontend.plans',compact('faqs','plans'));
+        $theme_path = get_option('theme_path');
+        $theme_path = empty($theme_path) ? 'frontend.index-1' : $theme_path;
+        //$theme_path = 'frontend.index-1';
+
+        if ($theme_path == 'frontend.index-1') {
+
+            return view('frontend.plans-2', compact('faqs', 'plans'));
+        } else {
+            return view('frontend.plans', compact('faqs', 'plans'));
         }
     }
 
@@ -50,13 +50,13 @@ class PricingController extends Controller
      */
     public function register(Request $request, $id)
     {
-        $plan = Plan::where('status',1)->findorFail($id);
+        $plan = Plan::where('status', 1)->findorFail($id);
 
         $meta['title'] = $plan->title ?? '';
         $this->pageMetaData($meta);
 
 
-        return view('frontend.register',compact('plan','request'));
+        return view('frontend.register', compact('plan', 'request'));
     }
 
 
@@ -70,36 +70,36 @@ class PricingController extends Controller
     public function registerPlan(Request $request, $id)
     {
         $request->validate([
-            'name'     => ['required', 'string', 'max:255'],
-            'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8'],
         ]);
 
-        $plan = Plan::where('status',1)->findorFail($id);
+        $plan = Plan::where('status', 1)->findorFail($id);
 
-        $user              = new User;
-        $user->name        = $request->name;
-        $user->email       = $request->email;
-        $user->role        = 'user';
-        $user->status      = 1;
-        $user->plan        = json_encode($plan->data);
-        $user->plan_id     = $plan->id;
+        $user = new User;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->role = 'user';
+        $user->status = 1;
+        $user->plan = json_encode($plan->data);
+        $user->plan_id = $plan->id;
         $user->will_expire = $plan->is_trial == 1 ? now()->addDays($plan->days) : null;
-        $user->authkey     = $this->generateAuthKey();
-        $user->password    = Hash::make($request->password);
+        $user->authkey = $this->generateAuthKey();
+        $user->password = Hash::make($request->password);
         $user->save();
-        
-        if(env('MAIL_VERIFICATION') == true){
-        $user->sendEmailVerificationNotification();
+
+        if (env('MAIL_VERIFICATION') == true) {
+            $user->sendEmailVerificationNotification();
         }
 
         Auth::login($user);
 
         if ($user->will_expire == null) {
-            return redirect('user/subscription/'.$plan->id);
+            return redirect('user/subscription/' . $plan->id);
         }
 
-        Session::put('new-user',__('Lets create a whatsapp cloudapi'));
+        Session::put('new-user', __('Lets create a whatsapp cloudapi'));
         return redirect('/user/cloudapi/create');
 
     }
@@ -112,7 +112,7 @@ class PricingController extends Controller
         $rend = Str::random(50);
         $check = User::where('authkey', $rend)->first();
 
-        if($check == true){
+        if ($check == true) {
             $rend = $this->generateAuthKey();
         }
         return $rend;

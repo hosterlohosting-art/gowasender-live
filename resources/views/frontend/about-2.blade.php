@@ -3,7 +3,6 @@
    <main>
       <section class="waf1">
          @include('frontend.sections.area-2')
-         @include('frontend.sections.work-2')
          @include('frontend.sections.faq')
       </section>
    </main>
