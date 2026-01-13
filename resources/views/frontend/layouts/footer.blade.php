@@ -19,7 +19,7 @@
         <!-- footer link 1 -->
         <div class="col-lg-4 col-md-6 col-12">
           <div class="abt_side">
-            <div class="logo"> <img src="{{ asset(get_option('primary_data', true)->footer_logo ?? '') }}" alt="image">
+            <div class="logo"> <img src="{{ asset('assets/img/brand/blue.png') }}" alt="image">
             </div>
             <ul>
               <li><a
@@ -67,7 +67,7 @@
         <!-- footer link 3 -->
         <div class="col-lg-3 col-md-6 col-12">
           <div class="links">
-            <h3>Help & Suport</h3>
+            <h3>Help & Support</h3>
             <ul>
               <li><a href="{{ url('/features') }}">{{ __('Features') }}</a></li>
               <li><a href="{{ url('/about') }}">{{ __('About Us') }}</a></li>
@@ -109,7 +109,7 @@
       <!-- row start -->
       <div class="row">
         <div class="col-md-6">
-                    <p>© Copyrights {{ date('Y') }} Hosterlo Inc. All rights reserved.</p>
+          <p>© Copyrights {{ date('Y') }} Hosterlo Inc. All rights reserved.</p>
         </div>
         <div class="col-md-6">
           <p class="developer_text">Design & developed with Love </p>
