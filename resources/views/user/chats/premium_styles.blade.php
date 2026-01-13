@@ -1,14 +1,14 @@
 <style>
     /* --- PREMIUM WHATSAPP DARK THEME --- */
     :root {
-        --wa-dark-bg: #0b141a;
-        /* Main Background (behind doodles) */
+        --wa-dark-bg: #222e35;
+        /* Main Background - Lighter */
         --wa-dark-sidebar: #111b21;
         /* Sidebar & Headers */
-        --wa-dark-hover: #202c33;
+        --wa-dark-hover: #2a3942;
         /* Hover State / Search Bar */
-        --wa-dark-border: #222d36;
-        /* Borders */
+        --wa-dark-border: #2a3942;
+        /* Borders - Lighter */
         --wa-green-sent: #005c4b;
         /* Sent Bubble */
         --wa-incoming: #202c33;
