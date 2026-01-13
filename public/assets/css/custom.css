@@ -1,13 +1,15 @@
 .scroll::-webkit-scrollbar {
-   display: none;
- }
+    display: none;
+}
 
-.none{
-	display: none;
+.none {
+    display: none;
 }
-.show{
-	display: block;
+
+.show {
+    display: block;
 }
+
 .is-invalid {
     color: red;
     font-weight: normal;
@@ -17,44 +19,52 @@
     background: #f8f9fe;
 }
 
-.armi{
+.armi {
     display: flex;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
-.vt:hover{
+
+.vt:hover {
     background: green;
 }
+
 .vt:hover .card-body .armi h5 {
     color: white;
 }
+
 .vt .card-body .armi h5:hover {
     color: white;
 }
 
-.hello{
-    display:none;
+.hello {
+    display: none;
 }
-.blue{
-    color:#25D366;
+
+.blue {
+    color: #25D366;
     font-weight: 600;
 }
+
 @media only screen and (max-width: 767px) {
-    .armi{
-        overflow:auto;
+    .armi {
+        overflow: auto;
     }
 
-    .hello{
-        display:block;
-        padding:15px;
+    .hello {
+        display: block;
+        padding: 15px;
     }
-    .hello>h3{
+
+    .hello>h3 {
         font-size: 2rem;
     }
-    .hello>h6{
+
+    .hello>h6 {
         font-size: 1.2rem;
     }
 }
+
 /**.yl{
     box-shadow: 4px 4px 0rem 0px rgba(136, 152, 170, .15);
 }**/
@@ -70,15 +80,19 @@
 .font-14 {
     font-size: .75rem;
 }
-.h-200{
+
+.h-200 {
     min-height: 200px !important;
 }
-.h-100{
+
+.h-100 {
     min-height: 100px !important;
 }
-.h-150{
+
+.h-150 {
     min-height: 150px !important;
 }
+
 .custom-btn {
     color: #2642dd;
     font-size: .875rem;
@@ -113,7 +127,7 @@
     letter-spacing: 0px;
 }
 
-.link{
+.link {
     cursor: pointer;
 }
 
@@ -122,11 +136,12 @@
     padding-left: 0;
 }
 
-.custom-control-label{
+.custom-control-label {
     height: 20px;
 }
 
-.custom-control.image-checkbox .custom-control-input:checked ~ .custom-control-label:after, .custom-control.image-checkbox .custom-control-input:checked ~ .custom-control-label:before {
+.custom-control.image-checkbox .custom-control-input:checked~.custom-control-label:after,
+.custom-control.image-checkbox .custom-control-input:checked~.custom-control-label:before {
     opacity: 1;
 }
 
@@ -139,13 +154,15 @@
     background-color: #007bff;
 }
 
-.custom-control.image-checkbox label:after, .custom-control.image-checkbox label:before {
+.custom-control.image-checkbox label:after,
+.custom-control.image-checkbox label:before {
     transition: opacity .3s ease;
     opacity: 0;
     left: .25rem;
 }
 
-.custom-control.image-checkbox label:focus, .custom-control.image-checkbox label:hover {
+.custom-control.image-checkbox label:focus,
+.custom-control.image-checkbox label:hover {
     opacity: .8;
 }
 
@@ -175,13 +192,13 @@
 
 a.clipboard-button,
 p.clipboard-button,
-span.clipboard-button
-{
+span.clipboard-button {
     cursor: pointer;
     color: #007bff;
 }
 
-code[class*=language-], pre[class*=language-] {
+code[class*=language-],
+pre[class*=language-] {
     font-family: Consolas, Menlo, Monaco, 'Andale Mono WT', 'Andale Mono', 'Lucida Console', 'Lucida Sans Typewriter', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Liberation Mono', 'Nimbus Mono L', 'Courier New', Courier, monospace;
     font-size: 14px;
     line-height: 1.375;
@@ -201,7 +218,10 @@ code[class*=language-], pre[class*=language-] {
     -ms-hyphens: none
 }
 
-code[class*=language-] ::selection, code[class*=language-]::selection, pre[class*=language-] ::selection, pre[class*=language-]::selection {
+code[class*=language-] ::selection,
+code[class*=language-]::selection,
+pre[class*=language-] ::selection,
+pre[class*=language-]::selection {
     background: #dfe2f1;
     text-shadow: none
 }
@@ -212,11 +232,11 @@ pre[class*=language-] {
     padding: 1.25rem
 }
 
-.nav-ar{
+.nav-ar {
     padding-right: 1rem !important;
 }
 
-:not(pre) > code[class*=language-] {
+:not(pre)>code[class*=language-] {
     padding: .1em;
     border-radius: .3em
 }
@@ -231,7 +251,8 @@ pre[class*=language-] {
     background-color: #fff;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+.nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
     color: #fff;
     background-color: #075E54;
 }
@@ -293,10 +314,10 @@ pre[class*=language-] {
     background-color: #6658ea;
 }
 
-.qr-code{
-    width:100px;
-    height:100px;
-    margin-top:15px;
+.qr-code {
+    width: 100px;
+    height: 100px;
+    margin-top: 15px;
 }
 
 .search-table button {
@@ -315,7 +336,8 @@ pre[class*=language-] {
     align-items: center;
 }
 
-.card .card-header h4 + .card-header-action, .card .card-header h4 + .card-header-form {
+.card .card-header h4+.card-header-action,
+.card .card-header h4+.card-header-form {
     margin-left: auto;
 }
 
@@ -343,42 +365,43 @@ pre[class*=language-] {
 }
 
 .chartjs-size-monitor-expand {
-    position:absolute;
-    left:0;
-    top:0;
-    right:0;
-    bottom:0;
-    overflow:hidden;
-    pointer-events:none;
-    visibility:hidden;z-index:-1;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    pointer-events: none;
+    visibility: hidden;
+    z-index: -1;
 }
 
 .chart-inner-div {
-    position:absolute;
-    width:1000000px;
-    height:1000000px;
-    left:0;
-    top:0
+    position: absolute;
+    width: 1000000px;
+    height: 1000000px;
+    left: 0;
+    top: 0
 }
 
 .chartjs-size-monitor-shrink {
-    position:absolute;
-    left:0;
-    top:0;
-    right:0;
-    bottom:0;
-    overflow:hidden;
-    pointer-events:none;
-    visibility:hidden;
-    z-index:-1;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    pointer-events: none;
+    visibility: hidden;
+    z-index: -1;
 }
 
 .chart-inner-div-2 {
-    position:absolute;
-    width:200%;
-    height:200%;
-    left:0;
-    top:0
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    left: 0;
+    top: 0
 }
 
 .chartjs-render-monitor {
@@ -388,122 +411,139 @@ pre[class*=language-] {
 }
 
 
-.card-primary{
+.card-primary {
     border-top: 2px solid #6777ef;
 }
+
 .card-header-form {
     margin-left: auto;
 }
-.position-relative{
+
+.position-relative {
     position: relative;
 }
-.contact-list{
+
+.contact-list {
     position: relative;
     height: 500px;
     overflow-x: hidden;
     overflow-y: scroll;
 }
 
-.wa-bg-img{
+.wa-bg-img {
     height: 20%;
     width: 50%;
 }
 
-.wa-content-area{
-    position: absolute; 
+.wa-content-area {
+    position: absolute;
     bottom: 0px;
 }
-.w-70-per{
+
+.w-70-per {
     width: 70%;
 }
 
-.card-bottom-min-25{
+.card-bottom-min-25 {
     margin-bottom: -25px !important;
 }
-.breadcrumb-item>a{
-    color:#1e1a1a;
+
+.breadcrumb-item>a {
+    color: #1e1a1a;
 }
-.black{
+
+.black {
     background: black;
 }
-.thistle{
+
+.thistle {
     background: thistle;
 }
-.indianred{
+
+.indianred {
     background: indianred;
 }
-.chartreuse{
+
+.chartreuse {
     background: chartreuse;
 }
 
 .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 20px; /* Adjust the radius as needed */
-            appearance: none;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23343a40" width="18px" height="18px"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>') no-repeat right 10px center/15px 15px; /* Add a dropdown arrow icon */
-            background-color: #fff; /* Background color */
-            color: #343a40; /* Text color */
-            font-size: 14px; /* Font size */
-            outline: none; /* Remove the outline */
-        }
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    /* Adjust the radius as needed */
+    appearance: none;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23343a40" width="18px" height="18px"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>') no-repeat right 10px center/15px 15px;
+    /* Add a dropdown arrow icon */
+    background-color: #fff;
+    /* Background color */
+    color: #343a40;
+    /* Text color */
+    font-size: 14px;
+    /* Font size */
+    outline: none;
+    /* Remove the outline */
+}
 
-        /* Style the label */
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        
-        .radio-group {
-            display: flex;
-        }
+/* Style the label */
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
 
-        /* Style the label for each radio button */
-        .radio-label {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            cursor: pointer;
-            border: solid 1px;
-            padding: 10px;
-            margin: 10px;
-            border-radius: 10px;
-        }
+.radio-group {
+    display: flex;
+}
 
-        /* Style the radio input (hidden) */
-        .radio-input {
-            display: none;
-        }
+/* Style the label for each radio button */
+.radio-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    border: solid 1px;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 10px;
+}
 
-        /* Style the circular indicator */
-        .radio-indicator {
-            width: 20px;
-            height: 20px;
-            background-color: #ccc;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 5px;
-        }
+/* Style the radio input (hidden) */
+.radio-input {
+    display: none;
+}
 
-        /* Style the selected state of the radio indicator */
-        .radio-input:checked + .radio-indicator {
-            background-color: #007bff; /* Change to your desired color */
-            color: #fff;
-        }
-        
-        .arp{
-            padding: 10px;
-            background: #f3f3f3;
-            border-radius: 5px;
-            }
-.form-control{
-        width: 100%;
+/* Style the circular indicator */
+.radio-indicator {
+    width: 20px;
+    height: 20px;
+    background-color: #ccc;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+
+/* Style the selected state of the radio indicator */
+.radio-input:checked+.radio-indicator {
+    background-color: #007bff;
+    /* Change to your desired color */
+    color: #fff;
+}
+
+.arp {
+    padding: 10px;
+    background: #f3f3f3;
+    border-radius: 5px;
+}
+
+.form-control {
+    width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -513,25 +553,26 @@ pre[class*=language-] {
     font-size: 14px;
     outline: none;
 }
+
 /* -------------------------------------------------------------------------- */
 /*                               WHATSAPP REDESIGN                            */
 /* -------------------------------------------------------------------------- */
 
 :root {
     --font-primary: 'Plus Jakarta Sans', 'Inter', sans-serif;
-    
+
     /* WhatsApp Color Palette */
     --wa-teal-dark: #075E54;
     --wa-teal-light: #128C7E;
     --wa-green: #25D366;
     --wa-blue: #34B7F1;
-    --wa-bg-light: #f0f2f5; 
+    --wa-bg-light: #f0f2f5;
     --wa-sidebar-dark: #111b21;
-    
+
     /* Admin Palette */
     --admin-primary: #5e72e4;
     --admin-dark: #172b4d;
-    
+
     --card-radius: 12px;
 }
 
@@ -548,9 +589,9 @@ body {
     background-color: var(--wa-sidebar-dark) !important;
 }
 
-.user-layout .sidenav .navbar-brand-img {
+/* .user-layout .sidenav .navbar-brand-img {
     filter: brightness(0) invert(1);
-}
+} */
 
 .user-layout .navbar-vertical .navbar-nav .nav-link {
     color: #aebac1 !important;
@@ -559,26 +600,28 @@ body {
 
 .user-layout .navbar-vertical .navbar-nav .nav-link:hover {
     color: #e9edef !important;
-    background-color: rgba(255,255,255,0.05);
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
 .user-layout .navbar-vertical .navbar-nav .nav-link.active {
-    color: #00a884 !important; /* WhatsApp Web Active Green */
+    color: #00a884 !important;
+    /* WhatsApp Web Active Green */
     background: rgba(37, 211, 102, 0.1) !important;
     border-right: 3px solid var(--wa-green);
 }
 
-.user-layout .navbar-vertical .navbar-nav .nav-link > i {
+.user-layout .navbar-vertical .navbar-nav .nav-link>i {
     color: #aebac1 !important;
 }
 
-.user-layout .navbar-vertical .navbar-nav .nav-link.active > i {
+.user-layout .navbar-vertical .navbar-nav .nav-link.active>i {
     color: var(--wa-green) !important;
 }
 
 /* Header */
 .user-layout .header {
-    background: var(--wa-teal-dark) !important; /* WhatsApp Header Color */
+    background: var(--wa-teal-dark) !important;
+    /* WhatsApp Header Color */
     padding-bottom: 6rem;
 }
 
@@ -590,7 +633,7 @@ body {
 /* Cards */
 .user-layout .card {
     border: none !important;
-    box-shadow: 0 2px 5px rgba(11,20,26,0.05) !important;
+    box-shadow: 0 2px 5px rgba(11, 20, 26, 0.05) !important;
     border-radius: var(--card-radius) !important;
 }
 
