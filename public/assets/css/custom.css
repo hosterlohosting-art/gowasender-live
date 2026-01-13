@@ -681,3 +681,21 @@ body {
     background-color: #f6f9fc !important;
     border-radius: 0.375rem;
 }
+
+/* -------------------------------------------------------------------------- */
+/*                              DROPDOWN FIX                                  */
+/* -------------------------------------------------------------------------- */
+
+/* Ensure user profile dropdown appears above everything */
+.navbar-nav .dropdown-menu {
+    z-index: 9999 !important;
+}
+
+.navbar .dropdown-menu {
+    z-index: 9999 !important;
+}
+
+/* Fix header z-index to not overlap dropdowns */
+.header {
+    z-index: 1000 !important;
+}
