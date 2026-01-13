@@ -41,9 +41,9 @@
     <div class="scrollbar-inner">
       <!-- Brand -->
       <div class="sidenav-header d-flex align-items-center">
-        <a class="navbar-brand" href="{{ url('/login') }}">
-          <img src="{{ asset('assets/img/brand/blue.png') }}" class="navbar-brand-img" alt="Logo"
-            style="max-height: 50px;">
+        <a class="navbar-brand" href="{{ url('/') }}">
+          <img src="{{ asset('assets/img/brand/blue.png') }}" class="navbar-brand-img" alt="WA Sender Logo"
+            style="max-height: 50px; width: auto; display: block;">
         </a>
         <div class="ml-auto">
           <!-- Sidenav toggler -->
