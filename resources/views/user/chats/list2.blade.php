@@ -1,7 +1,7 @@
 @extends('layouts.main.app')
 @section('head')
 @include('layouts.main.headersection',[
-'title' => __('Chat list'),
+'title' => __('Chat List'),
 'buttons'=>[
 [
 'name'=> __('CloudApis List'),
@@ -10,9 +10,9 @@
 ]])
 @endsection
 @push('css')
+<style>.header-body{display:none;}</style>
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/cloudapi.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/select2/dist/css/select2.min.css') }}">
-@include('user.chats.premium_styles') {{-- Load the style block we just made --}}
 @endpush
 @section('content')
 
@@ -97,16 +97,15 @@
                                     <p> {{__('Please select a user to start chatting')}}</p>
                                 </div>
                                 <div class="chat-user-details">
-                    <!-- Empty State Overlay -->
-                    <div class="chat-details empty" style="position: absolute; top:0; left:0; width:100%; height:100%; background-color: #222e35; z-index: 5; display: flex; flex-direction: column; align-items: center; justify-content: center; border-bottom: 6px solid #00a884;">
-                         <div style="position: relative; z-index: 6; text-align: center; max-width: 560px; padding: 40px;">
-                             <div style="width: 360px; height: 360px; margin: 0 auto 32px; opacity: 0.5;">
-                                 <svg viewBox="0 0 303 172" width="360" height="172" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M229.1 37.3L81.2 157.9c-6.3 5.1-15.3 5.4-22 .7-2.1-1.5-3.3-3.2-4.3-5.2L9.4 50.2c-3.5-6.9-1.1-15.3 5.5-19.3 6.6-4 15.1-2.1 19.3 4.5l39.1 77.5 138.2-113c6.5-5.3 16-4.3 21.2 2.2 5.2 6.5 4.3 16-2.2 21.2l-1.4.9z" fill="#005c4b"/></svg>
-                             </div>
-                             <h2 style="color: #e9edef; font-size: 36px; font-weight: 300; margin-bottom: 16px; line-height: 45px;">GoWaSender Web</h2>
-                             <p style="color: #8696a0; font-size: 14px; line-height: 20px;">Send and receive messages directly from your browser.<br>Select a conversation from the list to get started.</p>
-                         </div>
-                    </div>
+                                    <div class="hide-chat-user-details">
+                                        <i class="fa fa-arrow-left"></i>
+                                    </div>
+                                    <div class="other-details">
+                                        <img src="{{asset('/assets/img/whatsapp.png')}}" />
+                                        <h3 class="chat-with-name"></h3>
+                                        <p class="chat-number"></p>
+                                        
+                                    </div>
                                     
                                     
                                     <div class="single-chat-option">
