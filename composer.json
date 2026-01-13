@@ -11,6 +11,7 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
+        "laravel/socialite": "^5.5",
         "laravel/ui": "^4.0",
         "league/flysystem-aws-s3-v3": "^3.12",
         "league/omnipay": "^3.2",
