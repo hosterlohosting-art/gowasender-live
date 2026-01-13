@@ -28,8 +28,9 @@
     <div class="row mb-4">
         <div class="col-12">
             <div class="card shadow-lg border-0"
-                style="background-color: #0c1317 !important; position: relative; overflow: hidden;">
+                style="background-color: #075E54 !important; position: relative; overflow: hidden; border-radius: 12px;">
                 <!-- Doodle Overlay -->
+                <!-- WhatsApp Dark Green Theme: #075E54 -->
                 <div
                     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('{{ asset('assets/img/whatsapp-bg.png') }}'); opacity: 0.1; pointer-events: none;">
                 </div>
@@ -299,6 +300,20 @@
     #automaticReply option {
         color: #2d3748 !important;
         font-weight: 500 !important;
+    }
+
+    /* Force Remove Green Strip or Gradient Behind Header */
+    .header {
+        background: transparent !important;
+        background-color: transparent !important;
+    }
+
+    .main-content {
+        background-color: #f0f2f5 !important;
+    }
+
+    body {
+        background-color: #f0f2f5 !important;
     }
 </style>
 
