@@ -38,10 +38,10 @@ require __DIR__ . '/../vendor/autoload.php';
 | Run The Application
 |--------------------------------------------------------------------------
 |
-| Once we have the application, we can handle the incoming request using
+| once we have the application, we can handle the incoming request using
 | the application's HTTP kernel. Then, we will send the response back
 | to this client's browser, allowing them to enjoy our application.
-|^ "/opt/lampp/htdocs/public/../app/Http/Controllers/Installer/InstallerController.php"
+|
 */
 
 $config = require_once __DIR__ . '/../config/tools.php';
