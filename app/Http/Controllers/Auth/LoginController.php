@@ -26,7 +26,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-   // protected $redirectTo = RouteServiceProvider::HOME;
+    // protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
@@ -39,16 +39,21 @@ class LoginController extends Controller
     }
 
 
+    public function authenticated(\Illuminate\Http\Request $request, $user)
+    {
+        $user->generateTwoFactorCode();
+        $user->notify(new \App\Notifications\TwoFactorCode());
+        return redirect()->route('verify.index');
+    }
+
     public function redirectTo()
     {
+        // This won't be called if authenticated() redirects, 
+        // but we keep it as a fallback or for other auth flows.
         if (Auth::user()->role == 'user') {
-            return  $this->redirectTo='/user/dashboard';
+            return '/user/dashboard';
+        } elseif (Auth::user()->role == 'admin') {
+            return '/admin/dashboard';
         }
-        elseif (Auth::user()->role == 'admin') {
-            $this->redirectTo='/admin/dashboard';
-            return $this->redirectTo;           
-        }
-      
-       $this->middleware('guest')->except('logout');
-   }
+    }
 }

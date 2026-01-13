@@ -18,6 +18,11 @@ Route::match(['get', 'post'], '/send-webhook/{cloudapi_id}', [BulkController::cl
 Route::get('login/google', [App\Http\Controllers\Auth\SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('login/google/callback', [App\Http\Controllers\Auth\SocialAuthController::class, 'handleGoogleCallback']);
 
+// Two Factor Auth Routes
+Route::get('verify-2fa', [App\Http\Controllers\Auth\TwoFactorController::class, 'index'])->name('verify.index')->middleware('auth');
+Route::post('verify-2fa', [App\Http\Controllers\Auth\TwoFactorController::class, 'store'])->name('verify.store')->middleware('auth');
+Route::get('verify-2fa/resend', [App\Http\Controllers\Auth\TwoFactorController::class, 'resend'])->name('verify.resend')->middleware('auth');
+
 // Home Route
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

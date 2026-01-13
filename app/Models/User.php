@@ -24,6 +24,8 @@ class User extends Authenticatable
         'password',
         'authkey',
         'wallet',
+        'two_factor_code',
+        'two_factor_expires_at',
     ];
 
     /**
@@ -36,9 +38,9 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected $cast=[
-        'meta'=>'json',
-        'plan'=>'json'
+    protected $cast = [
+        'meta' => 'json',
+        'plan' => 'json'
     ];
 
     /**
@@ -48,9 +50,27 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'two_factor_expires_at' => 'datetime',
     ];
 
-     public static function getpermissionGroups()
+    public function generateTwoFactorCode()
+    {
+        $this->timestamps = false;
+        $this->two_factor_code = rand(100000, 999999);
+        $this->two_factor_expires_at = now()->addMinutes(10);
+        $this->save();
+    }
+
+    public function resetTwoFactorCode()
+    {
+        $this->timestamps = false;
+        $this->two_factor_code = null;
+        $this->two_factor_expires_at = null;
+        $this->save();
+    }
+
+
+    public static function getpermissionGroups()
     {
         $permission_groups = DB::table('permissions')
             ->select('group_name as name')
@@ -72,7 +92,7 @@ class User extends Authenticatable
         return $permissions;
     }
 
-     public static function roleHasPermissions($role, $permissions)
+    public static function roleHasPermissions($role, $permissions)
     {
         $hasPermission = true;
         foreach ($permissions as $permission) {
@@ -86,17 +106,17 @@ class User extends Authenticatable
 
     public function app()
     {
-        return $this->hasOne('App\Models\App','user_id','id');
+        return $this->hasOne('App\Models\App', 'user_id', 'id');
     }
 
     public function plan()
     {
-        return $this->belongsTo('App\Models\Plan','plan_id');
+        return $this->belongsTo('App\Models\Plan', 'plan_id');
     }
 
     public function subscription()
     {
-        return $this->belongsTo('App\Models\Plan','plan_id');
+        return $this->belongsTo('App\Models\Plan', 'plan_id');
     }
 
     public function orders()
@@ -114,7 +134,7 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\CloudApi');
     }
 
-     public function contact()
+    public function contact()
     {
         return $this->hasMany('App\Models\Contact');
     }
