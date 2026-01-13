@@ -1,5 +1,10 @@
 @extends('frontend.layouts.main')
 @section('content')
+  <style>
+    header {
+      background-color: #fff !important;
+    }
+  </style>
   @include('frontend.layouts.header')
   <main>
     <div class="bred_crumb">
