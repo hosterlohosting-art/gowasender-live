@@ -2,10 +2,9 @@
 
 @section('head')
     <!-- Custom Header removed for cleaner look -->
-    <div class="header pb-6 pt-5 pt-md-8" style="background: transparent !important;">
+    <div class="header" style="background: transparent !important; padding-top: 10px; padding-bottom: 0px;">
         <div class="container-fluid">
             <div class="header-body">
-                <!-- Breadcrumbs removed as they are redundant visually -->
             </div>
         </div>
     </div>
@@ -39,7 +38,8 @@
                                 style="background-color: #25D366; color: #075E54; font-weight: 800; letter-spacing: 0.5px;">ONLINE</span>
                             <h2 class="text-white mb-1 font-weight-800"
                                 style="font-family: 'Plus Jakarta Sans', sans-serif;">Welcome back,
-                                {{ Auth::user()->name }}! 👋</h2>
+                                {{ Auth::user()->name }}! 👋
+                            </h2>
                             <p class="text-white-50 mb-0 font-weight-500">Your automation empire is running smoothly.</p>
 
                             <!-- Quick Actions (New) -->
