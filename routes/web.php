@@ -18,7 +18,7 @@ Route::match(['get', 'post'], '/send-webhook/{cloudapi_id}', [BulkController::cl
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 //**======================== CRON Routes ====================**//
-Route::group(['prefix' => 'cron', 'as' => 'cron.'], function (){
+Route::group(['prefix' => 'cron', 'as' => 'cron.'], function () {
     Route::get('/execute-schedule', [App\Http\Controllers\CronController::class, 'ExecuteSchedule']);
     Route::get('/notify-to-user', [App\Http\Controllers\CronController::class, 'notifyToUser']);
     Route::get('/remove-junk-cloudapi', [App\Http\Controllers\CronController::class, 'removeJunkCloudApi']);
@@ -42,7 +42,7 @@ Route::group(['middleware' => ['auth', 'web']], function () {
     Route::get('/stripe', '\App\Gateway\Stripe@view')->name('stripe.view');
     Route::get('/stripe-pay/success', '\App\Gateway\Stripe@status')->name('stripe.success');
     Route::get('/stripe-pay/fail', '\App\Gateway\Stripe@fail')->name('stripe.fail');
-   
+
     Route::get('/payment/mollie', '\App\Gateway\Mollie@status');
     Route::post('/payment/paystack', '\App\Gateway\Paystack@status')->name('paystack.status');
     Route::get('/paystack', '\App\Gateway\Paystack@view')->name('paystack.view');
@@ -69,5 +69,6 @@ Route::get('/clear-cache', function () {
     \Illuminate\Support\Facades\Artisan::call('route:clear');
     \Illuminate\Support\Facades\Artisan::call('config:clear');
     \Illuminate\Support\Facades\Artisan::call('cache:clear');
-    return '<h1>Cache Cleared!</h1> <p>Try visiting the flows page now.</p>';
+    \Illuminate\Support\Facades\Artisan::call('view:clear');
+    return '<h1>Cache Cleared!</h1> <p>All caches (View, Route, Config) cleared.</p>';
 });
