@@ -27,12 +27,11 @@
     <!-- Welcome Section -->
     <div class="row mb-5">
         <div class="col-12">
-            <div class="card shadow-sm border-0 bg-white">
-                <div class="card-body d-flex align-items-center">
+            <div class="card shadow-lg border-0" style="background: linear-gradient(87deg, #5e72e4 0, #825ee4 100%) !important;">
+                <div class="card-body d-flex align-items-center py-4">
                     <div>
-                        <h3 class="mb-1 text-dark">Welcome back, <span class="text-primary">{{ Auth::user()->name }}</span>!
-                            👋</h3>
-                        <p class="text-muted mb-0 small">Here's what's happening with your messaging campaigns today.</p>
+                        <h3 class="mb-1 text-white">Welcome back, <span class="font-weight-bold">{{ Auth::user()->name }}</span>! 👋</h3>
+                        <p class="text-white mb-0 opacity-8 small">Here's what's happening with your messaging campaigns today.</p>
                     </div>
                 </div>
             </div>
@@ -41,20 +40,20 @@
 
     <!-- Stats Grid -->
     <div class="row">
-        <!-- Stat Card 1 -->
+        <!-- Stat Card 1: Connected APIs (Green) -->
         <div class="col-xl-3 col-md-6">
-            <div class="card card-stats border-0 shadow-sm mb-4">
+            <div class="card card-stats border-0 shadow-lg mb-4" style="background: linear-gradient(87deg, #2dce89 0, #2dcecc 100%) !important;">
                 <div class="card-body">
                     <div class="row">
                         <div class="col">
-                            <h5 class="card-title text-uppercase text-muted mb-0 font-weight-bold"
-                                style="font-size: 0.7rem;">Connected APIs</h5>
-                            <span class="h2 font-weight-bold mb-0 text-dark" id="total-device">
-                                <i class="fas fa-spinner fa-spin text-muted small"></i>
+                            <h5 class="card-title text-uppercase text-white mb-0 font-weight-bold"
+                                style="font-size: 0.7rem; opacity: 0.8;">Connected APIs</h5>
+                            <span class="h2 font-weight-bold mb-0 text-white" id="total-device">
+                                <i class="fas fa-spinner fa-spin text-white small"></i>
                             </span>
                         </div>
                         <div class="col-auto">
-                            <div class="icon icon-shape bg-light text-success rounded-circle shadow-none">
+                            <div class="icon icon-shape bg-white text-success rounded-circle shadow-none">
                                 <i class="fas fa-server"></i>
                             </div>
                         </div>
@@ -63,20 +62,20 @@
             </div>
         </div>
 
-        <!-- Stat Card 2 -->
+        <!-- Stat Card 2: Total Messages (Blue/Purple) -->
         <div class="col-xl-3 col-md-6">
-            <div class="card card-stats border-0 shadow-sm mb-4">
+            <div class="card card-stats border-0 shadow-lg mb-4" style="background: linear-gradient(87deg, #5e72e4 0, #825ee4 100%) !important;">
                 <div class="card-body">
                     <div class="row">
                         <div class="col">
-                            <h5 class="card-title text-uppercase text-muted mb-0 font-weight-bold"
-                                style="font-size: 0.7rem;">Total Messages</h5>
-                            <span class="h2 font-weight-bold mb-0 text-dark" id="total-messages">
-                                <i class="fas fa-spinner fa-spin text-muted small"></i>
+                            <h5 class="card-title text-uppercase text-white mb-0 font-weight-bold"
+                                style="font-size: 0.7rem; opacity: 0.8;">Total Messages</h5>
+                            <span class="h2 font-weight-bold mb-0 text-white" id="total-messages">
+                                <i class="fas fa-spinner fa-spin text-white small"></i>
                             </span>
                         </div>
                         <div class="col-auto">
-                            <div class="icon icon-shape bg-light text-primary rounded-circle shadow-none">
+                            <div class="icon icon-shape bg-white text-primary rounded-circle shadow-none">
                                 <i class="ni ni-spaceship"></i>
                             </div>
                         </div>
@@ -85,20 +84,20 @@
             </div>
         </div>
 
-        <!-- Stat Card 3 -->
+        <!-- Stat Card 3: Pending Schedules (Orange) -->
         <div class="col-xl-3 col-md-6">
-            <div class="card card-stats border-0 shadow-sm mb-4">
+            <div class="card card-stats border-0 shadow-lg mb-4" style="background: linear-gradient(87deg, #fb6340 0, #fbb140 100%) !important;">
                 <div class="card-body">
                     <div class="row">
                         <div class="col">
-                            <h5 class="card-title text-uppercase text-muted mb-0 font-weight-bold"
-                                style="font-size: 0.7rem;">Pending Schedules</h5>
-                            <span class="h2 font-weight-bold mb-0 text-dark" id="total-schedule">
-                                <i class="fas fa-spinner fa-spin text-muted small"></i>
+                            <h5 class="card-title text-uppercase text-white mb-0 font-weight-bold"
+                                style="font-size: 0.7rem; opacity: 0.8;">Pending Schedules</h5>
+                            <span class="h2 font-weight-bold mb-0 text-white" id="total-schedule">
+                                <i class="fas fa-spinner fa-spin text-white small"></i>
                             </span>
                         </div>
                         <div class="col-auto">
-                            <div class="icon icon-shape bg-light text-warning rounded-circle shadow-none">
+                            <div class="icon icon-shape bg-white text-warning rounded-circle shadow-none">
                                 <i class="ni ni-calendar-grid-58"></i>
                             </div>
                         </div>
@@ -107,20 +106,20 @@
             </div>
         </div>
 
-        <!-- Stat Card 4 -->
+        <!-- Stat Card 4: Total Contacts (Info/Cyan) -->
         <div class="col-xl-3 col-md-6">
-            <div class="card card-stats border-0 shadow-sm mb-4">
+            <div class="card card-stats border-0 shadow-lg mb-4" style="background: linear-gradient(87deg, #11cdef 0, #1171ef 100%) !important;">
                 <div class="card-body">
                     <div class="row">
                         <div class="col">
-                            <h5 class="card-title text-uppercase text-muted mb-0 font-weight-bold"
-                                style="font-size: 0.7rem;">Total Contacts</h5>
-                            <span class="h2 font-weight-bold mb-0 text-dark" id="total-contacts">
-                                <i class="fas fa-spinner fa-spin text-muted small"></i>
+                            <h5 class="card-title text-uppercase text-white mb-0 font-weight-bold"
+                                style="font-size: 0.7rem; opacity: 0.8;">Total Contacts</h5>
+                            <span class="h2 font-weight-bold mb-0 text-white" id="total-contacts">
+                                <i class="fas fa-spinner fa-spin text-white small"></i>
                             </span>
                         </div>
                         <div class="col-auto">
-                            <div class="icon icon-shape bg-light text-info rounded-circle shadow-none">
+                            <div class="icon icon-shape bg-white text-info rounded-circle shadow-none">
                                 <i class="ni ni-collection"></i>
                             </div>
                         </div>
