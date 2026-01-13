@@ -84,13 +84,17 @@
 		@if(count($templates ?? []) == 0)
 		<div class="row">
 			<div class="col-sm-12">
-			<div class="card">
-				<div class="card-body">
-					<center>
-						<img src="{{ asset('assets/img/404.jpg') }}" height="500">
-						<h3 class="text-center">{{ __('!Opps You Have Not Created Any Template') }}</h3>
-						<a href="{{ route('user.template.create') }}" class="btn btn-neutral"><i class="fas fa-plus"></i> {{ __('Create a template') }}</a>
-					</center>
+			<div class="card shadow-lg border-0">
+				<div class="card-body py-6 text-center">
+					<div class="icon-shape bg-gradient-primary text-white rounded-circle shadow-lg mb-4" style="width: 80px; height: 80px; display: inline-flex; align-items: center; justify-content: center;">
+						<i class="fi fi-rs-template fa-3x"></i>
+					</div>
+					<h4 class="text-dark font-weight-bold mb-2">{{ __('No Templates Found') }}</h4>
+					<p class="text-muted mb-4" style="max-width: 400px; margin: 0 auto;">{{ __('Create reusable message templates to save time.') }}</p>
+					<a href="{{ route('user.template.create') }}" class="btn btn-primary btn-lg shadow-lg rounded-pill px-5" 
+					   style="background: linear-gradient(87deg, #5e72e4 0, #825ee4 100%) !important; border: none;">
+						<i class="fas fa-plus mr-2"></i> {{ __('Create a Template') }}
+					</a>
 				</div>
 			</div>
 		</div>

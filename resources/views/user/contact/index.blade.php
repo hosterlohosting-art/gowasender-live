@@ -132,7 +132,19 @@
 			</div>
 		</div>
 		@else
-		<div class="alert  bg-gradient-primary text-white"><span class="text-left">{{ __('Opps There Is No Contact Found....') }}</span></div>
+		<div class="card shadow-lg border-0">
+			<div class="card-body py-6 text-center">
+				<div class="icon-shape bg-gradient-primary text-white rounded-circle shadow-lg mb-4" style="width: 80px; height: 80px; display: inline-flex; align-items: center; justify-content: center;">
+					<i class="fi fi-rs-address-book fa-3x"></i>
+				</div>
+				<h4 class="text-dark font-weight-bold mb-2">{{ __('No Contacts Found') }}</h4>
+				<p class="text-muted mb-4" style="max-width: 400px; margin: 0 auto;">{{ __('Import or create contacts to start sending messages.') }}</p>
+				<a href="{{ route('user.contact.create') }}" class="btn btn-primary btn-lg shadow-lg rounded-pill px-5" 
+				   style="background: linear-gradient(87deg, #5e72e4 0, #825ee4 100%) !important; border: none;">
+					<i class="fas fa-plus mr-2"></i> {{ __('Create Contact') }}
+				</a>
+			</div>
+		</div>
 		@endif
 	</div>
 </div>
