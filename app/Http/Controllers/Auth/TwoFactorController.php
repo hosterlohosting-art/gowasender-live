@@ -32,6 +32,10 @@ class TwoFactorController extends Controller
 
             $user->resetTwoFactorCode();
 
+            if ($request->input('remember_device') == '1') {
+                \Illuminate\Support\Facades\Cookie::queue('device_trusted_' . $user->id, 'true', 43200); // 30 Days
+            }
+
             // Redirect based on role
             if ($user->role == 'admin') {
                 return redirect()->route('admin.dashboard.index');

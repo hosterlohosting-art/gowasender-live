@@ -41,6 +41,12 @@ class LoginController extends Controller
 
     public function authenticated(\Illuminate\Http\Request $request, $user)
     {
+        // Check if device is trusted
+        if ($request->cookie('device_trusted_' . $user->id)) {
+            \Illuminate\Support\Facades\Log::info('LoginController: Trusted device cookie found for user ' . $user->id);
+            return redirect()->intended($this->redirectPath());
+        }
+
         \Illuminate\Support\Facades\Log::info('LoginController: authenticated method called for user ' . $user->id);
         $user->generateTwoFactorCode();
         \Illuminate\Support\Facades\Log::info('LoginController: Code generated: ' . $user->two_factor_code);
