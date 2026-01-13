@@ -27,22 +27,74 @@
 
          <!-- RIGHT SIDE ICONS -->
          <ul class="navbar-nav align-items-center ml-auto ml-md-0">
-
-            <!-- Notification Bell -->
             @if(Request::is('user/*'))
                <audio id="notificationSound" src="{{ asset('assets/messagetone.mp3') }}"></audio>
                <li class="nav-item dropdown notifications-icon none notifications-area">
                   <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
                      aria-expanded="false">
-                     <i class="ni ni-bell-55"></i> <!-- Restored Bell Icon -->
+                     <i class="ni ni-bell-55"></i>
                   </a>
                   <button id="install-button" style="display: none;">Install</button>
                   <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right py-0 overflow-hidden">
+                     <!-- Dropdown header -->
                      <div class="px-3 py-3">
                         <h6 class="text-sm text-muted m-0">{{ __('You have') }} <strong
                               class="text-primary notification-count">0</strong> {{ __('notifications.') }}</h6>
                      </div>
-                     <div class="list-group list-group-flush notifications-list"></div>
+                     <!-- List group -->
+                     <div class="list-group list-group-flush notifications-list">
+
+
+                     </div>
+                     <!-- View all -->
+
+                  </div>
+               </li>
+
+               <li class="nav-item dropdown">
+                  <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+                     aria-expanded="false">
+                     <i class="ni ni-ungroup"></i>
+                  </a>
+                  <div class="dropdown-menu dropdown-menu-lg dropdown-menu-dark bg-default dropdown-menu-right">
+                     <div class="row shortcuts px-4">
+                        <a href="{{ url('/user/cloudapi') }}" class="col-4 shortcut-item">
+                           <span class="shortcut-media avatar rounded-circle bg-gradient-red">
+                              <i class="fi-rs-sensor-on"></i>
+                           </span>
+                           <small>{{ __('WhatsApp') }}</small>
+                        </a>
+                        <a href="{{ url('/user/sent-text-message') }}" class="col-4 shortcut-item">
+                           <span class="shortcut-media avatar rounded-circle bg-gradient-orange">
+                              <i class="fi fi-rs-paper-plane"></i>
+                           </span>
+                           <small>{{ __('Single Send') }}</small>
+                        </a>
+                        <a href="{{ url('/user/bulk-message') }}" class="col-4 shortcut-item">
+                           <span class="shortcut-media avatar rounded-circle bg-gradient-purple">
+                              <i class="fi fi-rs-rocket-lunch"></i>
+                           </span>
+                           <small>{{ __('Bulk Send') }}</small>
+                        </a>
+                        <a href="{{ __('/user/chatbot') }}" class="col-4 shortcut-item">
+                           <span class="shortcut-media avatar rounded-circle bg-gradient-info">
+                              <i class="fas fa-robot"></i>
+                           </span>
+                           <small>{{ __('Chatbot') }}</small>
+                        </a>
+                        <a href="{{ url('/user/contact') }}" class="col-4 shortcut-item">
+                           <span class="shortcut-media avatar rounded-circle bg-gradient-yellow">
+                              <i class="fi  fi-rs-address-book"></i>
+                           </span>
+                           <small>{{ __('Contacts') }}</small>
+                        </a>
+                        <a href="{{ url('/user/logs') }}" class="col-4 shortcut-item">
+                           <span class="shortcut-media avatar rounded-circle bg-gradient-green">
+                              <i class="ni ni-books"></i>
+                           </span>
+                           <small>{{ __('Reports') }}</small>
+                        </a>
+                     </div>
                   </div>
                </li>
             @endif
