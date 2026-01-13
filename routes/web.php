@@ -14,6 +14,10 @@ use App\Http\Controllers\Api\BulkController;
 // Webhook Route
 Route::match(['get', 'post'], '/send-webhook/{cloudapi_id}', [BulkController::class, 'webHook']);
 
+// Google Auth Routes
+Route::get('auth/google', [App\Http\Controllers\Auth\SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('auth/google/callback', [App\Http\Controllers\Auth\SocialAuthController::class, 'handleGoogleCallback']);
+
 // Home Route
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
