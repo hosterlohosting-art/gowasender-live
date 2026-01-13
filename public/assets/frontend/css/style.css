@@ -3479,3 +3479,54 @@ header.fix_style.white_header {
 
 
 
+
+/* Dark Theme Customization */
+.bred_crumb, footer, .top_footer, .bottom_footer {
+    background-color: #111b21 !important;
+    background-image: none !important; /* Remove any existing gradients/images */
+    position: relative;
+    overflow: hidden;
+    color: #ffffff !important;
+}
+
+.bred_crumb::before, footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../../img/whatsapp-bg.png');
+    opacity: 0.06;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.bred_crumb .container, footer .container {
+    position: relative;
+    z-index: 2;
+}
+
+.bred_crumb h1, .bred_crumb p, .bred_crumb li, .bred_crumb li a,
+footer h3, footer p, footer a, footer li, .bottom_footer p {
+    color: #e9edef !important;
+}
+
+.bred_crumb li span, footer a:hover, footer .social_media li a {
+    color: #00a884 !important;
+}
+
+.bred_crumb ul li a:hover {
+    color: #00a884 !important;
+}
+
+footer .anim_line img {
+    opacity: 0.1;
+    filter: invert(1);
+}
+
+.bred_crumb .banner_shape1, .bred_crumb .banner_shape2, .bred_crumb .banner_shape3 {
+    opacity: 0.1;
+    filter: invert(1);
+}
+
