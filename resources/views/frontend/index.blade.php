@@ -139,11 +139,6 @@ function formatFeatureKey($key)
                 <!-- Logo -->
                 <a href="/" class="flex items-center gap-2.5 group cursor-pointer">
                     <img src="{{ asset('assets/img/brand/blue.png') }}" alt="WA Sender Logo" class="h-10 w-auto">
-                    <div>
-                        <span class="text-2xl font-display font-bold text-gray-900 tracking-tight block leading-none">WA
-                            Sender</span>
-                        <span class="text-[10px] font-bold text-brand-600 tracking-widest uppercase">by Hosterlo</span>
-                    </div>
                 </a>
 
                 <!-- Desktop Menu -->
@@ -200,12 +195,12 @@ function formatFeatureKey($key)
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-5 justify-center w-full md:w-auto">
-                    <a href="/register"
-                        class="px-8 py-4 bg-brand-600 text-white font-bold text-lg rounded-xl shadow-xl shadow-brand-500/30 hover:shadow-2xl hover:bg-brand-700 transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3">
+                    <a href="{{ url('/register') }}"
+                        class="px-8 py-4 bg-gradient-to-r from-brand-600 to-brand-500 text-white font-bold text-lg rounded-xl shadow-xl shadow-brand-500/30 hover:shadow-2xl hover:shadow-brand-500/50 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3">
                         <i class="fab fa-whatsapp text-2xl"></i> Start Sending Now
                     </a>
-                    <a href="pricing.php"
-                        class="px-8 py-4 bg-white text-gray-800 border border-gray-200 font-bold text-lg rounded-xl hover:border-brand-500 hover:text-brand-600 transition-all duration-300 flex items-center justify-center gap-2 shadow-sm">
+                    <a href="{{ url('/pricing') }}"
+                        class="px-8 py-4 bg-white text-gray-800 border border-gray-200 font-bold text-lg rounded-xl hover:border-brand-500 hover:text-brand-600 transition-all duration-300 flex items-center justify-center gap-2 shadow-sm hover:shadow-md">
                         See Pricing
                     </a>
                 </div>
@@ -589,11 +584,7 @@ function formatFeatureKey($key)
 
                 <div class="col-span-1 md:col-span-1">
                     <div class="flex items-center gap-3 mb-6">
-                        <div
-                            class="w-10 h-10 bg-brand-600 rounded-lg flex items-center justify-center text-white text-xl">
-                            <i class="fab fa-whatsapp"></i>
-                        </div>
-                        <span class="text-2xl font-display font-bold tracking-tight">WA Sender</span>
+                        <img src="{{ asset('assets/img/brand/white.png') }}" alt="WA Sender Logo" class="h-10 w-auto">
                     </div>
                     <p class="text-gray-400 text-sm leading-relaxed mb-8">
                         The world's most trusted WhatsApp marketing platform by Hosterlo. Built for safety, speed,
