@@ -50,13 +50,7 @@ class PricingController extends Controller
      */
     public function register(Request $request, $id)
     {
-        $plan = Plan::where('status', 1)->findorFail($id);
-
-        $meta['title'] = $plan->title ?? '';
-        $this->pageMetaData($meta);
-
-
-        return view('frontend.register', compact('plan', 'request'));
+        return redirect('/register?plan=' . $id);
     }
 
 
