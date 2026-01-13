@@ -21,11 +21,19 @@
                         <div class="card-body px-lg-5 py-lg-5">
                             <div class="text-center mb-4">
                                 <h3 class="font-weight-bold" style="color: #e9edef;">{{ __('Create Account') }}</h3>
-                                <small style="color: #8696a0;">{{ __('Sign up to get started') }}</small>
+                                @if(isset($plan))
+                                    <small class="badge badge-pill badge-primary mb-3" style="background-color: #00a884; font-size: 0.8rem;">{{ $plan->title }} Plan</small>
+                                    <p style="color: #8696a0; font-size: 0.9rem;">{{ __('Register to start your subscription') }}</p>
+                                @else
+                                    <small style="color: #8696a0;">{{ __('Sign up to get started') }}</small>
+                                @endif
                             </div>
 
                             <form method="POST" action="{{ route('register') }}">
                                 @csrf
+                                @if(isset($plan))
+                                    <input type="hidden" name="plan_id" value="{{ $plan->id }}">
+                                @endif
 
                                 <div class="form-group mb-3">
                                     <div class="input-group input-group-merge input-group-alternative"

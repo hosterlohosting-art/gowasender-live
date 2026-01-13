@@ -48,12 +48,26 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
+    public function showRegistrationForm()
+    {
+        $plan = null;
+        if (request()->has('plan')) {
+            $plan = \App\Models\Plan::where('status', 1)->find(request('plan'));
+        }
+        return view('auth.register', compact('plan'));
+    }
+
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
     protected function validator(array $data)
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'phone' => ['required', 'numeric', 'phone', 'min:10', 'max:12'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -66,13 +80,25 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'phone' => $data['phone'],
-            'authkey' => $this->generateAuthKey(),
-            'password' => Hash::make($data['password']),
-        ]);
+        $user = new User;
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+        $user->password = Hash::make($data['password']);
+        $user->authkey = $this->generateAuthKey();
+        $user->role = 'user';
+        $user->status = 1;
+
+        if (isset($data['plan_id'])) {
+            $plan = \App\Models\Plan::where('status', 1)->find($data['plan_id']);
+            if ($plan) {
+                $user->plan = json_encode($plan->data);
+                $user->plan_id = $plan->id;
+                $user->will_expire = $plan->is_trial == 1 ? now()->addDays($plan->days) : null;
+            }
+        }
+
+        $user->save();
+        return $user;
     }
 
 
@@ -81,7 +107,7 @@ class RegisterController extends Controller
         $rend = Str::random(50);
         $check = User::where('authkey', $rend)->first();
 
-        if($check == true){
+        if ($check == true) {
             $rend = $this->generateAuthKey();
         }
         return $rend;
