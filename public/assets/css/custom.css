@@ -622,7 +622,8 @@ body {
 .user-layout .header {
     background: var(--wa-teal-dark) !important;
     /* WhatsApp Header Color */
-    padding-bottom: 6rem;
+    padding-bottom: 2rem !important;
+    /* Reduced from 6rem to prevent covering dropdown */
 }
 
 /* Background */
