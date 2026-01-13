@@ -18,6 +18,10 @@ class TwoFactorMiddleware
     {
         $user = auth()->user();
 
+        if (auth()->check() && $user->role === 'admin') {
+            return $next($request);
+        }
+
         if (auth()->check() && $user->two_factor_code) {
             \Illuminate\Support\Facades\Log::info('TwoFactorMiddleware: 2FA code found. URL: ' . $request->url());
             if (!$request->is('verify*')) {
