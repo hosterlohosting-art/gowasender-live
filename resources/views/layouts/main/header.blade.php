@@ -2,7 +2,7 @@
    <div class="container-fluid">
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-         <!-- Mobile Toggler (only visible on small screens) -->
+         <!-- Mobile Toggler -->
          <ul class="navbar-nav align-items-center d-xl-none mr-3">
             <li class="nav-item">
                <div class="pr-3 sidenav-toggler sidenav-toggler-light" data-action="sidenav-pin"
@@ -16,36 +16,42 @@
             </li>
          </ul>
 
-         <!-- LEFT SIDE: Page Title -->
-         <div class="d-none d-md-block">
-            <h1 class="page-title-text">
-               @if(View::hasSection('title'))
-                  @yield('title')
-               @else
-                  {{ __('Dashboard') }}
-               @endif
-            </h1>
-         </div>
-
-         <!-- Auto-fill space -->
-         <ul class="navbar-nav mr-auto"></ul>
-
-         <!-- RIGHT SIDE: Support & Profile -->
-         <ul class="navbar-nav align-items-center ml-auto ml-md-0 d-flex flex-row gap-3">
-
-            <!-- Support Button -->
-            <li class="nav-item mr-3">
-               <a href="{{ Request::is('user/*') ? url('/user/support') : url('/admin/support') }}" class="support-btn">
-                  <i class="ni ni-support-16"></i>
-                  <span>{{ __('Support') }}</span>
+         <!-- Search form (Hidden on mobile) -->
+         <ul class="navbar-nav align-items-center ml-md-auto">
+            <li class="nav-item d-sm-none">
+               <a class="nav-link" href="#" data-action="search-show" data-target="#navbar-search-main">
+                  <i class="ni ni-zoom-split-in"></i>
                </a>
             </li>
+         </ul>
+
+         <!-- RIGHT SIDE ICONS -->
+         <ul class="navbar-nav align-items-center ml-auto ml-md-0">
+
+            <!-- Notification Bell -->
+            @if(Request::is('user/*'))
+               <audio id="notificationSound" src="{{ asset('assets/messagetone.mp3') }}"></audio>
+               <li class="nav-item dropdown notifications-icon none notifications-area">
+                  <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+                     aria-expanded="false">
+                     <i class="ni ni-bell-55"></i> <!-- Restored Bell Icon -->
+                  </a>
+                  <button id="install-button" style="display: none;">Install</button>
+                  <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right py-0 overflow-hidden">
+                     <div class="px-3 py-3">
+                        <h6 class="text-sm text-muted m-0">{{ __('You have') }} <strong
+                              class="text-primary notification-count">0</strong> {{ __('notifications.') }}</h6>
+                     </div>
+                     <div class="list-group list-group-flush notifications-list"></div>
+                  </div>
+               </li>
+            @endif
 
             <!-- User Profile -->
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown ml-3">
                <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
                   aria-expanded="false">
-                  <div class="media align-items-center user-profile-media">
+                  <div class="media align-items-center">
                      <span class="avatar avatar-sm rounded-circle">
                         <img alt="Image placeholder"
                            src="{{ Auth::user()->avatar == null ? 'https://ui-avatars.com/api/?name=' . Auth::user()->name : asset(Auth::user()->avatar) }}">
