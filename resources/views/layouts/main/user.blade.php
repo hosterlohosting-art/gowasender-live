@@ -1,8 +1,38 @@
 <!-- Nav items -->
+<style>
+  /* Custom Sidebar Styles */
+  .navbar-nav .nav-link {
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.25rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    font-weight: 500;
+  }
+
+  .navbar-nav .nav-link:hover {
+    background-color: #f6f9fc;
+    transform: translateX(4px);
+  }
+
+  .navbar-nav .nav-link.active {
+    background: linear-gradient(87deg, #5e72e4 0, #825ee4 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+    /* shadow-md */
+  }
+
+  .navbar-nav .nav-link.active i {
+    color: #fff !important;
+  }
+
+  .navbar-nav .nav-link i {
+    min-width: 2rem;
+  }
+</style>
 <ul class="navbar-nav">
   <li class="nav-item">
     <a class="nav-link {{ Request::is('user/dashboard*') ? 'active' : '' }}" href="{{ route('user.dashboard.index') }}">
-     <i class="fi fi-rs-dashboard"></i>
+      <i class="fi fi-rs-dashboard"></i>
       <span class="nav-link-text">{{ __('Dashboard') }}</span>
     </a>
   </li>
@@ -12,9 +42,10 @@
       <span class="nav-link-text">{{ __('WhatsApp') }}</span>
     </a>
   </li>
-   
+
   <li class="nav-item">
-    <a class="nav-link {{ Request::is('user/sent-text-message*') ? 'active' : '' }}" href="{{ url('user/sent-text-message') }}">
+    <a class="nav-link {{ Request::is('user/sent-text-message*') ? 'active' : '' }}"
+      href="{{ url('user/sent-text-message') }}">
       <i class="fi fi-rs-paper-plane"></i>
       <span class="nav-link-text">{{ __('Single Send') }}</span>
     </a>
@@ -59,7 +90,8 @@
     </a>
   </li>
   <li class="nav-item">
-    <a class="nav-link {{ Request::is('user/schedule-message*') ? 'active' : '' }}" href="{{ url('user/schedule-message') }}">
+    <a class="nav-link {{ Request::is('user/schedule-message*') ? 'active' : '' }}"
+      href="{{ url('user/schedule-message') }}">
       <i class="ni ni-calendar-grid-58"></i>
       <span class="nav-link-text">{{ __('Scheduled Message') }}</span>
     </a>
@@ -86,7 +118,7 @@
     </a>
   </li>
   <li class="nav-item">
-    <a class="nav-link {{ Request::is('user/support*') ? 'active' : '' }}" href="{{ url('/user/support') }}" >
+    <a class="nav-link {{ Request::is('user/support*') ? 'active' : '' }}" href="{{ url('/user/support') }}">
       <i class="fas fa-headset"></i>
       <span class="nav-link-text">{{ __('Help & Support') }}</span>
     </a>
@@ -97,14 +129,14 @@
       <span class="nav-link-text">{{ __('Profile Settings') }}</span>
     </a>
   </li>
-   <li class="nav-item">
+  <li class="nav-item">
     <a class="nav-link {{ Request::is('user/auth-key*') ? 'active' : '' }}" href="{{ url('/user/auth-key') }}">
       <i class="ni ni-key-25"></i>
       <span class="nav-link-text">{{ __('Auth Key') }}</span>
     </a>
   </li>
   <li class="nav-item">
-    <a class="nav-link logout-button" href="#" >
+    <a class="nav-link logout-button" href="#">
       <i class="ni ni-button-power"></i>
       <span class="nav-link-text">{{ __('Logout') }}</span>
     </a>
