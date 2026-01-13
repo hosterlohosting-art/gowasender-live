@@ -53,7 +53,7 @@ class CloudApiController extends Controller
         $data['total'] = CloudApi::where('user_id', Auth::id())->count();
         $data['active'] = CloudApi::where('user_id', Auth::id())->where('status', 1)->count();
         $data['inActive'] = CloudApi::where('user_id', Auth::id())->where('status', 0)->count();
-        $limit  = json_decode(Auth::user()->plan);
+        $limit = json_decode(Auth::user()->plan);
         $limit = $limit->cloudapi_limit ?? 0;
 
         if ($limit == '-1') {
@@ -210,16 +210,16 @@ class CloudApiController extends Controller
         // --- FIX START: Manually save the keys ---
         // This ensures your new input is actually written to the database
         if ($request->has('phone_number_id')) {
-             $cloudapi->phone_number_id = $request->phone_number_id;
+            $cloudapi->phone_number_id = $request->phone_number_id;
         }
         if ($request->has('wa_business_id')) {
-             $cloudapi->wa_business_id = $request->wa_business_id;
+            $cloudapi->wa_business_id = $request->wa_business_id;
         }
         if ($request->has('meta_app_id')) {
-             $cloudapi->meta_app_id = $request->meta_app_id;
+            $cloudapi->meta_app_id = $request->meta_app_id;
         }
         if ($request->has('access_token')) {
-             $cloudapi->access_token = $request->access_token;
+            $cloudapi->access_token = $request->access_token;
         }
         // --- FIX END ---
 
@@ -234,7 +234,7 @@ class CloudApiController extends Controller
 
         // 4. Update Meta Profile (External API)
         $whatsapp_app_cloud_api = new WhatsappLibrary();
-        
+
         // Use the new keys if provided, otherwise fallback to existing
         $accessToken = $request->access_token ?? $cloudapi->access_token;
         $phoneNumberId = $request->phone_number_id ?? $cloudapi->phone_number_id;
@@ -263,11 +263,13 @@ class CloudApiController extends Controller
             }
         }
 
-        // Try to update Meta, but don't crash if keys are wrong
+        // Try to update Meta, and update STATUS based on success
         try {
             $whatsapp_app_cloud_api->updateProfile($profileData, $phoneNumberId, $accessToken);
+            $cloudapi->status = 1; // Connected!
         } catch (\Exception $e) {
-            // Log error if needed
+            $cloudapi->status = 0; // Failed
+            \Illuminate\Support\Facades\Log::error('Meta Update Failed: ' . $e->getMessage());
         }
 
         // 5. Final Save
