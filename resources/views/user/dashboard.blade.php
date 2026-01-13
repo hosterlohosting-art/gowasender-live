@@ -166,8 +166,9 @@
     <div class="row">
         <!-- Messages Transaction Chart -->
         <div class="col-xl-8">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-transparent d-flex align-items-center justify-content-between py-3">
+            <div class="card shadow-lg border-0" style="border-radius: 1rem;">
+                <div class="card-header bg-transparent d-flex align-items-center justify-content-between py-3" 
+                     style="border-bottom: 1px solid rgba(0,0,0,0.05); border-left: 5px solid #5e72e4;">
                     <h6 class="h4 text-dark mb-0 ls-1 text-uppercase">Messages Transaction</h6>
                     <div class="card-header-action">
                         <select class="form-control bg-white border shadow-none cursor-pointer"
@@ -188,8 +189,9 @@
 
         <!-- Messages Type Doughnut -->
         <div class="col-xl-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-transparent d-flex align-items-center justify-content-between py-3">
+            <div class="card shadow-lg border-0" style="border-radius: 1rem;">
+                <div class="card-header bg-transparent d-flex align-items-center justify-content-between py-3"
+                     style="border-bottom: 1px solid rgba(0,0,0,0.05); border-left: 5px solid #11cdef;">
                     <h6 class="h4 text-dark mb-0 ls-1 text-uppercase">Message Types</h6>
                     <div class="card-header-action">
                         <select class="form-control bg-white border shadow-none cursor-pointer"
@@ -212,8 +214,9 @@
     <div class="row">
         <!-- Auto Replies Bar Chart -->
         <div class="col-xl-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-transparent d-flex align-items-center justify-content-between py-3">
+            <div class="card shadow-lg border-0" style="border-radius: 1rem;">
+                <div class="card-header bg-transparent d-flex align-items-center justify-content-between py-3"
+                     style="border-bottom: 1px solid rgba(0,0,0,0.05); border-left: 5px solid #fb6340;">
                     <h6 class="h4 text-dark mb-0 ls-1 text-uppercase">Automatic Replies</h6>
                     <div class="card-header-action">
                         <select class="form-control bg-white border shadow-none cursor-pointer"
@@ -234,13 +237,23 @@
 
         <!-- Devices List -->
         <div class="col-xl-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-transparent py-3">
+            <div class="card shadow-lg border-0" style="border-radius: 1rem;">
+                <div class="card-header bg-transparent py-3 d-flex align-items-center justify-content-between"
+                     style="border-bottom: 1px solid rgba(0,0,0,0.05); border-left: 5px solid #2dce89;">
                     <h6 class="h4 text-dark mb-0 ls-1 text-uppercase">Devices Status</h6>
+                    <a href="{{ url('/user/device') }}" class="btn btn-sm btn-primary rounded-pill px-3 shadow-none">Manage Devices</a>
                 </div>
                 <div class="card-body p-0">
                     <ul class="list-group list-group-flush" id="device-list">
                         <!-- Loaded via JS -->
+                        <!-- Fallback / Empty State Visualization (Visible if JS is slow or list empty) -->
+                        <div id="device-list-empty" class="text-center py-5 d-none">
+                            <div class="icon icon-shape bg-light text-muted rounded-circle mb-3">
+                                <i class="fas fa-mobile-alt fa-2x"></i>
+                            </div>
+                            <h6 class="text-muted">No connected devices found</h6>
+                            <a href="{{ url('/user/device') }}" class="btn btn-sm btn-outline-primary mt-2">Connect Now</a>
+                        </div>
                     </ul>
                 </div>
             </div>
