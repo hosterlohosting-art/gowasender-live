@@ -1,7 +1,7 @@
 @extends('layouts.main.app')
 @section('head')
 @include('layouts.main.headersection',[
-'title' => __('Chat List'),
+'title' => __('Chat list'),
 'buttons'=>[
 [
 'name'=> __('CloudApis List'),
@@ -10,9 +10,9 @@
 ]])
 @endsection
 @push('css')
-<style>.header-body{display:none;}</style>
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/cloudapi.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/select2/dist/css/select2.min.css') }}">
+@include('user.chats.premium_styles') {{-- Load the style block we just made --}}
 @endpush
 @section('content')
 
