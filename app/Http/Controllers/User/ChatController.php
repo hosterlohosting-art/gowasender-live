@@ -132,9 +132,9 @@ class ChatController extends Controller
             // 2. Log the transaction
             $logs["user_id"] = Auth::id();
             $logs["cloudapi_id"] = $cloudapi->id;
-            $logs["from"] = $device->phone ?? null;
-            $logs["to"] = $request->receiver; // Fixed typo (was reciver)
-            $logs["template_id"] = $template->id ?? null;
+            $logs["from"] = $cloudapi->phone ?? null; // Fixed: was $device->phone
+            $logs["to"] = $request->receiver;
+            $logs["template_id"] = null; // Fixed: was $template->id (not used in chat)
             $logs["type"] = "single-send";
             $this->saveLog($logs);
 

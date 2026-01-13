@@ -293,7 +293,7 @@
                 @endforeach
             </select>
         </div>
-        <div class="card-body" style="justify-content: flex-end; text-align: right; background: url('{{ asset('http://localhost/uploads/default/wpbox/bg.png') }}');">
+        <div class="card-body" style="justify-content: flex-end; text-align: right; background: url('{{ asset('assets/img/bg.png') }}');">
            <div class="card" id="previewElement" style="min-width: 18rem; text-align: left; border-top-left-radius: 0; margin-bottom: 5px;">
                <div id="documentPrev1"></div>
                <div id ="imagePrev1"></div>
@@ -374,7 +374,7 @@
                 @endforeach
             </select>
         </div>
-       <div class="card-body" style="justify-content: flex-end; text-align: right; background: url('{{ asset('http://localhost/uploads/default/wpbox/bg.png') }}');">
+       <div class="card-body" style="justify-content flex-end; text-align: right; background: url('{{ asset('assets/img/bg.png') }}');">
            <div class="card" id="previewElement" style="min-width: 18rem; text-align: left; border-top-left-radius: 0; margin-bottom: 5px;">
                <div id="documentPrev"></div>
                <div id ="imagePrev"></div>
@@ -454,7 +454,7 @@
             </select>
         </div>
 
-        <div class="card-body" style="justify-content: flex-end; text-align: right; background: url('{{ asset('http://localhost/uploads/default/wpbox/bg.png') }}');">
+        <div class="card-body" style="justify-content: flex-end; text-align: right; background: url('{{ asset('assets/img/bg.png') }}');">
            <div class="card" id="previewElement2" style="min-width: 18rem; text-align: left; border-top-left-radius: 0; margin-bottom: 5px;">
                <div id="documentPrev2"></div>
                <div id ="imagePrev2"></div>
