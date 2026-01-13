@@ -339,7 +339,7 @@
                                 <i class="fas fa-mobile-alt fa-2x"></i>
                             </div>
                             <h6 class="text-muted">No connected devices found</h6>
-                            <a href="{{ url('/user/device') }}" class="btn btn-sm btn-outline-primary mt-2">Connect Now</a>
+                            <a href="{{ route('user.cloudapi.index') }}" class="btn btn-sm btn-outline-primary mt-2">Connect Now</a>
                         </div>
                     </ul>
                 </div>
