@@ -2,21 +2,10 @@
 
 @section('head')
     <!-- Custom Header removed for cleaner look -->
-    <div class="header bg-white pb-2 pt-3 pt-md-4 border-bottom-0">
+    <div class="header pb-6 pt-5 pt-md-8" style="background: transparent !important;">
         <div class="container-fluid">
             <div class="header-body">
-                <div class="row align-items-center py-2">
-                    <div class="col-lg-6 col-7">
-                        <h6 class="h2 d-inline-block mb-0 text-dark">Dashboard</h6>
-                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
-                            <ol class="breadcrumb breadcrumb-links breadcrumb-white p-0 m-0 text-sm font-weight-600">
-                                <li class="breadcrumb-item"><a href="#" class="text-muted"><i class="fas fa-home"></i></a>
-                                </li>
-                                <li class="breadcrumb-item"><a href="#" class="text-muted">Overview</a></li>
-                            </ol>
-                        </nav>
-                    </div>
-                </div>
+               <!-- Breadcrumbs removed as they are redundant visually -->
             </div>
         </div>
     </div>
@@ -28,14 +17,14 @@
     <div class="row mb-4">
         <div class="col-12">
             <div class="card shadow-lg border-0"
-                style="background-color: #075E54 !important; position: relative; overflow: hidden; border-radius: 12px;">
+                style="background-color: #075E54 !important; position: relative; overflow: hidden; border-radius: 12px; min-height: 180px;">
                 <!-- Doodle Overlay -->
                 <!-- WhatsApp Dark Green Theme: #075E54 -->
                 <div
                     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('{{ asset('assets/img/whatsapp-bg.png') }}'); opacity: 0.1; pointer-events: none;">
                 </div>
 
-                <div class="card-body d-flex align-items-center py-4" style="position: relative; z-index: 1;">
+                <div class="card-body d-flex align-items-center py-5" style="position: relative; z-index: 1;">
                     <div class="mr-4 text-white d-none d-md-block">
                         <div class="icon icon-shape bg-white text-success rounded-circle shadow-lg"
                             style="width: 60px; height: 60px;">
