@@ -440,14 +440,15 @@ function formatFeatureKey($key)
                 <div class="bg-white rounded-3xl p-8 shadow-card col-span-3 text-center">
                     <h3 class="text-2xl font-bold text-gray-900">Flexible Pricing Available</h3>
                     <p class="text-gray-500 mt-2 mb-6">Check our full pricing page for detailed plans.</p>
-                    <a href="pricing.php" class="px-6 py-3 bg-brand-600 text-white font-bold rounded-xl">View All
+                    <a href="{{ url('/pricing') }}" class="px-6 py-3 bg-brand-600 text-white font-bold rounded-xl">View
+                        All
                         Plans</a>
                 </div>
                 <?php endif; ?>
             </div>
 
             <div class="text-center mt-12">
-                <a href="pricing.php"
+                <a href="{{ url('/pricing') }}"
                     class="inline-flex items-center gap-2 text-brand-600 font-bold hover:text-brand-700 transition">
                     View Full Pricing & Feature Comparison <i class="fas fa-arrow-right"></i>
                 </a>
@@ -608,7 +609,7 @@ function formatFeatureKey($key)
                     <h4 class="font-bold text-lg mb-6 text-white">Product</h4>
                     <ul class="space-y-4 text-gray-400 text-sm">
                         <li><a href="#features" class="hover:text-brand-400 transition">Features</a></li>
-                        <li><a href="pricing.php" class="hover:text-brand-400 transition">Pricing</a></li>
+                        <li><a href="{{ url('/pricing') }}" class="hover:text-brand-400 transition">Pricing</a></li>
                         <li><a href="#" class="hover:text-brand-400 transition">API Docs</a></li>
                         <li><a href="#anti-ban" class="hover:text-brand-400 transition">Anti-Ban Guide</a></li>
                     </ul>
@@ -617,9 +618,10 @@ function formatFeatureKey($key)
                 <div>
                     <h4 class="font-bold text-lg mb-6 text-white">Company</h4>
                     <ul class="space-y-4 text-gray-400 text-sm">
-                        <li><a href="#" class="hover:text-brand-400 transition">About Us</a></li>
-                        <li><a href="#" class="hover:text-brand-400 transition">Contact</a></li>
-                        <li><a href="#" class="hover:text-brand-400 transition">Privacy Policy</a></li>
+                        <li><a href="{{ url('/about') }}" class="hover:text-brand-400 transition">About Us</a></li>
+                        <li><a href="{{ url('/contact') }}" class="hover:text-brand-400 transition">Contact</a></li>
+                        <li><a href="{{ url('/privacy-policy') }}" class="hover:text-brand-400 transition">Privacy
+                                Policy</a></li>
                     </ul>
                 </div>
 
