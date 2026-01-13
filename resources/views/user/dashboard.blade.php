@@ -1,5 +1,5 @@
 @extends('layouts.main.app')
-
+@section('title', __('Dashboard'))
 @section('head')
     <!-- Custom Header removed for cleaner look -->
     <div class="header" style="background: transparent !important; padding-top: 10px; padding-bottom: 0px;">
@@ -328,7 +328,8 @@
             <div class="card shadow-lg border-0" style="border-radius: 20px;">
                 <div class="card-header bg-transparent py-3 d-flex align-items-center justify-content-between">
                     <h6 class="h4 text-dark mb-0 ls-1 text-uppercase font-weight-bold">Devices Status</h6>
-                    <a href="{{ route('user.cloudapi.index') }}" class="btn btn-sm btn-dark rounded-pill px-3 shadow-none">Manage
+                    <a href="{{ route('user.cloudapi.index') }}"
+                        class="btn btn-sm btn-dark rounded-pill px-3 shadow-none">Manage
                         Devices</a>
                 </div>
                 <div class="card-body p-0">
