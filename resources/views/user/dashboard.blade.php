@@ -48,7 +48,7 @@
                                     class="btn btn-white text-success font-weight-bold shadow-sm rounded-pill px-4">
                                     <i class="fas fa-bolt mr-2"></i> Create Flow
                                 </a>
-                                <a href="{{ url('/user/device') }}"
+                                <a href="{{ route('user.cloudapi.index') }}"
                                     class="btn btn-outline-white font-weight-bold rounded-pill px-4 ml-2">
                                     <i class="fas fa-mobile-alt mr-2"></i> Devices
                                 </a>
@@ -328,7 +328,7 @@
             <div class="card shadow-lg border-0" style="border-radius: 20px;">
                 <div class="card-header bg-transparent py-3 d-flex align-items-center justify-content-between">
                     <h6 class="h4 text-dark mb-0 ls-1 text-uppercase font-weight-bold">Devices Status</h6>
-                    <a href="{{ url('/user/device') }}" class="btn btn-sm btn-dark rounded-pill px-3 shadow-none">Manage
+                    <a href="{{ route('user.cloudapi.index') }}" class="btn btn-sm btn-dark rounded-pill px-3 shadow-none">Manage
                         Devices</a>
                 </div>
                 <div class="card-body p-0">
@@ -339,7 +339,8 @@
                                 <i class="fas fa-mobile-alt fa-2x"></i>
                             </div>
                             <h6 class="text-muted">No connected devices found</h6>
-                            <a href="{{ route('user.cloudapi.index') }}" class="btn btn-sm btn-outline-primary mt-2">Connect Now</a>
+                            <a href="{{ route('user.cloudapi.index') }}" class="btn btn-sm btn-outline-primary mt-2">Connect
+                                Now</a>
                         </div>
                     </ul>
                 </div>
