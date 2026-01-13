@@ -29,7 +29,7 @@
          <ul class="navbar-nav align-items-center ml-auto ml-md-0">
             @if(Request::is('user/*'))
                <audio id="notificationSound" src="{{ asset('assets/messagetone.mp3') }}"></audio>
-               <li class="nav-item dropdown notifications-icon none notifications-area">
+               <li class="nav-item dropdown notifications-icon notifications-area">
                   <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
                      aria-expanded="false">
                      <i class="ni ni-bell-55"></i>
