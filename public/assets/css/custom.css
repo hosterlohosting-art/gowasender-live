@@ -633,24 +633,35 @@ body {
 /* Target the body class when sidebar is hidden */
 .g-sidenav-hidden .sidenav .navbar-nav .nav-link {
     justify-content: center;
-    padding: 0.5rem 0 !important;
-    /* Reduced padding to fit more icons */
+    padding: 8px 0 !important;
+    /* Tighter padding (approx 0.5rem -> 8px) */
+    margin-bottom: 0 !important;
+}
+
+/* Ensure list items don't have extra spacing */
+.g-sidenav-hidden .sidenav .navbar-nav .nav-item {
+    margin-bottom: 2px !important;
+    /* Minimal gap between items */
 }
 
 /* Increase Icon Size & Color for White Background */
 .g-sidenav-hidden .sidenav .navbar-nav .nav-link>i {
     font-size: 1.4rem !important;
-    /* Slightly adjusted size */
     margin-right: 0 !important;
-    /* Remove right margin since text is hidden */
     min-width: unset;
-    /* Allow centering */
     text-align: center;
     color: #5e676f !important;
     /* Dark icons for white background */
 }
 
-/* Active State Icons */
+/* Active State Icons - Fix height/centering of active background */
+.g-sidenav-hidden .sidenav .navbar-nav .nav-link.active {
+    border-radius: 10px;
+    margin: 0 10px !important;
+    /* Center the active indicator horizontally */
+    padding: 8px 0 !important;
+}
+
 .g-sidenav-hidden .sidenav .navbar-nav .nav-link.active>i {
     color: var(--wa-green) !important;
 }
@@ -675,6 +686,8 @@ body {
     height: 100vh !important;
     padding-bottom: 0 !important;
     border-radius: 0 0 20px 0 !important;
+    border-right: 1px solid rgba(0, 0, 0, 0.05) !important;
+    /* Subtle border for definition */
 }
 
 /* Hide specific bottom elements if they are causing the black bar */
