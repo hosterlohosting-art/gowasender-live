@@ -25,13 +25,12 @@
          <!-- RIGHT: User Tools -->
          <ul class="navbar-nav align-items-center ml-auto">
 
-            <!-- Wallet Balance -->
+            <!-- Plan Name (Replaces Wallet) -->
             @if(Auth::check())
                <li class="nav-item d-none d-md-flex align-items-center mr-4">
-                  <div class="d-flex align-items-center px-3 py-2 bg-secondary rounded-pill">
-                     <i class="ni ni-credit-card text-primary mr-2"></i>
-                     <span class="text-sm font-weight-bold text-dark">{{ Auth::user()->wallet ?? '0.00' }}
-                        {{ get_option('currency_code', 'USD') }}</span>
+                  <div class="plan-badge">
+                     <i class="fas fa-crown"></i>
+                     <span>{{ Auth::user()->plan->title ?? 'Free Plan' }}</span>
                   </div>
                </li>
             @endif
@@ -39,12 +38,11 @@
             <!-- Notifications -->
             @if(Request::is('user/*'))
                <audio id="notificationSound" src="{{ asset('assets/messagetone.mp3') }}"></audio>
-               <li class="nav-item dropdown notifications-icon notifications-area mr-3">
-                  <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
-                     aria-expanded="false">
-                     <i class="ni ni-bell-55 text-dark" style="font-size: 1.2rem;"></i>
-                     <span class="badge badge-circle badge-primary notification-count"
-                        style="position: absolute; top: 0; right: -5px; width: 15px; height: 15px; font-size: 10px;">0</span>
+               <li class="nav-item dropdown notifications-icon notifications-area mr-4">
+                  <a class="nav-link notification-toggle" href="#" role="button" data-toggle="dropdown"
+                     aria-haspopup="true" aria-expanded="false">
+                     <i class="far fa-bell" style="font-size: 1.4rem; color: #5e6c84;"></i>
+                     <span class="notification-badge notification-count">0</span>
                   </a>
                   <button id="install-button" style="display: none;">Install</button>
                   <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right py-0 overflow-hidden">
@@ -62,17 +60,16 @@
                <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
                   aria-expanded="false">
                   <div class="media align-items-center">
-                     <span class="avatar avatar-sm rounded-circle">
-                        <img alt="Image placeholder"
+                     <span class="avatar avatar-sm rounded-circle mr-2">
+                        <img alt="User"
                            src="{{ Auth::user()->avatar == null ? 'https://ui-avatars.com/api/?name=' . Auth::user()->name : asset(Auth::user()->avatar) }}">
                      </span>
-                     <div class="media-body ml-2 d-none d-lg-block">
-                        <span class="mb-0 text-sm font-weight-bold text-dark">{{ Auth::user()->name }}</span>
-                        <div class="text-xs text-muted" style="line-height: 1;">
-                           {{ Auth::user()->role == 'admin' ? 'Administrator' : 'User' }}
-                        </div>
+                     <div class="profile-section d-none d-lg-block">
+                        <span class="profile-name">{{ Auth::user()->name }}</span>
+                        <span
+                           class="profile-role-badge">{{ Auth::user()->role == 'admin' ? __('Admin') : __('User') }}</span>
                      </div>
-                     <i class="ni ni-bold-down ml-2 text-dark"></i>
+                     <i class="ni ni-bold-down profile-dropdown-icon"></i>
                   </div>
                </a>
                <div class="dropdown-menu dropdown-menu-right">
@@ -106,6 +103,23 @@
                   </a>
                </div>
             </li>
+
+            <!-- Language Selector (Visual Placeholder to match screenshot) -->
+            <li class="nav-item dropdown ml-3 d-none d-md-flex">
+               <div class="d-flex align-items-center"
+                  style="background:#f0f2f5; padding: 5px 10px; border-radius: 20px;">
+                  <img src="https://flagcdn.com/w20/us.png" alt="US" style="width: 20px; border-radius: 50%;">
+                  <i class="ni ni-bold-down ml-2" style="font-size: 10px; color: #5e6c84;"></i>
+               </div>
+            </li>
+
+            <!-- Help Icon -->
+            <li class="nav-item ml-3 d-none d-md-block">
+               <a href="#" class="nav-link pr-0">
+                  <i class="far fa-question-circle" style="font-size: 1.4rem; color: #5e6c84;"></i>
+               </a>
+            </li>
+
          </ul>
       </div>
    </div>
