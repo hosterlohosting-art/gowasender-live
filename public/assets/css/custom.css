@@ -705,6 +705,8 @@ body {
 .g-sidenav-hidden .sidenav .mini-logo {
     display: block !important;
     margin: 0 auto !important;
+    max-width: 80% !important;
+    /* Allow it to be larger */
 }
 
 .g-sidenav-hidden .sidenav .sidenav-header {
