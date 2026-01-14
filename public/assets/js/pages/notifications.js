@@ -67,7 +67,9 @@ function fetchNotifications() {
             var html = `<a href="${row.url}" class="list-group-item list-group-item-action">
                         <div class="row align-items-center">
                            <div class="col-auto">
-                              ${iconHtml}
+                              <div style="width: 40px; text-align: center;">
+                                 ${iconHtml}
+                              </div>
                            </div>
                            <div class="col ml--2">
                               <div class="d-flex justify-content-between align-items-center">

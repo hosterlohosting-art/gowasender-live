@@ -692,23 +692,29 @@ body {
 }
 
 /* Fix logo appearance in mini mode */
+.g-sidenav-hidden .sidenav .navbar-brand {
+    display: block !important;
+    padding-top: 1rem !important;
+    padding-bottom: 0 !important;
+}
+
 .g-sidenav-hidden .sidenav .full-logo {
     display: none !important;
 }
 
 .g-sidenav-hidden .sidenav .mini-logo {
     display: block !important;
-    margin: 0 auto;
+    margin: 0 auto !important;
 }
 
 .g-sidenav-hidden .sidenav .sidenav-header {
     justify-content: center;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+    padding: 0 !important;
 }
 
 .g-sidenav-hidden .sidenav .sidenav-header .ml-auto {
     display: none !important;
+    /* Hide toggler when collapsed to focus on brand icon */
 }
 
 /* Fix "Black Bar" by Forcing White Background */
