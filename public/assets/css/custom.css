@@ -626,6 +626,51 @@ body {
     padding-top: 1rem;
 }
 
+/* -------------------------------------------------------------------------- */
+/*             COLLAPSED SIDEBAR FIXES (Icons & Spacing)                      */
+/* -------------------------------------------------------------------------- */
+
+/* Target the body class when sidebar is hidden */
+.g-sidenav-hidden .sidenav .navbar-nav .nav-link {
+    justify-content: center;
+    padding: 1rem 0;
+    /* More vertical breathing room */
+}
+
+/* Increase Icon Size */
+.g-sidenav-hidden .sidenav .navbar-nav .nav-link>i {
+    font-size: 1.5rem !important;
+    /* Make icons larger */
+    margin-right: 0 !important;
+    /* Remove right margin since text is hidden */
+    min-width: unset;
+    /* Allow centering */
+    text-align: center;
+}
+
+/* Fix "Black Bar" at bottom - likely overflow or specific element */
+.g-sidenav-hidden .sidenav {
+    overflow-y: hidden !important;
+    /* Hide scrollbar/overflow bar */
+}
+
+.g-sidenav-hidden .sidenav .scrollbar-inner {
+    overflow: hidden !important;
+    /* Double ensure no native scrollbar shows */
+}
+
+/* Hide specific bottom elements if they are causing the black bar */
+.g-sidenav-hidden .sidenav .navbar-inner .collapse:after {
+    display: none !important;
+}
+
+/* Ensure background matches exactly */
+.g-sidenav-hidden .sidenav {
+    background-color: var(--wa-sidebar-dark) !important;
+    border-radius: 0 0 20px 0 !important;
+    /* Maintain the curve */
+}
+
 /* New Top Navbar Styling */
 .navbar-top {
     background-color: rgba(255, 255, 255, 0.8) !important;
