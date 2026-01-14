@@ -637,7 +637,7 @@ body {
     /* Reduced padding to fit more icons */
 }
 
-/* Increase Icon Size */
+/* Increase Icon Size & Color for White Background */
 .g-sidenav-hidden .sidenav .navbar-nav .nav-link>i {
     font-size: 1.4rem !important;
     /* Slightly adjusted size */
@@ -646,14 +646,28 @@ body {
     min-width: unset;
     /* Allow centering */
     text-align: center;
+    color: #5e676f !important;
+    /* Dark icons for white background */
 }
 
-/* Fix "Black Bar" at bottom - Force background on all inner containers */
+/* Active State Icons */
+.g-sidenav-hidden .sidenav .navbar-nav .nav-link.active>i {
+    color: var(--wa-green) !important;
+}
+
+/* Fix "Black Bar" by Forcing White Background */
 .g-sidenav-hidden .sidenav,
 .g-sidenav-hidden .sidenav .scrollbar-inner,
 .g-sidenav-hidden .sidenav .navbar-inner {
-    background-color: var(--wa-sidebar-dark) !important;
+    background-color: white !important;
+    /* Back to white */
     overflow-y: hidden !important;
+}
+
+/* Fix Hamburger / Toggler Color in collapsed mode */
+.g-sidenav-hidden .sidenav-toggler-inner .sidenav-toggler-line {
+    background-color: #5e676f !important;
+    /* Dark hamburger lines */
 }
 
 /* Ensure the sidebar takes full height and no weird margins */
