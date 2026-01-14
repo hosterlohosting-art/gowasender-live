@@ -641,7 +641,12 @@ body {
 /* Ensure list items don't have extra spacing */
 .g-sidenav-hidden .sidenav .navbar-nav .nav-item {
     margin-bottom: 2px !important;
-    /* Minimal gap between items */
+}
+
+/* Hide badges and text in mini-sidebar to prevent layout break */
+.g-sidenav-hidden .sidenav .navbar-nav .nav-link .nav-link-text,
+.g-sidenav-hidden .sidenav .navbar-nav .nav-link .whatsapp-unread-count {
+    display: none !important;
 }
 
 /* Increase Icon Size & Color for White Background */
