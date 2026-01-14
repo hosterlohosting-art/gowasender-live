@@ -65,11 +65,13 @@
                            src="{{ Auth::user()->avatar == null ? 'https://ui-avatars.com/api/?name=' . Auth::user()->name : asset(Auth::user()->avatar) }}">
                      </span>
                      <div class="profile-section d-none d-lg-block">
-                        <span class="profile-name">{{ Auth::user()->name }}</span>
+                        <div class="d-flex align-items-center">
+                           <span class="profile-name">{{ Auth::user()->name }}</span>
+                           <i class="fas fa-chevron-down ml-2" style="font-size: 10px; color: #8898aa;"></i>
+                        </div>
                         <span
                            class="profile-role-badge">{{ Auth::user()->role == 'admin' ? __('Admin') : __('User') }}</span>
                      </div>
-                     <i class="ni ni-bold-down profile-dropdown-icon"></i>
                   </div>
                </a>
                <div class="dropdown-menu dropdown-menu-right">
@@ -102,9 +104,7 @@
                      <span>{{ __('Logout') }}</span>
                   </a>
                </div>
-            </li>
-
-            <!-- Language Selector (Visual Placeholder to match screenshot) -->
+            </li> <!-- Language Selector (Visual Placeholder to match screenshot) -->
             <li class="nav-item dropdown ml-3 d-none d-md-flex">
                <div class="d-flex align-items-center"
                   style="background:#f0f2f5; padding: 5px 10px; border-radius: 20px;">
@@ -120,7 +120,44 @@
                </a>
             </li>
 
+            <!-- Language Selector (Google Translate) -->
+             <li class="nav-item ml-3 d-none d-md-flex align-items-center">
+                 <div id="google_translate_element" style="border-radius: 20px; overflow: hidden; height: 36px; border: 1px solid #e9ecef;"></div>
+                 <style>
+                     /* Simple Hide of Google Top Bar */
+                     .goog-te-banner-frame.skiptranslate { display: none !important; } 
+                     body { top: 0px !important; }
+                     /* Style the widget to look like the screenshot */
+                     .goog-te-gadget-simple {
+                         background-color: #f0f2f5 !important;
+                         border: none !important;
+                         padding: 8px 12px !important;
+                         border-radius: 20px !important;
+                         font-size: 13px !important;
+                     }
+                     .goog-te-gadget-simple img { display: none; }
+                     .goog-te-gadget-simple span { color: #5e6c84 !important; font-weight: 600; }
+                 </style>
+             </li>
+
+              <!-- Help Icon (Beautiful Circle) -->
+             <li class="nav-item ml-3 d-none d-md-block">
+                 <a href="#" class="nav-link pr-0">
+                    <div style="width: 36px; height: 36px; background: #6c757d; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                        <i class="fas fa-question" style="font-size: 14px;"></i>
+                    </div>
+                 </a>
+             </li>
+
          </ul>
+         
+         <!-- Google Translate Script -->
+         <script type="text/javascript">
+            function googleTranslateElementInit() {
+              new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+            }
+         </script>
+         <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
       </div>
    </div>
 </nav>
