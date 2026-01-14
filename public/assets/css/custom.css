@@ -691,6 +691,26 @@ body {
     padding: 0 !important;
 }
 
+/* Fix logo appearance in mini mode */
+.g-sidenav-hidden .sidenav .full-logo {
+    display: none !important;
+}
+
+.g-sidenav-hidden .sidenav .mini-logo {
+    display: block !important;
+    margin: 0 auto;
+}
+
+.g-sidenav-hidden .sidenav .sidenav-header {
+    justify-content: center;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.g-sidenav-hidden .sidenav .sidenav-header .ml-auto {
+    display: none !important;
+}
+
 /* Fix "Black Bar" by Forcing White Background */
 .g-sidenav-hidden .sidenav,
 .g-sidenav-hidden .sidenav .scrollbar-inner,

@@ -43,8 +43,10 @@
       <!-- Brand -->
       <div class="sidenav-header d-flex align-items-center">
         <a class="navbar-brand" href="{{ url('/') }}">
-          <img src="{{ asset('assets/img/brand/blue.png') }}" class="navbar-brand-img" alt="WA Sender Logo"
+          <img src="{{ asset('assets/img/brand/blue.png') }}" class="navbar-brand-img full-logo" alt="WA Sender Logo"
             style="max-height: 50px; width: auto; display: block;">
+          <img src="{{ asset('assets/img/brand/favicon.png') }}" class="navbar-brand-img mini-logo d-none" alt="Favicon"
+            style="max-height: 35px; width: auto;">
         </a>
         <div class="ml-auto">
           <!-- Sidenav toggler -->

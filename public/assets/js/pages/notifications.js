@@ -59,10 +59,17 @@ function fetchNotifications() {
 
 
          $(res.notifications).each(function (index, row) {
+            let iconHtml = '<i class="fi fi-rs-bell text-primary"></i>';
+            if (row.comment === 'whatsapp-message') {
+               iconHtml = '<i class="fab fa-whatsapp text-success" style="font-size: 24px;"></i>';
+            }
+
             var html = `<a href="${row.url}" class="list-group-item list-group-item-action">
                         <div class="row align-items-center">
-                           
-                           <div class="col ml-2">
+                           <div class="col-auto">
+                              ${iconHtml}
+                           </div>
+                           <div class="col ml--2">
                               <div class="d-flex justify-content-between align-items-center">
                                  <div>
                                     <h4 class="mb-0 text-sm" style="color: ${row.seen == 0 ? 'green' : 'black'}">${row.title}</h4>
