@@ -758,115 +758,118 @@ body {
 
 /* Fix header z-index to not overlap dropdowns */
 .header {
-    /* -------------------------------------------------------------------------- */
-    /*                              MOBILE RESPONSIVENESS FIXES                   */
-    /* -------------------------------------------------------------------------- */
+    z-index: 1000 !important;
+}
 
-    @media (max-width: 768px) {
+/* -------------------------------------------------------------------------- */
+/*                              MOBILE RESPONSIVENESS FIXES                   */
+/* -------------------------------------------------------------------------- */
 
-        /* 1. Reset & Global Layout */
-        html,
-        body {
-            overflow-x: hidden;
-            /* Prevent horizontal scroll on body */
-            width: 100%;
-            font-size: 14px;
-            /* Slightly smaller base font */
-        }
+@media (max-width: 768px) {
 
-        .main-content {
-            padding-top: 0 !important;
-        }
-
-        .container-fluid {
-            padding-left: 15px !important;
-            padding-right: 15px !important;
-        }
-
-        /* 2. Header & Action Buttons */
-        .header .col-12 {
-            padding-left: 0;
-            padding-right: 0;
-        }
-
-        /* Stack buttons for easy tapping */
-        .header .d-inline-block {
-            display: flex !important;
-            flex-direction: column;
-            gap: 10px;
-            margin-left: 0 !important;
-            margin-top: 15px;
-            width: 100%;
-        }
-
-        .header .btn {
-            width: 100%;
-            /* Full width buttons on mobile */
-            margin-bottom: 0 !important;
-            /* Managed by gap */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0.75rem;
-            /* Larger tap area */
-            font-size: 1rem;
-        }
-
-        .breadcrumb-links {
-            display: none !important;
-            /* Hide breadcrumbs on mobile to save space */
-        }
-
-        /* 3. Tables - Compact & Scrollable */
-        .table-responsive {
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            /* Smooth scroll on iOS */
-        }
-
-        .table td,
-        .table th {
-            white-space: nowrap;
-            /* Prevent ugly wrapping */
-            padding: 0.75rem 0.5rem !important;
-        }
-
-        /* 4. Navbar Fixes */
-        .navbar-top {
-            padding: 0.5rem 1rem !important;
-        }
-
-        .page-title-text {
-            font-size: 1.1rem !important;
-        }
-
-        /* 5. Cards & Spacing */
-        .card {
-            margin-bottom: 1rem !important;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
-        }
-
-        .card-body {
-            padding: 1rem !important;
-        }
-
-        /* 6. Modals */
-        .modal-dialog {
-            margin: 10px;
-            width: auto !important;
-        }
-
-        /* 7. Hide non-critical decor elements */
-        .wa-bg-img {
-            display: none;
-        }
-
-        /* Ensure inputs are easily tapable */
-        .form-control {
-            height: 45px;
-            font-size: 16px;
-            /* Prevents auto-zoom on iOS inputs */
-        }
+    /* 1. Reset & Global Layout */
+    html,
+    body {
+        overflow-x: hidden;
+        /* Prevent horizontal scroll on body */
+        width: 100%;
+        font-size: 14px;
+        /* Slightly smaller base font */
     }
+
+    .main-content {
+        padding-top: 0 !important;
+    }
+
+    .container-fluid {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+
+    /* 2. Header & Action Buttons */
+    .header .col-12 {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* Stack buttons for easy tapping */
+    .header .d-inline-block {
+        display: flex !important;
+        flex-direction: column;
+        gap: 10px;
+        margin-left: 0 !important;
+        margin-top: 15px;
+        width: 100%;
+    }
+
+    .header .btn {
+        width: 100%;
+        /* Full width buttons on mobile */
+        margin-bottom: 0 !important;
+        /* Managed by gap */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.75rem;
+        /* Larger tap area */
+        font-size: 1rem;
+    }
+
+    .breadcrumb-links {
+        display: none !important;
+        /* Hide breadcrumbs on mobile to save space */
+    }
+
+    /* 3. Tables - Compact & Scrollable */
+    .table-responsive {
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        /* Smooth scroll on iOS */
+    }
+
+    .table td,
+    .table th {
+        white-space: nowrap;
+        /* Prevent ugly wrapping */
+        padding: 0.75rem 0.5rem !important;
+    }
+
+    /* 4. Navbar Fixes */
+    .navbar-top {
+        padding: 0.5rem 1rem !important;
+    }
+
+    .page-title-text {
+        font-size: 1.1rem !important;
+    }
+
+    /* 5. Cards & Spacing */
+    .card {
+        margin-bottom: 1rem !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .card-body {
+        padding: 1rem !important;
+    }
+
+    /* 6. Modals */
+    .modal-dialog {
+        margin: 10px;
+        width: auto !important;
+    }
+
+    /* 7. Hide non-critical decor elements */
+    .wa-bg-img {
+        display: none;
+    }
+
+    /* Ensure inputs are easily tapable */
+    .form-control {
+        height: 45px;
+        font-size: 16px;
+        /* Prevents auto-zoom on iOS inputs */
+    }
+}
