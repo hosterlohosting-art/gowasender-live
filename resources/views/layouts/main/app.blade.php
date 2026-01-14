@@ -46,7 +46,7 @@
           <img src="{{ asset('assets/img/brand/blue.png') }}" class="navbar-brand-img full-logo" alt="WA Sender Logo"
             style="max-height: 50px; width: auto; display: block;">
           <img src="{{ asset('assets/img/brand/rocket.png') }}" class="navbar-brand-img mini-logo d-none"
-            alt="Rocket Icon" style="max-height: 40px; width: auto;">
+            alt="Rocket Icon">
         </a>
         <div class="ml-auto">
           <!-- Sidenav toggler -->
