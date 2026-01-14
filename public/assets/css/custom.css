@@ -633,14 +633,14 @@ body {
 /* Target the body class when sidebar is hidden */
 .g-sidenav-hidden .sidenav .navbar-nav .nav-link {
     justify-content: center;
-    padding: 1rem 0;
-    /* More vertical breathing room */
+    padding: 0.5rem 0 !important;
+    /* Reduced padding to fit more icons */
 }
 
 /* Increase Icon Size */
 .g-sidenav-hidden .sidenav .navbar-nav .nav-link>i {
-    font-size: 1.5rem !important;
-    /* Make icons larger */
+    font-size: 1.4rem !important;
+    /* Slightly adjusted size */
     margin-right: 0 !important;
     /* Remove right margin since text is hidden */
     min-width: unset;
@@ -648,27 +648,24 @@ body {
     text-align: center;
 }
 
-/* Fix "Black Bar" at bottom - likely overflow or specific element */
-.g-sidenav-hidden .sidenav {
+/* Fix "Black Bar" at bottom - Force background on all inner containers */
+.g-sidenav-hidden .sidenav,
+.g-sidenav-hidden .sidenav .scrollbar-inner,
+.g-sidenav-hidden .sidenav .navbar-inner {
+    background-color: var(--wa-sidebar-dark) !important;
     overflow-y: hidden !important;
-    /* Hide scrollbar/overflow bar */
 }
 
-.g-sidenav-hidden .sidenav .scrollbar-inner {
-    overflow: hidden !important;
-    /* Double ensure no native scrollbar shows */
+/* Ensure the sidebar takes full height and no weird margins */
+.g-sidenav-hidden .sidenav {
+    height: 100vh !important;
+    padding-bottom: 0 !important;
+    border-radius: 0 0 20px 0 !important;
 }
 
 /* Hide specific bottom elements if they are causing the black bar */
 .g-sidenav-hidden .sidenav .navbar-inner .collapse:after {
     display: none !important;
-}
-
-/* Ensure background matches exactly */
-.g-sidenav-hidden .sidenav {
-    background-color: var(--wa-sidebar-dark) !important;
-    border-radius: 0 0 20px 0 !important;
-    /* Maintain the curve */
 }
 
 /* New Top Navbar Styling */
