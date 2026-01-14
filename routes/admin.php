@@ -40,6 +40,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 	Route::resource('addons', ADMIN\AddonsController::class);
 
 	Route::get('dashboard', [ADMIN\DashboardController::class, 'index'])->name('dashboard.index');
+	Route::post('/customer/assign-plan/{id}', [ADMIN\CustomerController::class, 'assignPlan'])->name('customer.assign-plan');
 	Route::post('/language/addkey', [ADMIN\LanguageController::class, 'addKey']);
 	Route::post('/menu-update/{id}', [ADMIN\MenuController::class, 'storeDate'])->name('menu.content.update');
 	Route::get('profile', [ADMIN\ProfileController::class, 'settings']);
