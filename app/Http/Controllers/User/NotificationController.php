@@ -15,12 +15,12 @@ class NotificationController extends Controller
      */
     public function index()
     {
-       $notifications = Notification::where('user_id',Auth::id())->latest()->paginate(30);
+        $notifications = Notification::where('user_id', Auth::id())->latest()->paginate(30);
 
-       return view('user.notifications.index',compact('notifications'));
+        return view('user.notifications.index', compact('notifications'));
     }
 
-    
+
 
     /**
      * Store a newly created resource in storage.
@@ -30,8 +30,8 @@ class NotificationController extends Controller
      */
     public function store(Request $request)
     {
-       $notifications = Notification::where('user_id',Auth::id())->orderBy('seen','DESC')->latest()->get()->map(function($query){
-            $data['url'] = url('user/notifications',$query->id);
+        $notifications = Notification::where('user_id', Auth::id())->orderBy('seen', 'DESC')->latest()->get()->map(function ($query) {
+            $data['url'] = url('user/notifications', $query->id);
             $data['title'] = $query->title;
             $data['comment'] = $query->comment;
             $data['created_at'] = $query->created_at->diffForHumans();
@@ -39,10 +39,11 @@ class NotificationController extends Controller
             $data['seen'] = $query->seen;
 
             return $data;
-       });
-       $data['notifications'] = $notifications;
-       $data['notifications_unread'] = Notification::where('user_id',Auth::id())->where('seen',0)->count();
-       return response()->json($data);
+        });
+        $data['notifications'] = $notifications;
+        $data['notifications_unread'] = Notification::where('user_id', Auth::id())->where('seen', 0)->count();
+        $data['whatsapp_unread'] = Notification::where('user_id', Auth::id())->where('comment', 'whatsapp-message')->where('seen', 0)->count();
+        return response()->json($data);
     }
 
     /**
@@ -53,7 +54,7 @@ class NotificationController extends Controller
      */
     public function show($id)
     {
-        $notification = Notification::where('user_id',Auth::id())->findorFail($id);
+        $notification = Notification::where('user_id', Auth::id())->findorFail($id);
         $notification->seen = 1;
         $notification->save();
 

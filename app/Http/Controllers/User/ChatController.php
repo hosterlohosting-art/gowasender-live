@@ -41,7 +41,7 @@ class ChatController extends Controller
         $chatHistory = ChatMessage::where('cloudapi_id', $cloudapi->id)->get();
 
         // You can manipulate or format the chat history data as needed
-        $formattedHistory = $chatHistory->map(function ($item) use ($whatsapp_cloud_api) {
+        $formattedHistory = $chatHistory->map(function ($item) use ($whatsapp_cloud_api, $cloudapi) {
             $contact = Contact::where('user_id', Auth::id())->where('phone', $item->phone_number)->first();
             $name = $contact ? $contact->name : null;
 
@@ -74,10 +74,15 @@ class ChatController extends Controller
             // Save the changes to the ChatMessage model
             $item->save();
 
-            $notification = Notification::where('user_id', Auth::id())->where('comment', 'user-message')->first();
-            if ($notification) {
-                $notification->seen = 1;
-                $notification->save();
+            $notifications = Notification::where('user_id', Auth::id())
+                ->where('comment', 'whatsapp-message')
+                ->where('url', 'like', '%' . $cloudapi->uuid . '%')
+                ->where('seen', 0)
+                ->get();
+
+            foreach ($notifications as $notif) {
+                $notif->seen = 1;
+                $notif->save();
             }
 
             return [

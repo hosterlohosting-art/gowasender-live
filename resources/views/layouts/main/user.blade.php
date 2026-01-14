@@ -40,6 +40,18 @@
     <a class="nav-link {{ Request::is('user/cloudapi*') ? 'active' : '' }}" href="{{ route('user.cloudapi.index') }}">
       <i class="fi-rs-sensor-on"></i>
       <span class="nav-link-text">{{ __('WhatsApp') }}</span>
+      @php
+        $unreadMessagesCount = \App\Models\Notification::where('user_id', Auth::id())
+          ->where('comment', 'whatsapp-message')
+          ->where('seen', 0)
+          ->count();
+      @endphp
+      @if($unreadMessagesCount > 0)
+        <span class="badge badge-warning ml-auto whatsapp-unread-count"
+          style="border-radius: 50%; padding: 4px 8px; font-size: 11px;">{{ $unreadMessagesCount }}</span>
+      @else
+        <span class="badge badge-warning ml-auto whatsapp-unread-count d-none" style="border-radius: 50%; padding: 4px 8px; font-size: 11px;">0</span>
+      @endif
     </a>
   </li>
 

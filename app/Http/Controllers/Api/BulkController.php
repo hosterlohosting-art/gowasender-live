@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Bulkrequest;
 use Netflie\WhatsAppCloudApi\WhatsAppCloudApi;
 use Netflie\WhatsAppCloudApi\Message\Media\LinkID;
-use Netflie\WhatsAppCloudApi\Message\ButtonReply\Button; 
+use Netflie\WhatsAppCloudApi\Message\ButtonReply\Button;
 use Netflie\WhatsAppCloudApi\Message\ButtonReply\ButtonAction;
 use App\Models\User;
 use App\Models\ChatMessage;
@@ -30,8 +30,9 @@ class BulkController extends Controller
     {
         $user = User::where('status', 1)->where('authkey', $request->authkey)->first();
         $app = App::where('key', $request->appkey)->first();
-        
-        if (!$user || !$app) return response()->json(['error' => 'Invalid Auth'], 401);
+
+        if (!$user || !$app)
+            return response()->json(['error' => 'Invalid Auth'], 401);
 
         return response()->json(['message' => 'Request Processed'], 200);
     }
@@ -59,7 +60,8 @@ class BulkController extends Controller
         $cloudapi_id = str_replace('cloudapi_', '', $cloudapi_id);
         $cloudapi = CloudApi::where('uuid', $cloudapi_id)->first();
 
-        if (!$cloudapi) return response()->json(['error' => 'Invalid API ID'], 404);
+        if (!$cloudapi)
+            return response()->json(['error' => 'Invalid API ID'], 404);
 
         if ($request->input('hub_mode') === 'subscribe') {
             return $request->input('hub_challenge');
@@ -69,24 +71,28 @@ class BulkController extends Controller
             $payload = $request->all();
             $changeValue = $payload['entry'][0]['changes'][0]['value'] ?? null;
 
-            if (isset($changeValue['statuses'])) return response()->json(['message' => 'Status'], 200);
-            if (!isset($changeValue['messages'])) return response()->json(['message' => 'No msg'], 200);
+            if (isset($changeValue['statuses']))
+                return response()->json(['message' => 'Status'], 200);
+            if (!isset($changeValue['messages']))
+                return response()->json(['message' => 'No msg'], 200);
 
             $messageEntry = $changeValue['messages'][0];
-            $request_from = $messageEntry['from']; 
+            $request_from = $messageEntry['from'];
             $message_id = $messageEntry['id'];
             $type = $messageEntry['type'];
             $message = '';
 
             // Extract Message Content
-            if ($type == 'text') $message = $messageEntry['text']['body'];
-            elseif ($type == 'button') $message = $messageEntry['button']['text'];
+            if ($type == 'text')
+                $message = $messageEntry['text']['body'];
+            elseif ($type == 'button')
+                $message = $messageEntry['button']['text'];
             elseif ($type == 'interactive') {
-                 $message = $messageEntry['interactive']['button_reply']['title'] 
-                         ?? $messageEntry['interactive']['list_reply']['title'] 
-                         ?? 'Interactive';
-            }
-            else $message = $type;
+                $message = $messageEntry['interactive']['button_reply']['title']
+                    ?? $messageEntry['interactive']['list_reply']['title']
+                    ?? 'Interactive';
+            } else
+                $message = $type;
 
             // --- A. SAVE INCOMING MESSAGE ---
             $userChat = ChatMessage::where('phone_number', $request_from)
@@ -98,16 +104,27 @@ class BulkController extends Controller
                 $newUserChat = new ChatMessage();
                 $newUserChat->phone_number = $request_from;
                 $newUserChat->cloudapi_id = $cloudapi->id;
-                $newUserChat->message_history = json_encode([[
-                    'chatID' => $message_id,
-                    'message' => $message,
-                    'timestamp' => now()->toDateTimeString(),
-                    'type' => 'received',
-                    'status' => 'read' 
-                ]]);
+                $newUserChat->message_history = json_encode([
+                    [
+                        'chatID' => $message_id,
+                        'message' => $message,
+                        'timestamp' => now()->toDateTimeString(),
+                        'type' => 'received',
+                        'status' => 'read'
+                    ]
+                ]);
                 $newUserChat->save();
-                $userChat = $newUserChat; 
+                $userChat = $newUserChat;
             }
+
+            // --- B. CREATE SYSTEM NOTIFICATION ---
+            $notification = new \App\Models\Notification();
+            $notification->user_id = $cloudapi->user_id;
+            $notification->title = __("New WhatsApp Message from ") . $request_from;
+            $notification->comment = 'whatsapp-message'; // Category for sidebar/logic
+            $notification->url = "/user/cloudapi/chats/" . $cloudapi->uuid;
+            $notification->seen = 0;
+            $notification->save();
 
             // Setup API
             $whatsapp_app_cloud_api = new WhatsAppCloudApi([
@@ -121,40 +138,41 @@ class BulkController extends Controller
             $flows = DB::table('flows')->where('user_id', $cloudapi->user_id)->where('status', 1)->get();
             $flowTriggered = false;
 
-            foreach($flows as $flow) {
+            foreach ($flows as $flow) {
                 $flowData = json_decode($flow->flow_data, true);
-                if(!$flowData || !isset($flowData['drawflow']['Home']['data'])) continue;
+                if (!$flowData || !isset($flowData['drawflow']['Home']['data']))
+                    continue;
 
                 $nodes = $flowData['drawflow']['Home']['data'];
                 $startNode = null;
 
                 // Find START Node
-                foreach($nodes as $key => $node) {
-                    if($node['name'] === 'start') {
+                foreach ($nodes as $key => $node) {
+                    if ($node['name'] === 'start') {
                         $startNode = $node;
                         break;
                     }
                 }
 
-                if($startNode) {
+                if ($startNode) {
                     // Check Keyword Match
                     $keyword = $startNode['data']['keyword'] ?? '';
                     $condition = $startNode['data']['condition'] ?? 'equal';
                     $isMatch = false;
 
-                    if(!empty($keyword)) {
-                        if($condition === 'equal' && strtolower(trim($message)) == strtolower(trim($keyword))) {
+                    if (!empty($keyword)) {
+                        if ($condition === 'equal' && strtolower(trim($message)) == strtolower(trim($keyword))) {
                             $isMatch = true;
                         } elseif ($condition === 'contains' && stripos($message, $keyword) !== false) {
                             $isMatch = true;
                         }
                     }
 
-                    if($isMatch) {
+                    if ($isMatch) {
                         $flowTriggered = true;
                         // Start the Chain Reaction
                         $this->processFlowChain($startNode, $nodes, $request_from, $whatsapp_app_cloud_api, $userChat);
-                        break; 
+                        break;
                     }
                 }
             }
@@ -162,22 +180,24 @@ class BulkController extends Controller
             // ====================================================
             // 2. SIMPLE CHATBOT FALLBACK
             // ====================================================
-            if(!$flowTriggered) {
+            if (!$flowTriggered) {
                 $replies = Reply::where('cloudapi_id', $cloudapi->id)->get();
                 $sent = false;
 
                 foreach ($replies as $reply) {
                     $should_send = false;
                     if ($reply->match_type == 'equal') {
-                        if (strtolower(trim($message)) == strtolower(trim($reply->keyword))) $should_send = true;
+                        if (strtolower(trim($message)) == strtolower(trim($reply->keyword)))
+                            $should_send = true;
                     } else {
-                        if (stripos($message, $reply->keyword) !== false) $should_send = true;
+                        if (stripos($message, $reply->keyword) !== false)
+                            $should_send = true;
                     }
 
                     if ($should_send) {
                         if ($reply->reply_type == 'text') {
                             $whatsapp_app_cloud_api->sendTextMessage($request_from, $reply->reply);
-                            $this->saveMessageToUserChat($userChat, $reply->reply, 'sent', 'bot_'.time());
+                            $this->saveMessageToUserChat($userChat, $reply->reply, 'sent', 'bot_' . time());
                             $sent = true;
                         }
                         break;
@@ -187,8 +207,8 @@ class BulkController extends Controller
                 if (!$sent) {
                     $defaultReply = Reply::where('cloudapi_id', $cloudapi->id)->where('keyword', 'default')->first();
                     if ($defaultReply) {
-                         $whatsapp_app_cloud_api->sendTextMessage($request_from, $defaultReply->reply);
-                         $this->saveMessageToUserChat($userChat, $defaultReply->reply, 'sent', 'bot_'.time());
+                        $whatsapp_app_cloud_api->sendTextMessage($request_from, $defaultReply->reply);
+                        $this->saveMessageToUserChat($userChat, $defaultReply->reply, 'sent', 'bot_' . time());
                     }
                 }
             }
@@ -202,18 +222,19 @@ class BulkController extends Controller
     }
 
     // --- RECURSIVE FLOW PROCESSOR ---
-    private function processFlowChain($currentNode, $allNodes, $to, $api, $userChat) {
-        
+    private function processFlowChain($currentNode, $allNodes, $to, $api, $userChat)
+    {
+
         $connections = $currentNode['outputs']['output_1']['connections'] ?? [];
 
-        foreach($connections as $connection) {
+        foreach ($connections as $connection) {
             $nextNodeId = $connection['node'];
             $nextNode = $allNodes[$nextNodeId] ?? null;
 
-            if($nextNode) {
+            if ($nextNode) {
                 // 1. SLEEP: The Secret Sauce!
                 // Waits 1 second before sending the next message to prevent order mix-ups
-                sleep(1); 
+                sleep(1);
 
                 // 2. EXECUTE
                 $this->executeNode($nextNode, $to, $api, $userChat);
@@ -225,7 +246,8 @@ class BulkController extends Controller
     }
 
     // --- EXECUTE NODE LOGIC ---
-    private function executeNode($node, $to, $api, $userChat) {
+    private function executeNode($node, $to, $api, $userChat)
+    {
         try {
             $nodeType = $node['name'];
             $data = $node['data'];
@@ -234,17 +256,17 @@ class BulkController extends Controller
             if ($nodeType === 'text') {
                 $text = $data['message'] ?? '...';
                 $api->sendTextMessage($to, $text);
-                $this->saveMessageToUserChat($userChat, $text, 'sent', 'flow_'.time());
-            } 
-            
+                $this->saveMessageToUserChat($userChat, $text, 'sent', 'flow_' . time());
+            }
+
             // 2. IMAGE MESSAGE
             elseif ($nodeType === 'image') {
                 $url = $data['image_url'] ?? null;
                 $caption = $data['caption'] ?? '';
-                if($url) {
+                if ($url) {
                     $link_id = new LinkID($url);
                     $api->sendImage($to, $link_id, $caption);
-                    $this->saveMessageToUserChat($userChat, 'Image Sent', 'sent', 'flow_'.time());
+                    $this->saveMessageToUserChat($userChat, 'Image Sent', 'sent', 'flow_' . time());
                 }
             }
 
@@ -254,14 +276,17 @@ class BulkController extends Controller
                 $body = $data['description'] ?? 'Please choose an option';
                 $buttons = [];
 
-                if(!empty($data['btn1'])) $buttons[] = new Button('btn1', $data['btn1']);
-                if(!empty($data['btn2'])) $buttons[] = new Button('btn2', $data['btn2']);
-                if(!empty($data['btn3'])) $buttons[] = new Button('btn3', $data['btn3']);
+                if (!empty($data['btn1']))
+                    $buttons[] = new Button('btn1', $data['btn1']);
+                if (!empty($data['btn2']))
+                    $buttons[] = new Button('btn2', $data['btn2']);
+                if (!empty($data['btn3']))
+                    $buttons[] = new Button('btn3', $data['btn3']);
 
-                if(count($buttons) > 0) {
+                if (count($buttons) > 0) {
                     $action = new ButtonAction($buttons);
-                    $api->sendButton($to, $body, $action, $header); 
-                    $this->saveMessageToUserChat($userChat, "[Buttons] $body", 'sent', 'flow_'.time());
+                    $api->sendButton($to, $body, $action, $header);
+                    $this->saveMessageToUserChat($userChat, "[Buttons] $body", 'sent', 'flow_' . time());
                 }
             }
 
@@ -271,9 +296,9 @@ class BulkController extends Controller
                 $body = $data['description'] ?? 'Check this out';
                 $footer = $data['footer'] ?? '';
                 $imgUrl = $data['image_url'] ?? null;
-                
+
                 // A. Send Header Image First (Most reliable method)
-                if($imgUrl) {
+                if ($imgUrl) {
                     $link_id = new LinkID($imgUrl);
                     $api->sendImage($to, $link_id);
                     sleep(1); // Short pause so image arrives before text
@@ -281,31 +306,34 @@ class BulkController extends Controller
 
                 // B. Send Content + Buttons
                 $buttons = [];
-                if(!empty($data['btn1'])) $buttons[] = new Button('btn1', $data['btn1']);
-                if(!empty($data['btn2'])) $buttons[] = new Button('btn2', $data['btn2']);
-                if(!empty($data['btn3'])) $buttons[] = new Button('btn3', $data['btn3']);
+                if (!empty($data['btn1']))
+                    $buttons[] = new Button('btn1', $data['btn1']);
+                if (!empty($data['btn2']))
+                    $buttons[] = new Button('btn2', $data['btn2']);
+                if (!empty($data['btn3']))
+                    $buttons[] = new Button('btn3', $data['btn3']);
 
-                if(count($buttons) > 0) {
+                if (count($buttons) > 0) {
                     $action = new ButtonAction($buttons);
                     $api->sendButton($to, $body, $action, $title); // Title acts as Header text
-                    $this->saveMessageToUserChat($userChat, "[Card] $title", 'sent', 'flow_'.time());
+                    $this->saveMessageToUserChat($userChat, "[Card] $title", 'sent', 'flow_' . time());
                 } else {
                     // Fallback if no buttons (Send as Text)
-                    $msg = "*$title*\n\n$body\n\n_$footer_";
+                    $msg = "*$title*\n\n$body\n\n_{$footer}_";
                     $api->sendTextMessage($to, $msg);
-                    $this->saveMessageToUserChat($userChat, "[Card Text] $title", 'sent', 'flow_'.time());
+                    $this->saveMessageToUserChat($userChat, "[Card Text] $title", 'sent', 'flow_' . time());
                 }
             }
 
             // 5. WAIT NODE
             elseif ($nodeType === 'wait') {
                 $seconds = intval($data['seconds'] ?? 0); // Corrected key from 'duration' to 'seconds'
-                if($seconds > 0 && $seconds <= 5) { 
+                if ($seconds > 0 && $seconds <= 5) {
                     sleep($seconds);
                 }
             }
 
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             Log::error("Node Execution Failed: " . $e->getMessage());
         }
     }

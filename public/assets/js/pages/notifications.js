@@ -27,6 +27,12 @@ function fetchNotifications() {
       success: function (res) {
          $('.notification-count').html(res.notifications_unread);
 
+         if (res.whatsapp_unread > 0) {
+            $('.whatsapp-unread-count').html(res.whatsapp_unread).removeClass('d-none');
+         } else {
+            $('.whatsapp-unread-count').addClass('d-none');
+         }
+
          // Alert if new notification arrives
          if (res.notifications_unread > lastUnreadCount && !firstLoad) {
             playNotificationSound();
