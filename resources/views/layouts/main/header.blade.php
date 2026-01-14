@@ -29,8 +29,12 @@
             @if(Auth::check())
                <li class="nav-item d-none d-md-flex align-items-center mr-4">
                   <div class="plan-badge">
-                     <i class="fas fa-crown"></i>
-                     <span>{{ Auth::user()->plan->title ?? 'Free Plan' }}</span>
+                     @if(Auth::user()->plan_id && Auth::user()->subscription)
+                        <i class="fas fa-crown text-gold"></i>
+                        <span>{{ Auth::user()->subscription->title }}</span>
+                     @else
+                        <span>{{ __('Free Plan') }}</span>
+                     @endif
                   </div>
                </li>
             @endif
@@ -41,7 +45,7 @@
                <li class="nav-item dropdown notifications-icon mr-4">
                   <a class="nav-link notification-toggle" href="#" role="button" data-toggle="dropdown"
                      aria-haspopup="true" aria-expanded="false">
-                     <i class="far fa-bell" style="font-size: 1.4rem; color: #5e6c84;"></i>
+                     <i class="fas fa-bell"></i>
                      <span class="notification-badge notification-count">0</span>
                   </a>
                   <button id="install-button" style="display: none;">Install</button>
@@ -69,8 +73,8 @@
                            style="color: #333; font-weight: 600; font-size: 14px;">{{ Auth::user()->name }}</span>
                         <i class="fas fa-chevron-down ml-2" style="font-size: 10px; color: #8898aa;"></i>
                      </div>
-                     <span class="profile-role-badge"
-                        style="background-color: #e3fcf0; color: #0d885a; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; display: inline-block; line-height: 1.5;">{{ Auth::user()->role == 'admin' ? __('Admin') : __('User') }}</span>
+                     <span
+                        class="profile-role-badge">{{ Auth::user()->role == 'admin' ? __('Admin') : __('User') }}</span>
                   </div>
                </a>
                <div class="dropdown-menu dropdown-menu-right">
@@ -105,57 +109,18 @@
                </div>
             </li>
 
-            <!-- Language Selector (Google Translate) -->
-            <li class="nav-item ml-3 d-none d-md-flex align-items-center">
-               <div id="google_translate_element"
-                  style="border-radius: 20px; overflow: hidden; height: 36px; border: 1px solid #e9ecef;"></div>
-               <style>
-                  .goog-te-banner-frame.skiptranslate {
-                     display: none !important;
-                  }
-
-                  body {
-                     top: 0px !important;
-                  }
-
-                  .goog-te-gadget-simple {
-                     background-color: #f0f2f5 !important;
-                     border: none !important;
-                     padding: 8px 12px !important;
-                     border-radius: 20px !important;
-                     font-size: 13px !important;
-                  }
-
-                  .goog-te-gadget-simple img {
-                     display: none;
-                  }
-
-                  .goog-te-gadget-simple span {
-                     color: #5e6c84 !important;
-                     font-weight: 600;
-                  }
-               </style>
-            </li>
-
-            <!-- Help Icon (Beautiful Circle) -->
+            <!-- Help Icon (Gradient Circle) -->
             <li class="nav-item ml-3 d-none d-md-block">
                <a href="#" class="nav-link pr-0">
-                  <div
-                     style="width: 36px; height: 36px; background: #6c757d; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                  <div class="help-icon-circle">
                      <i class="fas fa-question" style="font-size: 14px;"></i>
                   </div>
                </a>
             </li>
+
          </ul>
 
-         <!-- Google Translate Script -->
-         <script type="text/javascript">
-            function googleTranslateElementInit() {
-               new google.translate.TranslateElement({ pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE }, 'google_translate_element');
-            }
-         </script>
-         <script type="text/javascript"
-            src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+         <!-- Google Translate Script removed per request -->
       </div>
    </div>
 </nav>
