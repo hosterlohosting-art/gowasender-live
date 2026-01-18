@@ -38,8 +38,8 @@
   </li>
   <li class="nav-item">
     <a class="nav-link {{ Request::is('user/cloudapi*') ? 'active' : '' }}" href="{{ route('user.cloudapi.index') }}">
-      <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i>
-      <span class="nav-link-text">{{ __('WhatsApp') }}</span>
+      <i class="fi fi-rs-sensor-on"></i>
+      <span class="nav-link-text">{{ __('WhatsApp (Official)') }}</span>
       @php
         $unreadMessagesCount = \App\Models\Notification::where('user_id', Auth::id())
           ->where('comment', 'whatsapp-message')
@@ -53,6 +53,13 @@
         <span class="badge badge-warning ml-auto whatsapp-unread-count d-none"
           style="border-radius: 50%; padding: 4px 8px; font-size: 11px;">0</span>
       @endif
+    </a>
+  </li>
+
+  <li class="nav-item">
+    <a class="nav-link {{ Request::is('user/device*') ? 'active' : '' }}" href="{{ route('user.device.index') }}">
+      <i class="fi fi-rs-smartphone"></i>
+      <span class="nav-link-text">{{ __('WhatsApp (Unofficial)') }}</span>
     </a>
   </li>
 

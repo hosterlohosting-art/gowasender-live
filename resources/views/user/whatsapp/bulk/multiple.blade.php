@@ -35,11 +35,27 @@
 		<div class="modal-content">
 			<div class="modal-body">
 				<div class="form-group">
-					<label>{{ __('Select Number (From)') }}</label>
-					<select class="form-control" id="device_import"  name="cloudapi" required="">
+					<label>{{ __('Select Gateway') }}</label>
+					<select class="form-control gateway_selector" data-target="#device_import">
+						<option value="official">{{ __('Official WhatsApp API') }}</option>
+						<option value="unofficial">{{ __('Unofficial WhatsApp (QR Code)') }}</option>
+					</select>
+				</div>
+				<div class="form-group official_area">
+					<label>{{ __('Select Official Number') }}</label>
+					<select class="form-control gateway_api_select" id="device_import">
 						<option value="" disabled="" selected="">{{ __('Select Number') }}</option>
 						@foreach($cloudapis as $cloudapi)
 						<option value="{{ $cloudapi->id }}">{{ $cloudapi->name }} (+{{ $cloudapi->phone }})</option>
+						@endforeach
+					</select>
+				</div>
+                <div class="form-group unofficial_area none">
+					<label>{{ __('Select Unofficial Device') }}</label>
+					<select class="form-control gateway_device_select">
+                        <option value="" disabled="" selected="">{{ __('Select Device') }}</option>
+						@foreach($devices as $device)
+						<option value="{{ $device->uuid }}" {{ $device->status != 1 ? 'disabled' : '' }}>{{ $device->name }} ({{ $device->status == 1 ? __('Connected') : __('Disconnected') }})</option>
 						@endforeach
 					</select>
 				</div>
@@ -62,11 +78,27 @@
 				
 			<div class="modal-body">
 				<div class="form-group">
-					<label>{{ __('Select Number (From)') }}</label>
-					<select class="form-control" id="wa-device"  name="cloudapi" required="">
+					<label>{{ __('Select Gateway') }}</label>
+					<select class="form-control gateway_selector" data-target="#wa-device">
+						<option value="official">{{ __('Official WhatsApp API') }}</option>
+						<option value="unofficial">{{ __('Unofficial WhatsApp (QR Code)') }}</option>
+					</select>
+				</div>
+				<div class="form-group official_area">
+					<label>{{ __('Select Official Number') }}</label>
+					<select class="form-control gateway_api_select" id="wa-device">
 						<option value="" disabled="" selected="">{{ __('Select Number') }}</option>
 						@foreach($cloudapis as $cloudapi)
 						<option value="{{ $cloudapi->id }}" >{{ $cloudapi->name }} (+{{ $cloudapi->phone }})</option>
+						@endforeach
+					</select>
+				</div>
+                <div class="form-group unofficial_area none">
+					<label>{{ __('Select Unofficial Device') }}</label>
+					<select class="form-control gateway_device_select">
+                        <option value="" disabled="" selected="">{{ __('Select Device') }}</option>
+						@foreach($devices as $device)
+						<option value="{{ $device->uuid }}" {{ $device->status != 1 ? 'disabled' : '' }}>{{ $device->name }} ({{ $device->status == 1 ? __('Connected') : __('Disconnected') }})</option>
 						@endforeach
 					</select>
 				</div>
@@ -103,10 +135,25 @@
 			</div>	
 			<div class="modal-body">
 				<div class="form-group">
-					<label>{{ __('Select Number (From)') }}</label>
-					<select class="form-control" id="device_custom"  name="cloudapi" required="">
+					<label>{{ __('Select Gateway') }}</label>
+					<select class="form-control gateway_selector" data-target="#device_custom">
+						<option value="official">{{ __('Official WhatsApp API') }}</option>
+						<option value="unofficial">{{ __('Unofficial WhatsApp (QR Code)') }}</option>
+					</select>
+				</div>
+				<div class="form-group official_area">
+					<label>{{ __('Select Official Number') }}</label>
+					<select class="form-control gateway_api_select" id="device_custom">
 						@foreach($cloudapis as $cloudapi)
 						<option value="{{ $cloudapi->id }}">+{{ $cloudapi->phone }}</option>
+						@endforeach
+					</select>
+				</div>
+                <div class="form-group unofficial_area none">
+					<label>{{ __('Select Unofficial Device') }}</label>
+					<select class="form-control gateway_device_select">
+						@foreach($devices as $device)
+						<option value="{{ $device->uuid }}" {{ $device->status != 1 ? 'disabled' : '' }}>{{ $device->name }}</option>
 						@endforeach
 					</select>
 				</div>
@@ -174,6 +221,38 @@
 @csrf
 @endsection
 @push('js')
+<script>
+    $(document).on('change', '.gateway_selector', function() {
+        let val = $(this).val();
+        let parent = $(this).closest('.modal-body');
+        let targetId = $(this).data('target');
+        
+        if (val === 'official') {
+            parent.find('.official_area').show();
+            parent.find('.unofficial_area').hide();
+            // Assign the correct ID to the active selector
+            parent.find('.gateway_api_select').attr('id', targetId.replace('#',''));
+            parent.find('.gateway_device_select').removeAttr('id');
+        } else {
+            parent.find('.official_area').hide();
+            parent.find('.unofficial_area').show().removeClass('none');
+            // Assign the correct ID to the active selector
+            parent.find('.gateway_device_select').attr('id', targetId.replace('#',''));
+            parent.find('.gateway_api_select').removeAttr('id');
+        }
+    });
+
+    // Handle AJAX Gateway Type
+    $(document).ajaxSend(function(event, xhr, settings) {
+        if (settings.url === $('#bulk_message_link').val()) {
+            // Determine gateway type to append to data
+            // This is a bit hacky because the data is already stringified in bulkmessage.js
+            // But we can check the length of the cloudapi value in settings.data if it's not stringified yet
+            // Actually, if we use the same ID, bulkmessage.js will just pick the value.
+            // My BulkController->store already handles the routing based on ID format.
+        }
+    });
+</script>
 <script src="{{ asset('assets/vendor/select2/dist/js/select2.min.js') }}"></script>
 <script src="{{ asset('assets/js/pages/bulk/jquery.csv.min.js') }}" ></script>
 <script src="{{ asset('assets/js/pages/bulk/bulkmessage.js?v=1') }}" ></script>

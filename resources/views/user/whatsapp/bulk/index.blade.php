@@ -33,16 +33,50 @@
             </div>
             <div class="modal-body">
                <div class="form-group">
-                  <label>{{ __('Select Template') }}</label>
-                  <select  class="form-control" name="template" id="templateid" onchange="updateInputFields(this)">
-                     @foreach($templates as $template)
-        <option value="{{ $template->id }}" data-template-raw="{{ json_encode($template['body']) }}">
-                        {{ $template->title }} - @if($template->type == 'meta-template') (meta) @elseif ($template->type == 'text-with-list') (List) @else Others  @endif
-                    </option>
-@endforeach
-
+                  <label>{{ __('Select Gateway') }}</label>
+                  <select name="gateway_type" class="form-control gateway_type_selector" required>
+                      <option value="official" selected>{{ __('Official WhatsApp API') }}</option>
+                      <option value="unofficial">{{ __('Unofficial WhatsApp (QR Code)') }}</option>
                   </select>
-                  <small class="text-danger">Please be cautious as some templates may not function properly in this context.</small>
+               </div>
+
+               <div class="form-group official_gateway_area">
+                  <label>{{ __('Select Official API') }}</label>
+                  <select name="cloudapi" class="form-control">
+                      @foreach($cloudapis as $api)
+                          <option value="{{ $api->id }}">{{ $api->phone ?? $api->name }}</option>
+                      @endforeach
+                  </select>
+               </div>
+
+               <div class="form-group unofficial_gateway_area none">
+                  <label>{{ __('Select Unofficial Device') }}</label>
+                  <select name="device" class="form-control">
+                      @foreach($devices as $device)
+                          <option value="{{ $device->uuid }}" {{ $device->status != 1 ? 'disabled' : '' }}>{{ $device->name }} ({{ $device->status == 1 ? __('Connected') : __('Disconnected') }})</option>
+                      @endforeach
+                  </select>
+               </div>
+
+               <div class="template_area">
+                  <div class="form-group">
+                     <label>{{ __('Select Template') }}</label>
+                     <select class="form-control" name="template" id="templateid" onchange="updateInputFields(this)">
+                        @foreach($templates as $template)
+                           <option value="{{ $template->id }}" data-template-raw="{{ json_encode($template['body']) }}">
+                              {{ $template->title }} - @if($template->type == 'meta-template') (meta) @elseif ($template->type == 'text-with-list') (List) @else Others  @endif
+                           </option>
+                        @endforeach
+                     </select>
+                     <small class="text-danger">Please be cautious as some templates may not function properly in this context.</small>
+                  </div>
+               </div>
+
+               <div class="plain_text_area none">
+                  <div class="form-group">
+                     <label>{{ __('Message') }}</label>
+                     <textarea name="message" class="form-control h-200" placeholder="{{ __('Type your message here...') }}"></textarea>
+                  </div>
                </div>
                <div class="card-body" style="justify-content: flex-end; text-align: right; background: url('{{ asset('assets/img/bg.png') }}');">
            <div class="card" id="previewElement" style="min-width: 18rem; text-align: left; border-top-left-radius: 0; margin-bottom: 5px;">
@@ -65,11 +99,6 @@
         <div class="form-group message-parameters" id="body-variable">
             <!-- Input fields for message parameters will be added here -->
         </div>	
-               <div class="form-group">
-                     @foreach($cloudapis as $cloudapi)
-                     <input type="hidden" value="{{ $cloudapi->id }}" name="cloudapi">
-                     @endforeach
-               </div>
                <div class="form-group receivers">
                   <label>{{ __('Select Contacts Group') }}</label>
                   <select  class="form-control select2" name="group" >
@@ -204,6 +233,28 @@
 </div>
 @endsection
 @push('topjs')
+<script>
+    $(document).on('change', '.gateway_type_selector', function() {
+        let val = $(this).val();
+        let modal = $(this).closest('.modal-content');
+        
+        if (val === 'official') {
+            modal.find('.official_gateway_area').show();
+            modal.find('.unofficial_gateway_area').hide();
+            modal.find('.template_area').show();
+            modal.find('.plain_text_area').hide();
+            modal.find('select[name="template"]').attr('required', 'required');
+            modal.find('textarea[name="message"]').removeAttr('required');
+        } else {
+            modal.find('.official_gateway_area').hide();
+            modal.find('.unofficial_gateway_area').show().removeClass('none');
+            modal.find('.template_area').hide();
+            modal.find('.plain_text_area').show().removeClass('none');
+            modal.find('select[name="template"]').removeAttr('required');
+            modal.find('textarea[name="message"]').attr('required', 'required');
+        }
+    });
+</script>
 <script>
     // Submit the form when it's ready
     document.addEventListener('DOMContentLoaded', function() {

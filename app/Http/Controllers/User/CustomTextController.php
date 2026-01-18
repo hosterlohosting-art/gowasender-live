@@ -11,6 +11,8 @@ use App\Rules\Phone;
 use App\Traits\Cloud;
 use App\Models\ChatMessage;
 use App\Libraries\WhatsappLibrary;
+use App\Models\Device;
+use App\Traits\DeviceTrait;
 use Http;
 use Auth;
 use File;
@@ -30,142 +32,174 @@ use Netflie\WhatsAppCloudApi\Message\ButtonReply\ButtonAction;
 class CustomTextController extends Controller
 {
 
-    use Cloud;
+    use Cloud, DeviceTrait;
     public $whatsapp_app_cloud_api;
     public $wa_lib;
 
-    
-   
+
+
 
     //return custom text message view page
     public function index()
     {
-       
-        $phoneCodes=file_exists('uploads/phonecode.json') ? json_decode(file_get_contents('uploads/phonecode.json')) : [];
-        $cloudapis=CloudApi::where('user_id',Auth::id())->where('status',1)->latest()->get();
-        $templates = template::where('type', 'meta-template')->where('user_id', Auth::id())->where('status',1)->get();
-	
-        return view('user.singlesend.create',compact('phoneCodes','cloudapis','templates'));
+
+        $phoneCodes = file_exists('uploads/phonecode.json') ? json_decode(file_get_contents('uploads/phonecode.json')) : [];
+        $cloudapis = CloudApi::where('user_id', Auth::id())->where('status', 1)->latest()->get();
+        $devices = Device::where('user_id', Auth::id())->latest()->get();
+        $templates = template::where('type', 'meta-template')->where('user_id', Auth::id())->where('status', 1)->get();
+
+        return view('user.singlesend.create', compact('phoneCodes', 'cloudapis', 'devices', 'templates'));
     }
 
     public function templateDetails(Request $request)
-{
-    $selectedTemplate = $request->template;
+    {
+        $selectedTemplate = $request->template;
 
-    // Retrieve the template details based on the selected template
-    $template = Template::where('title', $selectedTemplate)->first();
+        // Retrieve the template details based on the selected template
+        $template = Template::where('title', $selectedTemplate)->first();
 
-    if ($template && isset($template->body)) {
-        $body = $template->body;
+        if ($template && isset($template->body)) {
+            $body = $template->body;
 
-        return response()->json(['body' => $body]);
+            return response()->json(['body' => $body]);
+        }
+
+        return response()->json(['body' => []]);
     }
 
-    return response()->json(['body' => []]);
-}
 
+    public function saveMessageToUserChat($userChat, $templateName, $type, $request_from, $templateCloudId)
+    {
+        if ($userChat) {
+            $userChatMessages = json_decode($userChat->message_history, true) ?? [];
+            $chatID = uniqid('chat_', true);
+            $newMessage = [
+                'chatID' => $chatID,
+                'message' => 'Single Send-[' . $type . ']:' . $templateName,
+                'timestamp' => now()->toDateTimeString(),
+                'type' => 'sent',
+            ];
 
-public function saveMessageToUserChat($userChat, $templateName, $type, $request_from, $templateCloudId)
-{
-    if ($userChat) {
-        $userChatMessages = json_decode($userChat->message_history, true) ?? [];
-        $chatID = uniqid('chat_', true);
-        $newMessage = [
-            'chatID' => $chatID,
-            'message' => 'Single Send-['.$type.']:'. $templateName,
-            'timestamp' => now()->toDateTimeString(),
-            'type' => 'sent',
-        ];
+            $userChatMessages[] = $newMessage;
 
-        $userChatMessages[] = $newMessage;
+            // Update the message history in the database
+            $userChat->message_history = json_encode($userChatMessages);
+            $userChat->save();
+        } else {
+            $chatID = uniqid('chat_', true);
+            $newUserChat = new ChatMessage();
+            $newUserChat->phone_number = $request_from;
+            $newUserChat->cloudapi_id = $templateCloudId;
+            $newUserChat->message_history = json_encode([
+                [
+                    'chatID' => $chatID,
+                    'message' => 'Single Send-[' . $type . ']:' . $templateName,
+                    'timestamp' => now()->toDateTimeString(),
+                    'type' => 'sent',
+                ]
+            ]);
+            $newUserChat->save();
 
-        // Update the message history in the database
-        $userChat->message_history = json_encode($userChatMessages);
-        $userChat->save();
-    }else{
-        $chatID = uniqid('chat_', true);
-        $newUserChat = new ChatMessage();
-        $newUserChat->phone_number = $request_from;
-        $newUserChat->cloudapi_id = $templateCloudId;
-        $newUserChat->message_history = json_encode([
-        [
-            'chatID' => $chatID,
-            'message' => 'Single Send-['.$type.']:'. $templateName,
-            'timestamp' => now()->toDateTimeString(),
-            'type' => 'sent',
-        ]
-    ]);
-    $newUserChat->save();
-
+        }
     }
-}
 
     //sent custom text msg request to api
-    public function sentCustomText(Request $request,$type)
+    public function sentCustomText(Request $request, $type)
     {
-        //dd($request);
-        
-        $cloudapi = CloudApi::findOrFail($request->cloudapi);
-        
+        if ($request->gateway_type == 'official') {
+            $cloudapi = CloudApi::findOrFail($request->cloudapi);
 
-        $whatsapp_app_cloud_api = new WhatsAppCloudApi([
-            'from_phone_number_id' => $cloudapi->phone_number_id,
-            'access_token' => $cloudapi->access_token,
-        ]);
-        
+            $whatsapp_app_cloud_api = new WhatsAppCloudApi([
+                'from_phone_number_id' => $cloudapi->phone_number_id,
+                'access_token' => $cloudapi->access_token,
+            ]);
+        } else {
+            $device = Device::where('user_id', Auth::id())->where('uuid', $request->device)->firstOrFail();
+            if ($device->status != 1) {
+                return response()->json([
+                    'message' => __('Selected device is disconnected. Please connect it first.')
+                ], 401);
+            }
+        }
+
         $wa_lib = new WhatsappLibrary();
 
         $validated = $request->validate([
-            'phone'   => ['required', new Phone],
-            'cloudapi'=>['required','numeric'], 
+            'phone' => ['required', new Phone],
+            'cloudapi' => ['required_if:gateway_type,official'],
+            'device' => ['required_if:gateway_type,unofficial'],
         ]);
 
         if (getUserPlanData('messages_limit') == false) {
             return response()->json([
-                'message'=>__('Maximum Monthly Messages Limit Exceeded')
-            ],401);  
+                'message' => __('Maximum Monthly Messages Limit Exceeded')
+            ], 401);
         }
 
         if ($request->templatestatus) {
             if (getUserPlanData('template_limit') == false) {
                 return response()->json([
-                    'message'=>__('Maximum Template Limit Exceeded')
-                ],401);  
+                    'message' => __('Maximum Template Limit Exceeded')
+                ], 401);
             }
         }
 
-        $cloudapi=CloudApi::where('user_id',Auth::id())->where('status',1)->findorFail($request->cloudapi);
+        $phone = str_replace('+', '', $request->phone);
 
-        $phone=str_replace('+', '', $request->phone);
+        // Handle Unofficial Device Sending
+        if ($request->gateway_type == 'unofficial') {
+            $message = $request->message;
+
+            // For now, only supporting plain text in this quick integration
+            // but the user wants Free Text Input.
+
+            $response = $this->sendDeviceMessage($device->uuid, $phone, $message);
+
+            if (isset($response['success']) && $response['success']) {
+                $logs['user_id'] = Auth::id();
+                $logs['from'] = $device->name;
+                $logs['to'] = $phone;
+                $logs['type'] = 'single-send';
+                $this->saveLog($logs);
+
+                return response()->json([
+                    'message' => __('Message sent successfully via device..!!'),
+                ], 200);
+            }
+
+            return response()->json([
+                'message' => $response['message'] ?? __('Failed to send message via device')
+            ], 500);
+        }
+
+        // Existing Official API Logic
+        $cloudapi = CloudApi::where('user_id', Auth::id())->where('status', 1)->findorFail($request->cloudapi);
         $userChat = ChatMessage::where('phone_number', $phone)->where('cloudapi_id', $cloudapi->id)->first();
-        
-        
-        if($type == 'meta-template'){
+
+
+        if ($type == 'meta-template') {
             //dd($request);
-            try{
+            try {
                 $response = $wa_lib->metaTemplatemessage($cloudapi->phone_number_id, $cloudapi->access_token, $request);
-                $logs['user_id']=Auth::id();
-                       $logs['cloudapi_id']=$cloudapi->id;
-                       $logs['from']=$cloudapi->phone;
-                       $logs['to']=$phone;
-                       $logs['type']='single-send';
-                       $this->saveLog($logs);
-                       $this->saveMessageToUserChat($userChat,$request->template_text,$type, $phone, $cloudapi->id);
-                       return response()->json([
-                                'message' => __("Message send Successfully"),
-                            ], 200);
-            }catch(\Exception $exception){
+                $logs['user_id'] = Auth::id();
+                $logs['cloudapi_id'] = $cloudapi->id;
+                $logs['from'] = $cloudapi->phone;
+                $logs['to'] = $phone;
+                $logs['type'] = 'single-send';
+                $this->saveLog($logs);
+                $this->saveMessageToUserChat($userChat, $request->template_text, $type, $phone, $cloudapi->id);
+                return response()->json([
+                    'message' => __("Message send Successfully"),
+                ], 200);
+            } catch (\Exception $exception) {
                 $errorMessage = $exception->getMessage();
                 preg_match('/\"message\":\"(.*?)\"/', $errorMessage, $matches);
                 $extractedMessage = isset($matches[1]) ? $matches[1] : 'Unknown error';
                 return response()->json([
-                                    'message' => $extractedMessage,
-                                ], 500);
-                }
+                    'message' => $extractedMessage,
+                ], 500);
             }
-
-
-        elseif($type == 'plain-text'){
+        } elseif ($type == 'plain-text') {
             $validated = $request->validate([
                 'message' => 'required|max:1000',
             ]);
@@ -173,23 +207,23 @@ public function saveMessageToUserChat($userChat, $templateName, $type, $request_
 
             try {
                 $response = $whatsapp_app_cloud_api->sendTextMessage($phone, $message, true);
-                 $logs['user_id']=Auth::id();
-                       $logs['cloudapi_id']=$cloudapi->id;
-                       $logs['from']=$cloudapi->phone;
-                       $logs['to']=$phone;
-                       $logs['type']='single-send';
-            
-                       $this->saveLog($logs);
-                       $this->saveMessageToUserChat($userChat,$message,$type,$phone, $cloudapi->id);
-                       
-                       return response()->json([
-                                'message' => __('Message sent successfully..!!'),
-                            ], 200);
-            
+                $logs['user_id'] = Auth::id();
+                $logs['cloudapi_id'] = $cloudapi->id;
+                $logs['from'] = $cloudapi->phone;
+                $logs['to'] = $phone;
+                $logs['type'] = 'single-send';
+
+                $this->saveLog($logs);
+                $this->saveMessageToUserChat($userChat, $message, $type, $phone, $cloudapi->id);
+
+                return response()->json([
+                    'message' => __('Message sent successfully..!!'),
+                ], 200);
+
             } catch (\Netflie\WhatsAppCloudApi\Response\ResponseException $e) {
-            return response()->json([
-                                'message' => $e->rawResponse(),
-                            ], $e->httpStatusCode());
+                return response()->json([
+                    'message' => $e->rawResponse(),
+                ], $e->httpStatusCode());
             }
 
         }
@@ -200,9 +234,9 @@ public function saveMessageToUserChat($userChat, $templateName, $type, $request_
                 'message' => 'required|max:1000',
             ]);
 
-            $file=$this->saveFile($request,'file');
+            $file = $this->saveFile($request, 'file');
             $fileExt = $this->saveFileExt($request, 'file');
-            $request['attachment']=$file;
+            $request['attachment'] = $file;
             $document = $file;
             $document_name = $fileExt;
             $message = $request->message;
@@ -212,256 +246,252 @@ public function saveMessageToUserChat($userChat, $templateName, $type, $request_
 
             try {
                 $response = $whatsapp_app_cloud_api->sendDocument($phone, $link_id, $document_name, $message);
-                 $logs['user_id']=Auth::id();
-                       $logs['cloudapi_id']=$cloudapi->id;
-                       $logs['from']=$cloudapi->phone;
-                       $logs['to']=$phone;
-                       $logs['type']='single-send';
-            
-                       $this->saveLog($logs);
-                       $this->saveMessageToUserChat($userChat,$message,$type,$phone, $cloudapi->id);
-                       
-                       return response()->json([
-                                'message' => __('Message sent successfully..!!'),
-                            ], 200);
-            
+                $logs['user_id'] = Auth::id();
+                $logs['cloudapi_id'] = $cloudapi->id;
+                $logs['from'] = $cloudapi->phone;
+                $logs['to'] = $phone;
+                $logs['type'] = 'single-send';
+
+                $this->saveLog($logs);
+                $this->saveMessageToUserChat($userChat, $message, $type, $phone, $cloudapi->id);
+
+                return response()->json([
+                    'message' => __('Message sent successfully..!!'),
+                ], 200);
+
             } catch (\Netflie\WhatsAppCloudApi\Response\ResponseException $e) {
-            return response()->json([
-                                'message' => $e->rawResponse(),
-                            ], $e->httpStatusCode());
+                return response()->json([
+                    'message' => $e->rawResponse(),
+                ], $e->httpStatusCode());
             }
 
-        }elseif ($type == 'text-with-image'){
+        } elseif ($type == 'text-with-image') {
             $validated = $request->validate([
                 'image' => 'required|mimes:jpg,jpeg,png|max:1000',
             ]);
 
-            $image=$this->saveFile($request,'image');
+            $image = $this->saveFile($request, 'image');
             $link_id = new LinkID($image);
             $caption = $request->message;
             try {
                 $response = $whatsapp_app_cloud_api->sendImage($phone, $link_id, $caption);
-                $logs['user_id']=Auth::id();
-                       $logs['cloudapi_id']=$cloudapi->id;
-                       $logs['from']=$cloudapi->phone;
-                       $logs['to']=$phone;
-                       $logs['type']='single-send';
-            
-                       $this->saveLog($logs);
-                       $this->saveMessageToUserChat($userChat,$caption,$type,$phone, $cloudapi->id);
-                       
-                       return response()->json([
-                                'message' => __('Message sent successfully..!!'),
-                            ], 200);
-            
+                $logs['user_id'] = Auth::id();
+                $logs['cloudapi_id'] = $cloudapi->id;
+                $logs['from'] = $cloudapi->phone;
+                $logs['to'] = $phone;
+                $logs['type'] = 'single-send';
+
+                $this->saveLog($logs);
+                $this->saveMessageToUserChat($userChat, $caption, $type, $phone, $cloudapi->id);
+
+                return response()->json([
+                    'message' => __('Message sent successfully..!!'),
+                ], 200);
+
             } catch (\Netflie\WhatsAppCloudApi\Response\ResponseException $e) {
-            return response()->json([
-                                'message' => $e->rawResponse(),
-                            ], $e->httpStatusCode());
+                return response()->json([
+                    'message' => $e->rawResponse(),
+                ], $e->httpStatusCode());
             }
-        }elseif ($type == 'text-with-video'){
+        } elseif ($type == 'text-with-video') {
             $validated = $request->validate([
                 'video' => 'required|mimes:mp4|max:6000',
             ]);
 
-            $image=$this->saveFile($request,'video');
+            $image = $this->saveFile($request, 'video');
             $link_id = new LinkID($image);
             $caption = $request->message;
             try {
                 $response = $whatsapp_app_cloud_api->sendVideo($phone, $link_id, $caption);
-                $logs['user_id']=Auth::id();
-                       $logs['cloudapi_id']=$cloudapi->id;
-                       $logs['from']=$cloudapi->phone;
-                       $logs['to']=$phone;
-                       $logs['type']='single-send';
-            
-                       $this->saveLog($logs);
-                       $this->saveMessageToUserChat($userChat,$caption,$type,$phone, $cloudapi->id);
-                       return response()->json([
-                                'message' => __('Message sent successfully..!!'),
-                            ], 200);
-            
+                $logs['user_id'] = Auth::id();
+                $logs['cloudapi_id'] = $cloudapi->id;
+                $logs['from'] = $cloudapi->phone;
+                $logs['to'] = $phone;
+                $logs['type'] = 'single-send';
+
+                $this->saveLog($logs);
+                $this->saveMessageToUserChat($userChat, $caption, $type, $phone, $cloudapi->id);
+                return response()->json([
+                    'message' => __('Message sent successfully..!!'),
+                ], 200);
+
             } catch (\Netflie\WhatsAppCloudApi\Response\ResponseException $e) {
-            return response()->json([
-                                'message' => $e->rawResponse(),
-                            ], $e->httpStatusCode());
+                return response()->json([
+                    'message' => $e->rawResponse(),
+                ], $e->httpStatusCode());
             }
-        }elseif ($type == 'text-with-vcard') {
+        } elseif ($type == 'text-with-vcard') {
             $validated = $request->validate([
                 'display_name' => 'required|max:100',
                 'full_name' => 'required|max:100',
                 'org_name' => 'required|max:100',
-                'contact_number' => ['required', new Phone,'max:20'],
-                'wa_number' => ['required', new Phone,'max:20'],
-                
+                'contact_number' => ['required', new Phone, 'max:20'],
+                'wa_number' => ['required', new Phone, 'max:20'],
+
             ]);
-        }elseif($type == 'text-with-audio'){
+        } elseif ($type == 'text-with-audio') {
             $validated = $request->validate([
                 'audio' => 'required|mimes:mp3,ogg,wav|max:500',
             ]);
-            $image=$this->saveFile($request,'audio');
+            $image = $this->saveFile($request, 'audio');
             $link_id = new LinkID($image);
             //$caption = $request->message;
             try {
                 $response = $whatsapp_app_cloud_api->sendAudio($phone, $link_id);
-                $logs['user_id']=Auth::id();
-                       $logs['cloudapi_id']=$cloudapi->id;
-                       $logs['from']=$cloudapi->phone;
-                       $logs['to']=$phone;
-                       $logs['type']='single-send';
-            
-                       $this->saveLog($logs);
-                       $this->saveMessageToUserChat($userChat,'Audio Message',$type,$phone, $cloudapi->id);
-                       return response()->json([
-                                'message' => __('Message sent successfully..!!'),
-                            ], 200);
-            }
-            catch (\Netflie\WhatsAppCloudApi\Response\ResponseException $e) {
-                return response()->json([
-                                    'message' => $e->rawResponse(),
-                                ], $e->httpStatusCode());
-                }
-        }
-        
-        elseif ($type == 'text-with-template') {
-            //dd($request->all());
-            $template=Template::where('user_id',Auth::id())->where('status',1)->findorFail($request->template); 
-                $body = $template->body;
-                $templateName = $body['name'];
-                $language = $body['language'];
-                if (!empty($body['components'][0]['example']['header_text'][0]) || !empty($body['components'][0]['example']['body_text'][0][0]) || !empty($body['components'][0]['example']['header_handle'][0])) {
-                    
-                                
-                                $component_header = [];
-                                $component_body = [];
-                                $component_buttons = [];
-                                $templateName = $body['name'];
-                                if ($body['components'][0]['type'] === 'HEADER' && $body['components'][0]['format'] === 'TEXT'  ) {
-                                    
-                                    if (!empty($request->header_param)) {
-                                        
-                                        $component_header = [];
-                                        
-                                        $componentHeader = [
-                                        'type' => 'text',
-                                        'text' => $request->header_param,
-                                    ];
-                                    $component_header[] = $componentHeader;
-                                
-                            }
-                        } elseif($body['components'][0]['type'] === 'HEADER' && $body['components'][0]['format'] === 'IMAGE'  ){
-                            
-                                        
-                                        $componentHeader = [
-                                        'type' => 'image',
-                                        'image' => [
-                                            'link' => $request->header_param ?? $body['components'][0]['example']['header_handle'][0],
-                                            ],
-                                    ];
-                                    $component_header[] = $componentHeader;
-                        }elseif($body['components'][0]['type'] === 'HEADER' && $body['components'][0]['format'] === 'DOCUMENT'  ){
-                            $componentHeader = [
-                                        'type' => 'document',
-                                        'document' => [
-                                            'link' => $request->header_param ?? $body['components'][0]['example']['header_handle'][0],
-                                            ],
-                                    ];
-                                    $component_header[] = $componentHeader;
-                        } elseif($body['components'][0]['type'] === 'HEADER' && $body['components'][0]['format'] === 'VIDEO'  ){
-                            
-                                        
-                                        $componentHeader = [
-                                        'type' => 'video',
-                                        'video' => [
-                                            'link' => $request->header_param ?? $body['components'][0]['example']['header_handle'][0],
-                                            ],
-                                    ];
-                                    $component_header[] = $componentHeader;
-                        }
-                        else{
-                            
-                                    $component_header = [];
-                            }
-                            // Assuming $reply->parameters contains the JSON data
-                            
-                            
-                            if ($body['components'][0]['type'] === 'BODY' || $body['components'][1]['type'] === 'BODY'  ) {
-                            if (!empty($request->body_param)){
-                            $bodyString = $request->body_param;
-                            
-                            $component_body = [];
-                            
+                $logs['user_id'] = Auth::id();
+                $logs['cloudapi_id'] = $cloudapi->id;
+                $logs['from'] = $cloudapi->phone;
+                $logs['to'] = $phone;
+                $logs['type'] = 'single-send';
 
-                            foreach ($bodyString as $value) {
-                                
-                            $componentBody = [
+                $this->saveLog($logs);
+                $this->saveMessageToUserChat($userChat, 'Audio Message', $type, $phone, $cloudapi->id);
+                return response()->json([
+                    'message' => __('Message sent successfully..!!'),
+                ], 200);
+            } catch (\Netflie\WhatsAppCloudApi\Response\ResponseException $e) {
+                return response()->json([
+                    'message' => $e->rawResponse(),
+                ], $e->httpStatusCode());
+            }
+        } elseif ($type == 'text-with-template') {
+            //dd($request->all());
+            $template = Template::where('user_id', Auth::id())->where('status', 1)->findorFail($request->template);
+            $body = $template->body;
+            $templateName = $body['name'];
+            $language = $body['language'];
+            if (!empty($body['components'][0]['example']['header_text'][0]) || !empty($body['components'][0]['example']['body_text'][0][0]) || !empty($body['components'][0]['example']['header_handle'][0])) {
+
+
+                $component_header = [];
+                $component_body = [];
+                $component_buttons = [];
+                $templateName = $body['name'];
+                if ($body['components'][0]['type'] === 'HEADER' && $body['components'][0]['format'] === 'TEXT') {
+
+                    if (!empty($request->header_param)) {
+
+                        $component_header = [];
+
+                        $componentHeader = [
                             'type' => 'text',
-                            'text' => $value,
+                            'text' => $request->header_param,
+                        ];
+                        $component_header[] = $componentHeader;
+
+                    }
+                } elseif ($body['components'][0]['type'] === 'HEADER' && $body['components'][0]['format'] === 'IMAGE') {
+
+
+                    $componentHeader = [
+                        'type' => 'image',
+                        'image' => [
+                            'link' => $request->header_param ?? $body['components'][0]['example']['header_handle'][0],
+                        ],
+                    ];
+                    $component_header[] = $componentHeader;
+                } elseif ($body['components'][0]['type'] === 'HEADER' && $body['components'][0]['format'] === 'DOCUMENT') {
+                    $componentHeader = [
+                        'type' => 'document',
+                        'document' => [
+                            'link' => $request->header_param ?? $body['components'][0]['example']['header_handle'][0],
+                        ],
+                    ];
+                    $component_header[] = $componentHeader;
+                } elseif ($body['components'][0]['type'] === 'HEADER' && $body['components'][0]['format'] === 'VIDEO') {
+
+
+                    $componentHeader = [
+                        'type' => 'video',
+                        'video' => [
+                            'link' => $request->header_param ?? $body['components'][0]['example']['header_handle'][0],
+                        ],
+                    ];
+                    $component_header[] = $componentHeader;
+                } else {
+
+                    $component_header = [];
+                }
+                // Assuming $reply->parameters contains the JSON data
+
+
+                if ($body['components'][0]['type'] === 'BODY' || $body['components'][1]['type'] === 'BODY') {
+                    if (!empty($request->body_param)) {
+                        $bodyString = $request->body_param;
+
+                        $component_body = [];
+
+
+                        foreach ($bodyString as $value) {
+
+                            $componentBody = [
+                                'type' => 'text',
+                                'text' => $value,
                             ];
 
                             $component_body[] = $componentBody;
                         }
-                    }}
-                    $components = new Component($component_header, $component_body, $component_buttons);
-                    try{
-                    $response= $whatsapp_app_cloud_api->sendTemplate($request->phone, $templateName, $language, $components);
-                    $jsonResponse = json_decode($response->body(), true);
-                    $id = $jsonResponse['messages'][0]['id'];
-                     $logs['user_id']=Auth::id();
-                    $logs['cloudapi_id']=$cloudapi->id;
-                    $logs['from']=$cloudapi->phone ?? null;
-                    $logs['to']=$request->phone;
-                    $logs['type']='single-send';
-                    $logs['template_id']=$template->id ?? null;
-                    $logs['wamid'] = $id;
-                    $this->saveLog($logs);
-                    $this->saveMessageToUserChat($id,$userChat,$template->title,$template->type, $request->phone, $cloudapi->id);
-                    return response()->json([
-                                'message' => __("Message send Successfully"),
-                            ], 200);
-                    }catch(\Netflie\WhatsAppCloudApi\Response\ResponseException $e){
-                        $errorDetails = $e->getMessage(); // This gets the JSON string
-                        $errorObject = json_decode($errorDetails); // Decode into an object
-    
-                        // Now, access the nested message property
-                        $errorMessage = isset($errorObject->error->message) ? $errorObject->error->message : 'An unknown error occurred';
-                        return response()->json([
-                            'message' => $errorMessage
-                                        ],500);
-                    }
-                } else {
-                    try{
-                    $response = $whatsapp_app_cloud_api-> sendTemplate($request->phone, $templateName, $body['language']);
-                    $jsonResponse = json_decode($response->body(), true);
-                    $id = $jsonResponse['messages'][0]['id'];
-                    $logs['user_id']=Auth::id();
-                    $logs['cloudapi_id']=$cloudapi->id;
-                    $logs['from']=$cloudapi->phone ?? null;
-                    $logs['to']=$request->phone;
-                    $logs['type']='single-send';
-                    $logs['template_id']=$template->id ?? null;
-                    $logs['wamid'] = $id;
-                    $this->saveMessageToUserChat($id,$userChat,$template->title,$template->type, $request->phone, $cloudapi->id);
-                    
-                    return response()->json([
-                                'message' => __("Message send Successfully"),
-                            ], 200);
-                    }catch(\Netflie\WhatsAppCloudApi\Response\ResponseException $e){
-                        $errorDetails = $e->getMessage(); // This gets the JSON string
-                        $errorObject = json_decode($errorDetails); // Decode into an object
-    
-                        // Now, access the nested message property
-                        $errorMessage = isset($errorObject->error->message) ? $errorObject->error->message : 'An unknown error occurred';
-                        return response()->json([
-                            'message' => $errorMessage
-                                        ],500);
                     }
                 }
-            
-            
-            
-        }
-        elseif ($type == 'text-with-location') {
+                $components = new Component($component_header, $component_body, $component_buttons);
+                try {
+                    $response = $whatsapp_app_cloud_api->sendTemplate($request->phone, $templateName, $language, $components);
+                    $jsonResponse = json_decode($response->body(), true);
+                    $id = $jsonResponse['messages'][0]['id'];
+                    $logs['user_id'] = Auth::id();
+                    $logs['cloudapi_id'] = $cloudapi->id;
+                    $logs['from'] = $cloudapi->phone ?? null;
+                    $logs['to'] = $request->phone;
+                    $logs['type'] = 'single-send';
+                    $logs['template_id'] = $template->id ?? null;
+                    $logs['wamid'] = $id;
+                    $this->saveLog($logs);
+                    $this->saveMessageToUserChat($id, $userChat, $template->title, $template->type, $request->phone, $cloudapi->id);
+                    return response()->json([
+                        'message' => __("Message send Successfully"),
+                    ], 200);
+                } catch (\Netflie\WhatsAppCloudApi\Response\ResponseException $e) {
+                    $errorDetails = $e->getMessage(); // This gets the JSON string
+                    $errorObject = json_decode($errorDetails); // Decode into an object
+
+                    // Now, access the nested message property
+                    $errorMessage = isset($errorObject->error->message) ? $errorObject->error->message : 'An unknown error occurred';
+                    return response()->json([
+                        'message' => $errorMessage
+                    ], 500);
+                }
+            } else {
+                try {
+                    $response = $whatsapp_app_cloud_api->sendTemplate($request->phone, $templateName, $body['language']);
+                    $jsonResponse = json_decode($response->body(), true);
+                    $id = $jsonResponse['messages'][0]['id'];
+                    $logs['user_id'] = Auth::id();
+                    $logs['cloudapi_id'] = $cloudapi->id;
+                    $logs['from'] = $cloudapi->phone ?? null;
+                    $logs['to'] = $request->phone;
+                    $logs['type'] = 'single-send';
+                    $logs['template_id'] = $template->id ?? null;
+                    $logs['wamid'] = $id;
+                    $this->saveMessageToUserChat($id, $userChat, $template->title, $template->type, $request->phone, $cloudapi->id);
+
+                    return response()->json([
+                        'message' => __("Message send Successfully"),
+                    ], 200);
+                } catch (\Netflie\WhatsAppCloudApi\Response\ResponseException $e) {
+                    $errorDetails = $e->getMessage(); // This gets the JSON string
+                    $errorObject = json_decode($errorDetails); // Decode into an object
+
+                    // Now, access the nested message property
+                    $errorMessage = isset($errorObject->error->message) ? $errorObject->error->message : 'An unknown error occurred';
+                    return response()->json([
+                        'message' => $errorMessage
+                    ], 500);
+                }
+            }
+
+
+
+        } elseif ($type == 'text-with-location') {
             $validated = $request->validate([
                 'degreesLatitude' => 'required|max:100',
                 'degreesLongitude' => 'required|max:100',
@@ -474,26 +504,25 @@ public function saveMessageToUserChat($userChat, $templateName, $type, $request_
 
             try {
                 $response = $whatsapp_app_cloud_api->sendLocation($phone, $longitude, $latitude, $name, $address);
-                 $logs['user_id']=Auth::id();
-                       $logs['cloudapi_id']=$cloudapi->id;
-                       $logs['from']=$cloudapi->phone;
-                       $logs['to']=$phone;
-                       $logs['type']='single-send';
-            
-                       $this->saveLog($logs);
-                       $this->saveMessageToUserChat($userChat,'Location Message',$type,$phone, $cloudapi->id);
-                       return response()->json([
-                                'message' => __('Message sent successfully..!!'),
-                            ], 200);
-            
+                $logs['user_id'] = Auth::id();
+                $logs['cloudapi_id'] = $cloudapi->id;
+                $logs['from'] = $cloudapi->phone;
+                $logs['to'] = $phone;
+                $logs['type'] = 'single-send';
+
+                $this->saveLog($logs);
+                $this->saveMessageToUserChat($userChat, 'Location Message', $type, $phone, $cloudapi->id);
+                return response()->json([
+                    'message' => __('Message sent successfully..!!'),
+                ], 200);
+
             } catch (\Netflie\WhatsAppCloudApi\Response\ResponseException $e) {
-            return response()->json([
-                                'message' => $e->rawResponse(),
-                            ], $e->httpStatusCode());
+                return response()->json([
+                    'message' => $e->rawResponse(),
+                ], $e->httpStatusCode());
             }
 
-        }
-        elseif ($type == 'text-with-list') {
+        } elseif ($type == 'text-with-list') {
             $validated = $request->validate([
                 'header_title' => 'required|max:30',
                 'message' => 'required|max:300',
@@ -505,9 +534,9 @@ public function saveMessageToUserChat($userChat, $templateName, $type, $request_
             $header_title = $request->header_title;
             $message = $request->message;
             $footer = $request->footer_text;
-            $button_text =  $request->button_text;
-            $is_valid= count($request->section ?? []) > 20 ? false : true;
-            $error_message=__('Maximum Section Limit Is 20');
+            $button_text = $request->button_text;
+            $is_valid = count($request->section ?? []) > 20 ? false : true;
+            $error_message = __('Maximum Section Limit Is 20');
 
             if ($is_valid == false) {
                 return response()->json([
@@ -516,54 +545,49 @@ public function saveMessageToUserChat($userChat, $templateName, $type, $request_
             }
 
             foreach ($request->section as $key => $section) {
-            
-               if (count($section['value'] ?? []) == 0) {
-                   $is_valid=false;
-                   $error_message=__('Fill up the list option value');
 
-                   break;
-               }
-               elseif ($section['title'] == null || !$section['title']) {
-                   $is_valid=false;
-                   $error_message=__('Fill up all the title field');
+                if (count($section['value'] ?? []) == 0) {
+                    $is_valid = false;
+                    $error_message = __('Fill up the list option value');
 
-                   break;
-               }
-               elseif (strlen($section['title']) > 50) {
-                   $is_valid=false;
-                   $error_message=__('Maximum title limit is 50');
+                    break;
+                } elseif ($section['title'] == null || !$section['title']) {
+                    $is_valid = false;
+                    $error_message = __('Fill up all the title field');
 
-                   break;
-               }
-               else{
-                $ar = 1;
-                foreach ($section['value'] as $value_key => $value) {
-                    if (empty($value['title'])) {
-                     $is_valid=false;
-                     $error_message=__('Option title is required');
+                    break;
+                } elseif (strlen($section['title']) > 50) {
+                    $is_valid = false;
+                    $error_message = __('Maximum title limit is 50');
 
-                     break;
+                    break;
+                } else {
+                    $ar = 1;
+                    foreach ($section['value'] as $value_key => $value) {
+                        if (empty($value['title'])) {
+                            $is_valid = false;
+                            $error_message = __('Option title is required');
+
+                            break;
+                        } elseif (strlen($value['title']) > 50) {
+                            $is_valid = false;
+                            $error_message = __('List value name maximum word limit is 50');
+
+                            break;
+                        } elseif (strlen($value['description']) > 50) {
+                            $is_valid = false;
+                            $error_message = __('List value description maximum word limit is 50');
+
+                            break;
+                        }
+                        $ar++;
+                        $rows[] = new Row($ar, $value['title'], $value['description']);
+
                     }
-                    elseif (strlen($value['title']) > 50) {
-                     $is_valid=false;
-                     $error_message=__('List value name maximum word limit is 50');
-
-                     break;
-                    }
-                    elseif (strlen($value['description']) > 50) {
-                        $is_valid=false;
-                        $error_message=__('List value description maximum word limit is 50');
-
-                        break;
-                    }
-                    $ar++;
-                    $rows[] = new Row($ar, $value['title'], $value['description']);
-                    
                 }
-               }
             }
-            
-            
+
+
             if ($is_valid == false) {
                 return response()->json([
                     'message' => $error_message,
@@ -573,30 +597,30 @@ public function saveMessageToUserChat($userChat, $templateName, $type, $request_
             $sections = [new Section('Stars', $rows)];
             $action = new Action($button_text, $sections);
 
-            
+
 
 
             try {
-                $response = $whatsapp_app_cloud_api->sendList($phone, $header_title,$message,$footer,$action);
-                     $logs['user_id']=Auth::id();
-                       $logs['cloudapi_id']=$cloudapi->id;
-                       $logs['from']=$cloudapi->phone;
-                       $logs['to']=$phone;
-                       $logs['type']='single-send';
-            
-                       $this->saveLog($logs);
-                       $this->saveMessageToUserChat($userChat,$message,$type,$phone, $cloudapi->id);
-                       return response()->json([
-                                'message' => __("Message send Successfully"),
-                            ], 200);
-            
+                $response = $whatsapp_app_cloud_api->sendList($phone, $header_title, $message, $footer, $action);
+                $logs['user_id'] = Auth::id();
+                $logs['cloudapi_id'] = $cloudapi->id;
+                $logs['from'] = $cloudapi->phone;
+                $logs['to'] = $phone;
+                $logs['type'] = 'single-send';
+
+                $this->saveLog($logs);
+                $this->saveMessageToUserChat($userChat, $message, $type, $phone, $cloudapi->id);
+                return response()->json([
+                    'message' => __("Message send Successfully"),
+                ], 200);
+
             } catch (\Netflie\WhatsAppCloudApi\Response\ResponseException $e) {
                 return response()->json([
-                                    'message' => $e->rawResponse(),
-                                ], $e->httpStatusCode());
-                }
+                    'message' => $e->rawResponse(),
+                ], $e->httpStatusCode());
+            }
 
-        } elseif ($type == 'text-with-button'){
+        } elseif ($type == 'text-with-button') {
             //dd($request);
             $validated = $request->validate([
                 'footer_text' => 'required|max:100',
@@ -604,81 +628,80 @@ public function saveMessageToUserChat($userChat, $templateName, $type, $request_
                 'message' => 'required|max:1000',
             ]);
 
-             if (count($request->buttons) > 3) {
+            if (count($request->buttons) > 3) {
                 return response()->json([
                     'message' => __('Maximum Button Limit Is 3'),
                 ], 403);
-             }
-             $message = $request->message;
-             $row = [];
-             
-             foreach ($request->buttons as $index => $label) {
-            $id = 'button-' . ($index + 1);
-            $button = new Button($id, $label);
-            $rows[] = $button;
+            }
+            $message = $request->message;
+            $row = [];
+
+            foreach ($request->buttons as $index => $label) {
+                $id = 'button-' . ($index + 1);
+                $button = new Button($id, $label);
+                $rows[] = $button;
             }
             $action = new ButtonAction($rows);
-            
+
             try {
-                $response = $whatsapp_app_cloud_api->sendButton($phone,$message,$action, $request->header_text ?? null, $request->footer_text ?? null);
-                $logs['user_id']=Auth::id();
-                       $logs['cloudapi_id']=$cloudapi->id;
-                       $logs['from']=$cloudapi->phone;
-                       $logs['to']=$phone;
-                       $logs['type']='text-with-buttons';
-            
-                       $this->saveLog($logs);
-                       $this->saveMessageToUserChat($userChat,$message,$type,$phone, $cloudapi->id);
-                       return response()->json([
-                                'message' => __("Message send Successfully"),
-                            ], 200);
-            }
-            catch (\Netflie\WhatsAppCloudApi\Response\ResponseException $e) {
+                $response = $whatsapp_app_cloud_api->sendButton($phone, $message, $action, $request->header_text ?? null, $request->footer_text ?? null);
+                $logs['user_id'] = Auth::id();
+                $logs['cloudapi_id'] = $cloudapi->id;
+                $logs['from'] = $cloudapi->phone;
+                $logs['to'] = $phone;
+                $logs['type'] = 'text-with-buttons';
+
+                $this->saveLog($logs);
+                $this->saveMessageToUserChat($userChat, $message, $type, $phone, $cloudapi->id);
                 return response()->json([
-                                    'message' => $e->rawResponse(),
-                                ], $e->httpStatusCode());
-                }
-            
-            
-             
-             
+                    'message' => __("Message send Successfully"),
+                ], 200);
+            } catch (\Netflie\WhatsAppCloudApi\Response\ResponseException $e) {
+                return response()->json([
+                    'message' => $e->rawResponse(),
+                ], $e->httpStatusCode());
+            }
+
+
+
+
         }
-        
-        
 
-       
 
-       
+
+
+
+
 
         if ($request->templatestatus) {
             $validated = $request->validate([
                 'template_name' => 'required|max:100',
             ]);
 
-           $template=$this->saveTemplate($request->all(), $request->message,$type,Auth::id());
-           if ($template == false) {
-               return response()->json([
+            $template = $this->saveTemplate($request->all(), $request->message, $type, Auth::id());
+            if ($template == false) {
+                return response()->json([
                     'message' => __('Maximum Template Limit Exceeded'),
                 ], 403);
-           }
+            }
         }
 
-                  
+
 
     }
-    
-    
 
-    
+
+
+
 
     //creating record
     public function createTransaction($arr)
     {
-         $trans=new Smstransaction;
-         foreach ($arr as $key => $value) {
-             $trans->$key=$value;
-         }
-         $trans->save();
+        $trans = new Smstransaction;
+        foreach ($arr as $key => $value) {
+            $trans->$key = $value;
+        }
+        $trans->save();
     }
 
 
