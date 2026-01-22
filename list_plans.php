@@ -10,7 +10,5 @@ foreach ($plans as $plan) {
     echo "Title: " . $plan->title . "\n";
     echo "Price: " . $plan->price . "\n";
     echo "Days: " . $plan->days . "\n";
-    echo "Status: " . $plan->status . "\n";
-    echo "Data: " . json_encode($plan->data) . "\n";
     echo "--------------------------\n";
 }
