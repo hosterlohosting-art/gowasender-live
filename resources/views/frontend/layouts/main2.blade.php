@@ -81,9 +81,24 @@
 
     <!-- Scripts -->
     <script src="{{ asset('assets/frontend/js/jquery.js') }}"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
     <script>
-        // AOS.init(); // Add animations if needed
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100,
+            easing: 'ease-out-cubic',
+        });
+        
+        // Initialize Tilt on elements with data-tilt attribute
+        VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
+            max: 15,
+            speed: 400,
+            glare: true,
+            "max-glare": 0.5,
+        });
     </script>
     @stack('js')
 </body>

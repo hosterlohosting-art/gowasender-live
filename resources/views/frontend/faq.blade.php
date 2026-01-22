@@ -15,15 +15,44 @@
       </div>
     </section>
 
-    <!-- FAQ Content -->
-    <section class="py-24 bg-white relative">
-      <div class="container mx-auto px-6">
+    <section class="py-24 bg-white relative min-h-screen">
+      <!-- Floating shapes background -->
+      <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div
+          class="absolute top-20 left-10 w-72 h-72 bg-brand-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob">
+        </div>
+        <div
+          class="absolute top-20 right-10 w-72 h-72 bg-accent-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000">
+        </div>
+        <div
+          class="absolute -bottom-8 left-20 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000">
+        </div>
+      </div>
+
+      <div class="container mx-auto px-6 relative z-10">
+
+        <!-- Search Bar -->
+        <div class="max-w-2xl mx-auto mb-16 relative" data-aos="fade-up">
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <i class="fas fa-search text-gray-400"></i>
+          </div>
+          <input type="text" id="faqSearch" placeholder="Search for answers (e.g. 'Billing', 'API', 'Setup')"
+            class="w-full pl-12 pr-4 py-4 rounded-2xl border-0 shadow-lg ring-1 ring-gray-200 focus:ring-2 focus:ring-brand-500 transition-all text-lg placeholder-gray-400 bg-white/80 backdrop-blur-sm">
+        </div>
+
         <div class="flex flex-col lg:flex-row gap-16 items-start">
           <!-- Left: 3D Image -->
-          <div class="lg:w-1/3 hidden lg:block sticky top-32">
-            <img src="{{ asset('public/uploads/faq_3d.png') }}" alt="Knowledge"
-              class="w-full h-auto rounded-3xl animate-float">
-            <div class="mt-12 p-8 bg-brand-50 rounded-3xl border border-brand-100">
+          <div class="lg:w-1/3 hidden lg:block sticky top-32" data-aos="fade-right">
+            <div class="relative group" data-tilt>
+              <div
+                class="absolute -inset-1 bg-gradient-to-r from-brand-600 to-accent-600 rounded-3xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200">
+              </div>
+              <img src="{{ asset('assets/frontend/images/faq_illustration.png') }}"
+                onerror="this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=Knowledge+Base'" alt="Knowledge"
+                class="relative rounded-3xl shadow-xl w-full">
+            </div>
+
+            <div class="mt-12 p-8 bg-white/60 backdrop-blur-md rounded-3xl border border-white/50 shadow-lg">
               <h4 class="font-bold text-gray-900 mb-2">Still need help?</h4>
               <p class="text-sm text-gray-600 mb-6">If you can't find your answer here, our team is always ready to assist
                 you personally.</p>
@@ -33,23 +62,32 @@
             </div>
           </div>
 
-          <!-- Right: Accordion -->
+          <!-- Right: Searchable Grid -->
           <div class="lg:w-2/3 w-full">
-            <div class="space-y-4">
+            <div class="space-y-4" id="faqContainer">
               @foreach($faqs ?? [] as $faq)
                 <div
-                  class="group border border-gray-100 rounded-2xl bg-white hover:border-brand-200 hover:shadow-xl transition-all duration-300">
+                  class="faq-item group border border-white/50 rounded-2xl bg-white/60 backdrop-blur-md shadow-card hover:shadow-card-hover hover:bg-white transition-all duration-300"
+                  data-aos="fade-up">
                   <button class="w-full p-6 text-left flex justify-between items-center"
                     onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('.icon').classList.toggle('rotate-180')">
                     <span
-                      class="text-lg font-bold text-gray-900 group-hover:text-brand-600 transition">{{ $faq->title }}</span>
-                    <i class="fas fa-chevron-down text-brand-500 transition-transform icon"></i>
+                      class="text-lg font-bold text-gray-900 group-hover:text-brand-600 transition faq-title">{{ $faq->title }}</span>
+                    <i
+                      class="fas fa-chevron-down text-brand-500 transition-transform icon bg-brand-50 p-2 rounded-full"></i>
                   </button>
-                  <div class="hidden px-6 pb-6 text-gray-500 leading-relaxed animate-fade-in-down">
+                  <div class="hidden px-6 pb-6 text-gray-600 leading-relaxed animate-fade-in-down">
                     {{ $faq->excerpt->value ?? '' }}
                   </div>
                 </div>
               @endforeach
+
+              <!-- No Results Message -->
+              <div id="noResults" class="hidden text-center p-12">
+                <div class="text-6xl mb-4">🔍</div>
+                <h3 class="text-xl font-bold text-gray-900">No results found</h3>
+                <p class="text-gray-500">Try searching for something else.</p>
+              </div>
 
               @if(empty($faqs) || count($faqs) == 0)
                 <div class="text-center p-12 bg-gray-50 rounded-3xl border border-dashed border-gray-300">
@@ -63,6 +101,32 @@
         </div>
       </div>
     </section>
+
+    <script>
+      // Simple Live Search
+      document.getElementById('faqSearch').addEventListener('keyup', function (e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const items = document.querySelectorAll('.faq-item');
+        let hasResults = false;
+
+        items.forEach(item => {
+          const title = item.querySelector('.faq-title').innerText.toLowerCase();
+          if (title.includes(searchTerm)) {
+            item.style.display = 'block';
+            hasResults = true;
+          } else {
+            item.style.display = 'none';
+          }
+        });
+
+        const noResults = document.getElementById('noResults');
+        if (hasResults) {
+          noResults.classList.add('hidden');
+        } else {
+          noResults.classList.remove('hidden');
+        }
+      });
+    </script>
 
     <!-- Search/Help CTA -->
     <section class="py-24 bg-gray-50 border-t border-gray-200">
