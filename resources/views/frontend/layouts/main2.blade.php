@@ -12,9 +12,7 @@
     {!! Twitter::generate() !!}
     {!! JsonLd::generate() !!}
 
-    <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon"
-        href="{{ asset(optional(get_option('primary_data', true))->favicon ?? '') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/img/brand/favicon.png') }}">
 
     <!-- CSS / Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -91,7 +89,7 @@
             offset: 100,
             easing: 'ease-out-cubic',
         });
-        
+
         // Initialize Tilt on elements with data-tilt attribute
         VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
             max: 15,
