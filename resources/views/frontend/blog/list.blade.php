@@ -1,61 +1,63 @@
-@extends('frontend.layouts.main')
+@extends('frontend.layouts.main2')
 @section('content')
-@include('frontend.layouts.header')
-<main>
+	<main class="overflow-hidden">
+		<!-- Hero Section -->
+		<section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 bg-brand-50/50">
+			<div class="container mx-auto px-6 relative z-10 text-center max-w-4xl">
+				<span class="text-brand-600 font-bold tracking-wider uppercase text-sm mb-2 block">Our Insights</span>
+				<h1
+					class="text-5xl lg:text-7xl font-display font-extrabold leading-tight text-gray-900 mb-8 tracking-tight">
+					Latest from the <span
+						class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-accent-600">Blog.</span>
+				</h1>
+				<p class="text-gray-500 text-lg md:text-xl leading-relaxed mx-auto max-w-2xl">
+					Expert tips, industry news, and automation strategies to help you master WhatsApp marketing.
+				</p>
+			</div>
+		</section>
 
-<div class="bred_crumb">
-      <div class="container">
-        <!-- shape animation  -->
-        <span class="banner_shape1"> <img src="{{ asset('assets/frontend/images/banner-shape1.png')}}" alt="image" > </span>
-        <span class="banner_shape2"> <img src="{{ asset('assets/frontend/images/banner-shape2.png')}}" alt="image" > </span>
-        <span class="banner_shape3"> <img src="{{ asset('assets/frontend/images/banner-shape3.png')}}" alt="image" > </span>
+		<!-- Blog Grid -->
+		<section class="py-24 bg-white -mt-10 lg:-mt-20">
+			<div class="container mx-auto px-6">
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+					@foreach($blogs ?? [] as $blog)
+						<div
+							class="group h-full flex flex-col bg-white rounded-[2.5rem] border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500">
+							<div class="relative overflow-hidden h-64">
+								<img src="{{ asset($blog->preview->value ?? '') }}" alt="{{ $blog->title }}"
+									class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+								<div class="absolute top-4 left-4">
+									<span
+										class="bg-brand-600 text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest">Automation</span>
+								</div>
+							</div>
+							<div class="p-10 flex flex-col flex-1">
+								<h3 class="text-2xl font-bold text-gray-900 mb-4 group-hover:text-brand-600 transition">
+									{{ $blog->title }}</h3>
+								<p class="text-gray-500 leading-relaxed mb-8 flex-1">
+									{{ Str::limit($blog->shortDescription->value ?? '', 140) }}
+								</p>
+								<a href="{{ url('/blog', $blog->slug) }}"
+									class="inline-flex items-center gap-2 text-brand-600 font-bold hover:gap-4 transition-all">
+									Read More <i class="fas fa-arrow-right"></i>
+								</a>
+							</div>
+						</div>
+					@endforeach
+				</div>
 
-        <div class="bred_text">
-          <h1>{{ __('Recent Blogs') }}</h1>
-          <ul>
-            <li><a href="{{ url('/') }}">{{ __('Home') }}</a></li>
-            <li><span>»</span></li>
-            <li>{{ __('Blog') }}</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+				@if(count($blogs) == 0)
+					<div class="text-center p-24 bg-gray-50 rounded-[3rem] border border-dashed border-gray-300">
+						<div class="text-6xl mb-6">📝</div>
+						<h3 class="text-2xl font-bold text-gray-900 mb-2">No Articles Found</h3>
+						<p class="text-gray-500">Please check back later as we are preparing fresh content for you.</p>
+					</div>
+				@endif
 
-<section class="row_am latest_story" id="blog">
-     <!-- container start -->
-      <div class="container">
-      <div class="section_title" data-aos="fade-in" data-aos-duration="1500" data-aos-delay="100">
-              <h2>Read latest <span>story</span></h2>
-              <p><br></p>
-          </div>
-          <div class="row">
-
-          @foreach($blogs ?? [] as $blog)
-          <div class="col-md-4">
-                <div class="story_box" data-aos="fade-up" data-aos-duration="1500">
-                    <div class="story_img">
-                      <img src="{{ asset($blog->preview->value ?? '') }}" alt="image" >
-                      <span>45 min ago</span>
-                    </div>
-                    <div class="story_text">
-                        <h3>{{ $blog->title }}</h3>
-                        <p>{{ Str::limit($blog->shortDescription->value ?? '',200) }}</p>
-                        <a href="{{ url('/blog',$blog->slug) }}">READ MORE</a>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-            @if(count($blogs) == 0)
-                     <div class="alert alert-warning" role="alert">
-                      {{ __('Opps there is no blog post available') }}
-                     </div>
-                     @endif
-
-                     <div class="pagination_block">
-                       {{ $blogs->appends($request->all())->links('vendor.pagination.bootstrap-5') }}
-                     </div>
-
-                     </div>
-      <!-- container end -->
-    </section>
-</main>
+				<div class="mt-20 flex justify-center">
+					{{ $blogs->appends($request->all())->links('vendor.pagination.bootstrap-5') }}
+				</div>
+			</div>
+		</section>
+	</main>
+@endsection

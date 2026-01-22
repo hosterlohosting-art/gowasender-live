@@ -1,131 +1,125 @@
-@extends('frontend.layouts.main')
+@extends('frontend.layouts.main2')
 @section('content')
-  <style>
-    header {
-      background-color: #fff !important;
-    }
-  </style>
-  @include('frontend.layouts.header')
-  <main>
-    <div class="bred_crumb">
-      <div class="container">
-        <!-- shape animation  -->
-        <span class="banner_shape1"> <img src="{{ asset('assets/frontend/images/banner-shape1.png')}}" alt="image">
-        </span>
-        <span class="banner_shape2"> <img src="{{ asset('assets/frontend/images/banner-shape2.png')}}" alt="image">
-        </span>
-        <span class="banner_shape3"> <img src="{{ asset('assets/frontend/images/banner-shape3.png')}}" alt="image">
-        </span>
-
-        <div class="bred_text">
-          <h1>{{ __('Contact us') }}</h1>
-          <p>If you have an query, please get in touch with us, we will revert back quickly.</p>
-          <ul>
-            <li><a href="{{ url('/') }}">{{ __('Home') }}</a></li>
-            <li><span>»</span></li>
-            <li>{{ __('Contact us') }}</li>
-          </ul>
-        </div>
+  <main class="overflow-hidden">
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 bg-brand-50/50">
+      <div class="container mx-auto px-6 relative z-10 text-center max-w-4xl">
+        <span class="text-brand-600 font-bold tracking-wider uppercase text-sm mb-2 block">Support Center</span>
+        <h1 class="text-5xl lg:text-7xl font-display font-extrabold leading-tight text-gray-900 mb-8 tracking-tight">
+          Get in <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-accent-600">Touch.</span>
+        </h1>
+        <p class="text-gray-500 text-lg md:text-xl leading-relaxed mx-auto">
+          Have questions or need technical assistance? Our team is here to help you scale your WhatsApp marketing journey.
+        </p>
       </div>
-    </div>
+    </section>
 
-    <section class="contact_page_section">
-      <div class="container">
-        <div class="contact_inner">
-          <div class="contact_form">
-            <div class="section_title">
-              <h2>Leave a <span>message</span></h2>
-              <p>Fill up form below, our team will get back soon</p>
-            </div>
-            @if ($errors->any())
-              <div class="alert alert-danger">
-                <ul>
-                  @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                  @endforeach
-                </ul>
-              </div>
-            @endif
-            @if(Session::has('success'))
-              <div class="alert alert-success" role="alert">
-                {{ Session::get('success') }}
-              </div>
-            @endif
-            @if(Session::has('error'))
-              <div class="alert alert-danger" role="alert">
-                {{ Session::get('error') }}
-              </div>
-            @endif
-            <form action="{{ route('send.mail') }}" method="POST">
+    <!-- Contact Form & Info -->
+    <section class="py-24 bg-white -mt-10 lg:-mt-20">
+      <div class="container mx-auto px-6">
+        <div
+          class="flex flex-col lg:flex-row gap-16 bg-white rounded-[3rem] shadow-2xl p-8 md:p-16 border border-gray-100 relative z-20">
+          <!-- Left: Form -->
+          <div class="lg:w-3/5">
+            <h2 class="text-3xl font-display font-bold text-gray-900 mb-8">Send us a message</h2>
+            <form action="{{ route('send.mail') }}" method="POST" class="space-y-6 ajaxform">
               @csrf
-              <div class="form-group">
-                <input type="text" required="" name="name" maxlength="20" placeholder="{{ __('Enter your Name') }}"
-                  class="form-control @error('name') is-invalid @enderror">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-2">Your Name</label>
+                  <input type="text" name="name" required
+                    class="w-full px-5 py-4 rounded-2xl bg-gray-50 border border-gray-200 focus:outline-none focus:border-brand-500 focus:bg-white transition"
+                    placeholder="John Doe">
+                </div>
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
+                  <input type="email" name="email" required
+                    class="w-full px-5 py-4 rounded-2xl bg-gray-50 border border-gray-200 focus:outline-none focus:border-brand-500 focus:bg-white transition"
+                    placeholder="john@example.com">
+                </div>
               </div>
-              <div class="form-group">
-                <input type="email" required="" name="email" maxlength="40" placeholder="{{ __('Enter your Mail') }}"
-                  class="form-control @error('email') is-invalid @enderror">
+              <div>
+                <label class="block text-sm font-bold text-gray-700 mb-2">Subject</label>
+                <input type="text" name="subject" required
+                  class="w-full px-5 py-4 rounded-2xl bg-gray-50 border border-gray-200 focus:outline-none focus:border-brand-500 focus:bg-white transition"
+                  placeholder="How can we help?">
               </div>
-              <div class="form-group">
-                <input type="number" required="" name="phone" maxlength="15" placeholder="{{ __('Enter your Number') }}"
-                  class="form-control @error('phone') is-invalid @enderror">
+              <div>
+                <label class="block text-sm font-bold text-gray-700 mb-2">Message</label>
+                <textarea name="message" required rows="5"
+                  class="w-full px-5 py-4 rounded-2xl bg-gray-50 border border-gray-200 focus:outline-none focus:border-brand-500 focus:bg-white transition"
+                  placeholder="Tell us more about your needs..."></textarea>
               </div>
-              <div class="form-group">
-                <input type="text" placeholder="{{ __('Subject') }}" maxlength="100" required="" name="subject"
-                  class="form-control @error('subject') is-invalid @enderror">
-              </div>
-              <div class="form-group">
-                <textarea placeholder="{{ __('Type your Message') }}" maxlength="500" required="" name="message"
-                  class="form-control @error('message') is-invalid @enderror"></textarea>
-              </div>
-              <div class="form-group term_check">
-                <input type="checkbox" id="term">
-                <label for="term">I agree to receive emails, newsletters and promotional messages</label>
-              </div>
-              <div class="form-group mb-0">
-                <button type="submit" class="btn puprple_btn">SEND MESSAGE</button>
-              </div>
+              <button type="submit"
+                class="w-full md:w-auto px-10 py-5 bg-brand-600 text-white font-bold text-lg rounded-2xl shadow-xl hover:-translate-y-1 transition duration-300 flex items-center justify-center gap-3 submit-btn">
+                <i class="fas fa-paper-plane"></i> Send Message
+              </button>
             </form>
           </div>
 
-          <div class="contact_info">
-            <div class="icon"><img src="{{ asset('assets/frontend/images/contact_message_icon.png')}}" alt="image"></div>
-            <div class="section_title">
-              <h2>Have any <span>question?</span></h2>
-              <p>If you have any question about our product, service, payment or company.</a></p>
+          <!-- Right: Info -->
+          <div class="lg:w-2/5 flex flex-col justify-between">
+            <div>
+              <div class="mb-12">
+                <img src="{{ asset('public/uploads/support_3d.png') }}" alt="Support"
+                  class="w-full h-auto rounded-3xl animate-float max-w-sm">
+              </div>
+              <div class="space-y-8">
+                <div class="flex items-start gap-6">
+                  <div
+                    class="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center text-brand-600 text-xl shrink-0">
+                    <i class="fas fa-envelope"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-gray-900 mb-1 text-lg">Email Us</h4>
+                    <p class="text-gray-500">support@hosterlo.com</p>
+                  </div>
+                </div>
+                <div class="flex items-start gap-6">
+                  <div
+                    class="w-12 h-12 rounded-xl bg-accent-50 flex items-center justify-center text-accent-600 text-xl shrink-0">
+                    <i class="fab fa-whatsapp"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-bold text-gray-900 mb-1 text-lg">Chat with Us</h4>
+                    <p class="text-gray-500">Available 24/7 via WhatsApp</p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <ul class="contact_info_list">
-              <li>
-                <div class="img">
-                  <img src="{{ asset('assets/frontend/images/mail_icon.png')}}" alt="image">
+
+            <div class="mt-12 bg-gray-50 p-8 rounded-3xl border border-gray-100">
+              <h4 class="font-bold text-gray-900 mb-4">Office Hours</h4>
+              <div class="space-y-2 text-sm text-gray-500">
+                <div class="flex justify-between"><span>Mon - Fri</span><span>9:00 AM - 6:00 PM</span></div>
+                <div class="flex justify-between"><span>Saturday</span><span>10:00 AM - 2:00 PM</span></div>
+                <div class="flex justify-between font-bold text-brand-600"><span>Sunday</span><span>Support Only</span>
                 </div>
-                <div class="text">
-                  <span>Email Us</span>
-                  <a href="mailto:support@gowasender.com">support@gowasender.com</a>
-                </div>
-              </li>
-              <li>
-                <div class="img">
-                  <img src="{{ asset('assets/frontend/images/call_icon.png')}}" alt="image">
-                </div>
-                <div class="text">
-                  <span>Call Us</span>
-                  <a href="tel:+16183561311">+1 (618) 356-1311</a>
-                </div>
-              </li>
-              <li>
-                <div class="img">
-                  <img src="{{ asset('assets/frontend/images/location_icon.png')}}" alt="image">
-                </div>
-                <div class="text">
-                  <span>Visit Us</span>
-                  <p>117 South Lexington Street Ste 100, Harrisonville, MO 64701, USA</p>
-                </div>
-              </li>
-            </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
   </main>
+
+  <style>
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-15px);
+      }
+
+      100% {
+        transform: translateY(0px);
+      }
+    }
+
+    .animate-float {
+      animation: float 5s ease-in-out infinite;
+    }
+  </style>
 @endsection

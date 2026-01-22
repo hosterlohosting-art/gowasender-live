@@ -29,16 +29,7 @@ class PricingController extends Controller
 
         $this->metadata('seo_pricing');
 
-        $theme_path = get_option('theme_path');
-        $theme_path = empty($theme_path) ? 'frontend.index-1' : $theme_path;
-        //$theme_path = 'frontend.index-1';
-
-        if ($theme_path == 'frontend.index-1') {
-
-            return view('frontend.plans-2', compact('faqs', 'plans'));
-        } else {
-            return view('frontend.plans', compact('faqs', 'plans'));
-        }
+        return view('frontend.plans', compact('faqs', 'plans'));
     }
 
     /**

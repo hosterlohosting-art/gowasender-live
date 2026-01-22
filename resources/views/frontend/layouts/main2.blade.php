@@ -1,41 +1,90 @@
 <!doctype html>
-<html class="no-js" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html class="scroll-smooth" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-   <meta charset="utf-8">
-   <meta http-equiv="x-ua-compatible" content="ie=edge">
-   <meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0" name="viewport">
-   <meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' />
-    <!-- CSRF Token -->
-   <meta name="csrf-token" content="{{ csrf_token() }}">
-   {!! SEOMeta::generate() !!}
-   {!! OpenGraph::generate() !!}
-   {!! Twitter::generate() !!}
-   {!! JsonLd::generate() !!}
-   
-   <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-   <!-- Place favicon.ico in the root directory -->
-   <link rel="shortcut icon" type="image/x-icon" href="{{ asset(get_option('primary_data',true)->favicon ?? '') }}">
+    {!! SEOMeta::generate() !!}
+    {!! OpenGraph::generate() !!}
+    {!! Twitter::generate() !!}
+    {!! JsonLd::generate() !!}
 
-   <!-- CSS here -->
-   <link rel="stylesheet" href="{{ asset('assets/frontend/css/style2.css') }}">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset(get_option('primary_data', true)->favicon ?? '') }}">
+
+    <!-- CSS / Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['"Outfit"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#F0FDF4',
+                            100: '#DCFCE7',
+                            200: '#BBF7D0',
+                            400: '#4ADE80',
+                            500: '#22C55E',
+                            600: '#16A34A',
+                            700: '#15803D',
+                            900: '#14532D',
+                            dark: '#022C22',
+                        },
+                        accent: {
+                            50: '#EFF6FF',
+                            100: '#DBEAFE',
+                            500: '#3B82F6',
+                            600: '#2563EB',
+                            700: '#1D4ED8',
+                            900: '#1E3A8A',
+                        }
+                    },
+                    boxShadow: {
+                        'glow': '0 0 40px -10px rgba(34, 197, 94, 0.4)',
+                        'card': '0 20px 40px -15px rgba(0, 0, 0, 0.05)',
+                        'card-hover': '0 30px 60px -15px rgba(34, 197, 94, 0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .glass-header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+        }
+    </style>
+    @stack('css')
 </head>
 
+<body class="bg-white text-gray-800 antialiased font-sans overflow-x-hidden">
+    @include('frontend.layouts.header')
 
-<body class="home page-template page-template-wacloud-home-page page-template-wacloud-home-page-php page page-id-6 wp-embed-responsive group-blog has-featured-image featured-image-wide" >
-    <div id ="myDiv" class="laoctionsetting wacloudAS wacloudIN" >
-        
-        @include('frontend.layouts.header-2')
-        @yield('content')
-    
-    </div>
+    @yield('content')
 
-   <!-- JS here -->
-   <script src="{{ asset('assets/frontend/js/jquery.js') }}"></script>
-   <script src="{{ asset('assets/frontend/js/wow.min.js') }}"></script>
-    <script src="{{ asset('assets/frontend/js/lazy_load.js') }}"></script>
-   <script src="{{ asset('assets/frontend/js/bootstrap.min.js') }}"></script>
-   <script src="{{ asset('assets/frontend/js/style2.js') }}"></script>
+    @include('frontend.layouts.footer')
+
+    <!-- Scripts -->
+    <script src="{{ asset('assets/frontend/js/jquery.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        // AOS.init(); // Add animations if needed
+    </script>
+    @stack('js')
 </body>
+
 </html>

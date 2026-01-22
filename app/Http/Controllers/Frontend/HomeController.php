@@ -47,17 +47,9 @@ class HomeController extends Controller
         $work = get_option('work', true, true);
         $download = get_option('download', true, true);
 
-        $theme_path = get_option('theme_path');
-        $theme_path = empty($theme_path) ? 'frontend.index-1' : $theme_path;
-        //$theme_path = 'frontend.index-1';
+        $features = Post::where('type', 'feature')->where('featured', 1)->where('lang', app()->getLocale())->with('preview', 'excerpt')->latest()->take(6)->get();
 
-        if ($theme_path == 'frontend.index-1') {
-            $features = Post::where('type', 'feature')->where('featured', 1)->where('lang', app()->getLocale())->with('preview', 'excerpt')->latest()->take(6)->get();
-        } else {
-            $features = get_option('features', true, true);
-        }
-
-        return view($theme_path, compact('brands', 'testimonials', 'faqs', 'plans', 'brand_area', 'banner', 'features', 'about', 'overview', 'work', 'download'));
+        return view('frontend.index', compact('brands', 'testimonials', 'faqs', 'plans', 'brand_area', 'banner', 'features', 'about', 'overview', 'work', 'download'));
     }
 
     public function fbemb()
@@ -84,17 +76,7 @@ class HomeController extends Controller
 
         $this->metadata('seo_about');
 
-        $theme_path = get_option('theme_path');
-        $theme_path = empty($theme_path) ? 'frontend.index-1' : $theme_path;
-        //$theme_path = 'frontend.index-1';
-
-        if ($theme_path == 'frontend.index-1') {
-
-            return view('frontend.about-2', compact('about', 'download', 'banner', 'faqs', 'overview'));
-
-        } else {
-            return view('frontend.about', compact('about', 'download', 'banner', 'faqs', 'plans'));
-        }
+        return view('frontend.about', compact('about', 'download', 'banner', 'faqs', 'overview', 'plans'));
     }
 
 
