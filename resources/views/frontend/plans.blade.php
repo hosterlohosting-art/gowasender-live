@@ -22,7 +22,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                @foreach($plans ?? [] as $plan)
                   @php
-                     $details = json_decode($plan->data ?? '{}');
+                     $details = json_decode($plan->data ?? '{}') ?? (object) [];
                      $isFeatured = $plan->is_recommended == 1;
                    @endphp
                   <div class="relative group">
@@ -47,17 +47,17 @@
                            <ul class="space-y-4 mb-10">
                               <li class="flex items-center gap-3 text-gray-600">
                                  <div class="w-2 h-2 rounded-full bg-brand-500"></div>
-                                 <span><strong>{{ $details->messages_limit == -1 ? 'Unlimited' : $details->messages_limit }}</strong>
+                                 <span><strong>{{ $details->messages_limit == -1 ? 'Unlimited' : ($details->messages_limit ?? 0) }}</strong>
                                     Bulks / Month</span>
                               </li>
                               <li class="flex items-center gap-3 text-gray-600">
                                  <div class="w-2 h-2 rounded-full bg-brand-500"></div>
-                                 <span><strong>{{ $details->device_limit == -1 ? 'Unlimited' : $details->device_limit }}</strong>
+                                 <span><strong>{{ $details->device_limit == -1 ? 'Unlimited' : ($details->device_limit ?? 0) }}</strong>
                                     WhatsApp Accounts</span>
                               </li>
                               <li class="flex items-center gap-3 text-gray-600">
                                  <div class="w-2 h-2 rounded-full bg-brand-500"></div>
-                                 <span><strong>{{ $details->contact_limit == -1 ? 'Unlimited' : $details->contact_limit }}</strong>
+                                 <span><strong>{{ $details->contact_limit == -1 ? 'Unlimited' : ($details->contact_limit ?? 0) }}</strong>
                                     Contacts</span>
                               </li>
                               <li class="flex items-center gap-3 text-gray-600 opacity-60">

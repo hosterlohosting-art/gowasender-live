@@ -13,7 +13,8 @@
     {!! JsonLd::generate() !!}
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset(get_option('primary_data', true)->favicon ?? '') }}">
+    <link rel="shortcut icon" type="image/x-icon"
+        href="{{ asset(optional(get_option('primary_data', true))->favicon ?? '') }}">
 
     <!-- CSS / Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
