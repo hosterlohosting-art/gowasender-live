@@ -21,6 +21,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // dd('HOME CONTROLLER HIT - IF YOU SEE THIS, I AM WORKING');
 
 
         $brands = Category::where('type', 'brand')->where('status', 1)->latest()->get();
