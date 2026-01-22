@@ -25,7 +25,7 @@ class PricingController extends Controller
     public function index()
     {
         $faqs = Post::where('type', 'faq')->where('lang', app()->getLocale())->with('excerpt')->latest()->get();
-        $plans = Plan::where('status', 1)->latest()->get();
+        $plans = Plan::where('status', 1)->orderBy('price', 'asc')->get();
 
         $this->metadata('seo_pricing');
 
