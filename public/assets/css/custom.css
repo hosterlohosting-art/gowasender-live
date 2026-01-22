@@ -817,9 +817,12 @@ body {
 
 /* Fix logo appearance in mini mode */
 .g-sidenav-hidden .sidenav .navbar-brand {
-    display: block !important;
-    padding-top: 1rem !important;
-    padding-bottom: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 70px !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 .g-sidenav-hidden .sidenav .full-logo {
@@ -829,9 +832,9 @@ body {
 .g-sidenav-hidden .sidenav .mini-logo {
     display: block !important;
     margin: 0 auto !important;
-    max-height: 50px !important;
-    /* SIGNIFICANTLY LARGER */
-    width: auto !important;
+    height: 38px !important;
+    width: 38px !important;
+    object-fit: contain !important;
 }
 
 .g-sidenav-hidden .sidenav .sidenav-header {
@@ -1209,8 +1212,6 @@ body {
         font-size: 16px;
         /* Prevents auto-zoom on iOS inputs */
     }
-}/ *  
- F o r c e  
- P u s h  
- * /  
- 
+}
+
+/ *     F o r c e     P u s h     * /     
