@@ -21,10 +21,13 @@ trait DeviceTrait
     public function createSession($sessionId)
     {
         try {
-            $response = Http::post($this->getApiBaseUrl() . '/sessions/add', [
-                'sessionId' => $sessionId,
-            ]);
+            $response = Http::withOptions([
+                'verify' => false,
+            ])->timeout(30)->post($this->getApiBaseUrl() . '/sessions/add', [
+                        'sessionId' => $sessionId,
+                    ]);
 
+            \Log::info('WhatsApp API Raw Response: ' . $response->body());
             return $response->json();
         } catch (\Exception $e) {
             Log::error('WhatsApp API Error (createSession): ' . $e->getMessage());
@@ -40,7 +43,9 @@ trait DeviceTrait
         try {
             // Some APIs might return the QR in the add session response, 
             // others might have a separate endpoint.
-            $response = Http::get($this->getApiBaseUrl() . '/sessions/qr/' . $sessionId);
+            $response = Http::withOptions([
+                'verify' => false,
+            ])->timeout(30)->get($this->getApiBaseUrl() . '/sessions/qr/' . $sessionId);
             return $response->json();
         } catch (\Exception $e) {
             Log::error('WhatsApp API Error (getSessionQR): ' . $e->getMessage());
@@ -54,7 +59,9 @@ trait DeviceTrait
     public function getSessionStatus($sessionId)
     {
         try {
-            $response = Http::get($this->getApiBaseUrl() . '/sessions/status/' . $sessionId);
+            $response = Http::withOptions([
+                'verify' => false,
+            ])->timeout(30)->get($this->getApiBaseUrl() . '/sessions/status/' . $sessionId);
             return $response->json();
         } catch (\Exception $e) {
             Log::error('WhatsApp API Error (getSessionStatus): ' . $e->getMessage());
@@ -68,7 +75,9 @@ trait DeviceTrait
     public function deleteSession($sessionId)
     {
         try {
-            $response = Http::delete($this->getApiBaseUrl() . '/sessions/delete/' . $sessionId);
+            $response = Http::withOptions([
+                'verify' => false,
+            ])->timeout(30)->delete($this->getApiBaseUrl() . '/sessions/delete/' . $sessionId);
             return $response->json();
         } catch (\Exception $e) {
             Log::error('WhatsApp API Error (deleteSession): ' . $e->getMessage());
@@ -82,11 +91,13 @@ trait DeviceTrait
     public function sendDeviceMessage($sessionId, $to, $text)
     {
         try {
-            $response = Http::post($this->getApiBaseUrl() . '/messages/send', [
-                'sessionId' => $sessionId,
-                'to' => $to,
-                'text' => $text,
-            ]);
+            $response = Http::withOptions([
+                'verify' => false,
+            ])->timeout(30)->post($this->getApiBaseUrl() . '/messages/send', [
+                        'sessionId' => $sessionId,
+                        'to' => $to,
+                        'text' => $text,
+                    ]);
 
             return $response->json();
         } catch (\Exception $e) {

@@ -87,7 +87,8 @@ class DeviceController extends Controller
 
         return response()->json([
             'success' => false,
-            'message' => $response['message'] ?? __('Failed to connect to WhatsApp server')
+            'message' => $response['message'] ?? __('Failed to connect to WhatsApp server'),
+            'debug' => $response // For debugging
         ], 500);
     }
 
