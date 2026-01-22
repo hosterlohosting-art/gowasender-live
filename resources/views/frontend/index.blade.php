@@ -37,6 +37,44 @@ function formatFeatureKey($key)
         content="Automate your WhatsApp marketing with Visual Flow Builder, Chatbots, and Anti-Ban technology. Send bulk messages safely with WA Sender by Hosterlo.">
     <meta name="keywords"
         content="whatsapp automation, bulk sender, visual flow builder, chatbot builder, anti-ban whatsapp, hosterlo wa sender">
+    <link rel="canonical" href="{{ url()->current() }}" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="WA Sender by Hosterlo - #1 Safe Bulk WhatsApp Automation Tool">
+    <meta property="og:description"
+        content="Automate your WhatsApp marketing with Visual Flow Builder, Chatbots, and Anti-Ban technology. Send bulk messages safely.">
+    <meta property="og:image" content="{{ asset('assets/img/brand/blue.png') }}">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ url()->current() }}">
+    <meta property="twitter:title" content="WA Sender by Hosterlo - #1 Safe Bulk WhatsApp Automation Tool">
+    <meta property="twitter:description"
+        content="Automate your WhatsApp marketing with Visual Flow Builder, Chatbots, and Anti-Ban technology.">
+    <meta property="twitter:image" content="{{ asset('assets/img/brand/blue.png') }}">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "WA Sender by Hosterlo",
+      "operatingSystem": "Cloud",
+      "applicationCategory": "BusinessApplication",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "ratingCount": "1250"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "9.00",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link

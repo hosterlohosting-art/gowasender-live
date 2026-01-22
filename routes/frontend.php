@@ -6,9 +6,9 @@ use App\Http\Controllers\Frontend as FRONTEND;
 
 Auth::routes();
 
-Route::get('/', [FRONTEND\HomeController::class, 'index']);//
-Route::get('/', function () {
-    return view('frontend.index'); });
+Route::get('/sitemap.xml', [FRONTEND\SitemapController::class, 'index']);
+
+Route::get('/', [FRONTEND\HomeController::class, 'index']);
 Route::get('/about', [FRONTEND\HomeController::class, 'about']);
 Route::get('/blogs', [FRONTEND\BlogController::class, 'index']);
 Route::get('/blog/{slug}', [FRONTEND\BlogController::class, 'show']);

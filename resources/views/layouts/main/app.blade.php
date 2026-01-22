@@ -8,7 +8,10 @@
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <title>{{ env('APP_NAME') }}</title>
+  {!! SEOMeta::generate() !!}
+  {!! OpenGraph::generate() !!}
+  {!! Twitter::generate() !!}
+  {!! JsonLd::generate() !!}
   <!-- Favicon -->
   <link rel="icon" href="{{ asset('assets/img/brand/favicon.png') }}" type="image/png">
   <!-- Fonts -->
