@@ -8,6 +8,33 @@
 @endsection
 
 @section('content')
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card anti-ban-warning shadow-lg border-0" style="border-radius: 20px; background: linear-gradient(135deg, #fffbeb 0%, #fff7ed 100%); border-left: 5px solid #f97316 !important;">
+            <div class="card-body p-4">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <div class="icon icon-lg icon-shape bg-soft-warning text-warning rounded-circle shadow-sm">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                    </div>
+                    <div class="col ml--2">
+                        <h4 class="mb-1 font-weight-bold text-dark">{{ __('Safety Warning (Unofficial API)') }}</h4>
+                        <p class="text-sm text-dark mb-0">
+                            {{ __('Using Unofficial API (QR Scan) carries a higher risk of account blocking if you send too many messages too fast. For 100% safety and high volume, we recommend using the Official WhatsApp Cloud API.') }}
+                        </p>
+                    </div>
+                    <div class="col-auto mt-3 mt-md-0">
+                        <a href="{{ url('/pricing') }}" class="btn btn-warning btn-sm rounded-pill px-4 font-weight-bold shadow-sm">
+                           <i class="fas fa-rocket mr-2"></i> {{ __('Go Official') }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row">
     @forelse($devices as $device)
         <div class="col-xl-4 col-md-6 mb-4">
