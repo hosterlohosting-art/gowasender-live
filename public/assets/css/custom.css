@@ -14,25 +14,32 @@
 }
 
 /* Fix for "Hiding Bars" and accessibility */
-.scrollbar-inner > .scroll-content {
+.scrollbar-inner>.scroll-content {
     scrollbar-width: thin !important;
     scrollbar-color: var(--wa-green) transparent !important;
 }
 
-.scrollbar-inner > .scroll-content::-webkit-scrollbar {
+.scrollbar-inner>.scroll-content::-webkit-scrollbar {
     height: 6px !important;
     display: block !important;
 }
 
-.scrollbar-inner > .scroll-content::-webkit-scrollbar-thumb {
+.scrollbar-inner>.scroll-content::-webkit-scrollbar-thumb {
     background: var(--wa-green) !important;
     border-radius: 10px !important;
 }
 
 /* Animations */
 @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .animate-fade-in-up {
@@ -660,38 +667,67 @@ body {
 /*                              USER LAYOUT (WhatsApp Theme)                  */
 /* -------------------------------------------------------------------------- */
 
-/* Sidebar */
-.user-layout .sidenav {
-    background-color: var(--wa-sidebar-dark) !important;
-}
-
-/* .user-layout .sidenav .navbar-brand-img {
-    filter: brightness(0) invert(1);
-} */
-
-.user-layout .navbar-vertical .navbar-nav .nav-link {
-    color: #aebac1 !important;
+/* Sidebar Navigation - Consolidated Premium Style */
+.navbar-vertical .navbar-nav .nav-link {
+    padding: 0.85rem 1.25rem;
+    margin: 0.25rem 0.75rem;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-weight: 500;
-}
-
-.user-layout .navbar-vertical .navbar-nav .nav-link:hover {
-    color: #e9edef !important;
-    background-color: rgba(255, 255, 255, 0.05);
-}
-
-.user-layout .navbar-vertical .navbar-nav .nav-link.active {
-    color: #00a884 !important;
-    /* WhatsApp Web Active Green */
-    background: rgba(37, 211, 102, 0.1) !important;
-    border-right: 3px solid var(--wa-green);
-}
-
-.user-layout .navbar-vertical .navbar-nav .nav-link>i {
     color: #aebac1 !important;
+    /* WhatsApp muted text */
+    display: flex;
+    align-items: center;
 }
 
-.user-layout .navbar-vertical .navbar-nav .nav-link.active>i {
-    color: var(--wa-green) !important;
+.user-layout .sidenav {
+    background-color: #111b21 !important;
+    /* WhatsApp Dark */
+}
+
+.navbar-vertical .navbar-nav .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #e9edef !important;
+    transform: translateX(5px);
+}
+
+.navbar-vertical .navbar-nav .nav-link.active {
+    background: linear-gradient(135deg, #128C7E 0%, #075E54 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(18, 140, 126, 0.25);
+    border-right: none !important;
+}
+
+.navbar-vertical .navbar-nav .nav-link i {
+    min-width: 1.75rem;
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: center;
+    margin-right: 0.75rem;
+    color: #aebac1;
+}
+
+.navbar-vertical .navbar-nav .nav-link.active i {
+    color: #ffffff !important;
+}
+
+.navbar-heading {
+    padding: 1.5rem 1.75rem 0.75rem !important;
+    font-size: 0.7rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 800;
+    color: #8696a0 !important;
+    /* WhatsApp secondary text */
+}
+
+/* Header Section Refines */
+.header-section {
+    background: white;
+    border-bottom: 1px solid #f0f2f5;
+    margin-bottom: 1.5rem;
+    z-index: 5;
+    position: relative;
 }
 
 /* Header */

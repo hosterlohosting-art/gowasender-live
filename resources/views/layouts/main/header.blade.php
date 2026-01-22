@@ -2,10 +2,8 @@
    style="height: 70px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
    <div class="container-fluid">
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
          <!-- LEFT: Logo & Mobile Toggler -->
          <div class="d-flex align-items-center">
-            <!-- Mobile Toggler (Only visible on mobile) -->
             <div class="sidenav-toggler sidenav-toggler-dark d-xl-none mr-3" data-action="sidenav-pin"
                data-target="#sidenav-main">
                <div class="sidenav-toggler-inner">
@@ -15,10 +13,9 @@
                </div>
             </div>
 
-            <!-- Brand Logo -->
-            <a class="navbar-brand mr-lg-5" href="{{ url('/') }}">
+            <a class="navbar-brand d-xl-none" href="{{ url('/') }}">
                <img src="{{ asset('assets/img/brand/blue.png') }}" class="navbar-brand-img" alt="Logo"
-                  style="height: 40px;">
+                  style="height: 35px;">
             </a>
          </div>
 
