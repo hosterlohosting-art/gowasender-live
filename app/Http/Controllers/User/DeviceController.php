@@ -75,20 +75,44 @@ class DeviceController extends Controller
     {
         $device = Device::where('user_id', Auth::id())->where('uuid', $uuid)->firstOrFail();
 
-        // Try to create/get session from Node.js server
+        // 1. Try to create/get session from Node.js server
         $response = $this->createSession($device->uuid);
 
         if (isset($response['success']) && $response['success']) {
+            // 2. Poll for the QR code for up to 10 seconds
+            for ($i = 0; $i < 10; $i++) {
+                $qrResponse = $this->getSessionQR($device->uuid);
+
+                if (isset($qrResponse['success']) && $qrResponse['success'] && !empty($qrResponse['qr'])) {
+                    return response()->json([
+                        'success' => true,
+                        'qr' => $qrResponse['qr'],
+                    ]);
+                }
+
+                // If session is already connected, we don't need a QR
+                $statusResponse = $this->getSessionStatus($device->uuid);
+                if (isset($statusResponse['connected']) && $statusResponse['connected']) {
+                    return response()->json([
+                        'success' => false,
+                        'connected' => true,
+                        'message' => __('Device is already connected.')
+                    ]);
+                }
+
+                sleep(1); // Wait 1 second before retrying
+            }
+
             return response()->json([
-                'success' => true,
-                'qr' => $response['qr'] ?? '',
-            ]);
+                'success' => false,
+                'message' => __('QR code is taking too long to generate. Please refresh.')
+            ], 408);
         }
 
         return response()->json([
             'success' => false,
             'message' => $response['message'] ?? __('Failed to connect to WhatsApp server'),
-            'debug' => $response // For debugging
+            'debug' => $response // Raw debug info
         ], 500);
     }
 
