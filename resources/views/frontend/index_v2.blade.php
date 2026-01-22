@@ -206,7 +206,7 @@ function formatLimit($value)
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
                     @foreach($featuredPlans as $plan)
-                        @php $details = json_decode($plan->data ?? '{}'); @endphp
+                        @php $details = (object) (is_array($plan->data) ? $plan->data : json_decode($plan->data ?? '{}', true)); @endphp
                         <div
                             class="bg-white rounded-3xl p-8 shadow-card hover:shadow-card-hover transition-all border border-transparent hover:border-brand-200 flex flex-col">
                             <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ $plan->title }}</h3>
