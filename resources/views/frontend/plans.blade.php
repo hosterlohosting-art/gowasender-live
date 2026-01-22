@@ -19,119 +19,160 @@
       <!-- Pricing Grid -->
       <section class="py-24 bg-white -mt-10 lg:-mt-20">
          <div class="container mx-auto px-6 relative z-10">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
                @foreach($plans ?? [] as $plan)
                   @php
                      $details = (object) (is_array($plan->data) ? $plan->data : json_decode($plan->data ?? '{}', true));
                      $isFeatured = $plan->is_recommended == 1;
                      $title = strtoupper($plan->title);
                    @endphp
-                  <div class="relative group">
+                  <div class="relative group h-full">
                      @if($isFeatured)
                         <div
-                           class="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand-600 text-white px-6 py-1 rounded-full text-xs font-bold uppercase tracking-widest z-20 shadow-lg">
-                           MOST RECOMMENDED</div>
+                           class="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand-600 text-white px-6 py-1 rounded-full text-xs font-bold uppercase tracking-widest z-20 shadow-lg whitespace-nowrap">
+                           BEST VALUE</div>
                      @endif
 
                      <div
-                        class="h-full flex flex-col bg-white rounded-[2.5rem] p-10 shadow-card hover:shadow-card-hover transition-all duration-500 border {{ $isFeatured ? 'border-brand-500 ring-4 ring-brand-50/50' : 'border-gray-100' }}">
-                        <div class="mb-8">
-                           <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ $plan->title }}</h3>
+                        class="h-full flex flex-col bg-white rounded-[2rem] p-8 shadow-card hover:shadow-card-hover transition-all duration-500 border {{ $isFeatured ? 'border-brand-500 ring-4 ring-brand-50/50' : 'border-gray-100' }}">
+                        <div class="mb-6">
+                           <h3 class="text-xl font-bold text-gray-900 mb-2 truncate" title="{{ $plan->title }}">
+                              {{ $plan->title }}</h3>
                            <div class="flex items-baseline gap-1">
-                              <span class="text-5xl font-extrabold text-gray-900">${{ $plan->price }}</span>
-                              <span class="text-gray-400 font-medium">/
+                              <span class="text-4xl font-extrabold text-gray-900">${{ $plan->price }}</span>
+                              <span class="text-gray-400 text-sm font-medium">/
                                  {{ $plan->days >= 3650 ? 'Life Time' : ($plan->days == 730 ? '2 Years' : ($plan->days == 30 ? 'Monthly' : $plan->days . ' Days')) }}</span>
                            </div>
                         </div>
 
                         <div class="flex-1">
-                           <ul class="space-y-4 mb-10">
+                           <ul class="space-y-3 mb-8">
                               @if(str_contains(strtolower($plan->title), 'free'))
-                                 <li class="flex items-start gap-3 text-gray-600">
-                                    <span class="text-red-500">❌</span>
-                                    <span class="text-sm">Unofficial WhatsApp Only (QR Code Scan)</span>
+                                 <li class="flex items-start gap-2 text-gray-500">
+                                    <span class="text-red-500 text-xs">❌</span>
+                                    <span class="text-xs">No Official Cloud API</span>
                                  </li>
-                                 <li class="flex items-start gap-3 text-red-600 font-bold bg-red-50 p-2 rounded-lg">
-                                    <span>⚠️</span>
-                                    <span class="text-xs">DANGER: High Risk of Number Ban. WhatsApp may detect and ban your
-                                       number for bulk messaging.</span>
+                                 <li class="flex items-start gap-2 text-red-600 font-bold bg-red-50 p-2 rounded-lg">
+                                    <span class="text-xs">⚠️</span>
+                                    <span class="text-[10px] leading-tight">DANGER: High Risk of Number Ban. Not recommended for
+                                       business.</span>
                                  </li>
-                                 <li class="flex items-start gap-3 text-orange-600 font-medium">
-                                    <span>⚠️</span>
-                                    <span class="text-xs">No Anti-Ban Protection: Messages are sent instantly without random
-                                       delays.</span>
+                                 <li class="flex items-start gap-2 text-gray-600">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-gray-400 mt-1.5"></div>
+                                    <span class="text-xs"><strong>50</strong> Messages / day</span>
                                  </li>
-                                 <li class="flex items-center gap-3 text-gray-600">
-                                    <div class="w-2 h-2 rounded-full bg-gray-400"></div>
-                                    <span><strong>50</strong> Messages / day</span>
+                                 <li class="flex items-start gap-2 text-gray-600">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-gray-400 mt-1.5"></div>
+                                    <span class="text-xs">1 WhatsApp Account</span>
                                  </li>
-                                 <li class="flex items-center gap-3 text-gray-400 opacity-60">
-                                    <div class="w-2 h-2 rounded-full bg-gray-300"></div>
-                                    <span>Support: None</span>
+                                 <li class="flex items-start gap-2 text-gray-400 opacity-60">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-gray-300 mt-1.5"></div>
+                                    <span class="text-xs">No Shared Team Access</span>
+                                 </li>
+                                 <li class="flex items-start gap-2 text-gray-400 opacity-60">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-gray-300 mt-1.5"></div>
+                                    <span class="text-xs">Support: None</span>
                                  </li>
                               @elseif(str_contains(strtolower($plan->title), 'starter'))
-                                 <li class="flex items-start gap-3 text-gray-700 font-semibold">
-                                    <span class="text-green-500">✅</span>
-                                    <span class="text-sm">Official Cloud API Included</span>
+                                 <li class="flex items-start gap-2 text-gray-700 font-semibold">
+                                    <span class="text-green-500 text-xs">✅</span>
+                                    <span class="text-xs">Official Cloud API Ready</span>
                                  </li>
-                                 <li class="flex items-start gap-3 text-gray-600">
-                                    <span class="text-green-500">✅</span>
-                                    <span class="text-sm">Unlimited Bulk Messaging Safely</span>
+                                 <li class="flex items-start gap-2 text-gray-600">
+                                    <span class="text-green-500 text-xs">✅</span>
+                                    <span class="text-xs">Unlimited Bulk Messaging</span>
                                  </li>
-                                 <li class="flex items-start gap-3 text-gray-600">
-                                    <span class="text-green-500">✅</span>
-                                    <span class="text-sm">Hybrid Mode: Switch between Unofficial & Official</span>
+                                 <li class="flex items-start gap-2 text-gray-600">
+                                    <span class="text-green-500 text-xs">✅</span>
+                                    <span class="text-xs">Smart Anti-Ban Protection</span>
                                  </li>
-                                 <li class="flex items-start gap-3 text-gray-600">
-                                    <span class="text-green-500">✅</span>
-                                    <span class="text-sm">Smart Anti-Ban: Random delays & Spintax</span>
+                                 <li class="flex items-start gap-2 text-gray-600">
+                                    <span class="text-green-500 text-xs">✅</span>
+                                    <span class="text-xs">Visual Flow Builder</span>
+                                 </li>
+                                 <li class="flex items-start gap-2 text-gray-600">
+                                    <span class="text-green-500 text-xs">✅</span>
+                                    <span class="text-xs">Auto-Reply & Chatbots</span>
+                                 </li>
+                                 <li class="flex items-start gap-2 text-gray-600">
+                                    <span class="text-green-500 text-xs">✅</span>
+                                    <span class="text-xs">Contact Management</span>
+                                 </li>
+                                 <li class="flex items-start gap-2 text-gray-600">
+                                    <span class="text-green-500 text-xs">✅</span>
+                                    <span class="text-xs">Standard Support</span>
                                  </li>
                               @elseif(str_contains(strtolower($plan->title), 'pro'))
-                                 <li class="flex items-start gap-3 text-gray-700 font-bold">
-                                    <span class="text-brand-500">✅</span>
-                                    <span class="text-sm">ALL Features from Starter Plan</span>
+                                 <li class="flex items-start gap-2 text-brand-600 font-bold">
+                                    <span class="text-brand-500 text-xs">✅</span>
+                                    <span class="text-xs">ALL Features Included</span>
                                  </li>
-                                 <li class="flex items-start gap-3 text-brand-600">
-                                    <span class="text-brand-500">✅</span>
-                                    <span class="text-sm">Valid for 24 Months (Save Big!)</span>
+                                 <li class="flex items-start gap-2 text-gray-700">
+                                    <span class="text-brand-500 text-xs">✅</span>
+                                    <span class="text-xs">Valid for 24 Full Months</span>
                                  </li>
-                                 <li class="flex items-start gap-3 text-gray-600">
-                                    <span class="text-brand-500">✅</span>
-                                    <span class="text-sm">Priority Support: Direct WhatsApp line</span>
+                                 <li class="flex items-start gap-2 text-gray-700">
+                                    <span class="text-brand-500 text-xs">✅</span>
+                                    <span class="text-xs">Priority WhatsApp Support</span>
                                  </li>
-                                 <li class="flex items-start gap-3 text-gray-600">
-                                    <span class="text-brand-500">✅</span>
-                                    <span class="text-sm">2-Year Price Lock Protection</span>
+                                 <li class="flex items-start gap-2 text-gray-700">
+                                    <span class="text-brand-500 text-xs">✅</span>
+                                    <span class="text-xs">Advanced API Documentation</span>
+                                 </li>
+                                 <li class="flex items-start gap-2 text-gray-700">
+                                    <span class="text-brand-500 text-xs">✅</span>
+                                    <span class="text-xs">Webhooks Integration</span>
+                                 </li>
+                                 <li class="flex items-start gap-2 text-gray-700">
+                                    <span class="text-brand-500 text-xs">✅</span>
+                                    <span class="text-xs">Multiple Device Slots</span>
+                                 </li>
+                                 <li class="flex items-start gap-2 text-gray-700">
+                                    <span class="text-brand-500 text-xs">✅</span>
+                                    <span class="text-xs">2-Year Price Guarantee</span>
                                  </li>
                               @elseif(str_contains(strtolower($plan->title), 'reseller'))
-                                 <li class="flex items-start gap-3 text-gray-800 font-extrabold">
-                                    <span class="text-blue-500">✅</span>
-                                    <span class="text-sm uppercase">Full Source Code Included</span>
+                                 <li class="flex items-start gap-2 text-gray-800 font-bold">
+                                    <span class="text-blue-500 text-xs">✅</span>
+                                    <span class="text-xs">Full Source Code (PHP/Laravel)</span>
                                  </li>
-                                 <li class="flex items-start gap-3 text-gray-700 font-bold">
-                                    <span class="text-blue-500">✅</span>
-                                    <span class="text-sm">White Label: Custom Logo & Branding</span>
+                                 <li class="flex items-start gap-2 text-gray-800 font-bold">
+                                    <span class="text-blue-500 text-xs">✅</span>
+                                    <span class="text-xs">White Label Branding</span>
                                  </li>
-                                 <li class="flex items-start gap-3 text-green-600 font-bold">
-                                    <span class="text-green-500">✅</span>
-                                    <span class="text-sm">100% Profit: Keep everything you make</span>
+                                 <li class="flex items-start gap-2 text-green-600 font-bold">
+                                    <span class="text-green-500 text-xs">✅</span>
+                                    <span class="text-xs">Keep 100% of Subscription Revenue</span>
                                  </li>
-                                 <li class="flex items-start gap-3 text-gray-600">
-                                    <span class="text-blue-500">✅</span>
-                                    <span class="text-sm">Full Installation & Setup Support</span>
+                                 <li class="flex items-start gap-2 text-gray-700 font-medium">
+                                    <span class="text-blue-500 text-xs">✅</span>
+                                    <span class="text-xs">Professional Setup & Install</span>
+                                 </li>
+                                 <li class="flex items-start gap-2 text-gray-700 font-medium">
+                                    <span class="text-blue-500 text-xs">✅</span>
+                                    <span class="text-xs">Multi-Tenant CMS Included</span>
+                                 </li>
+                                 <li class="flex items-start gap-2 text-gray-700 font-medium">
+                                    <span class="text-blue-500 text-xs">✅</span>
+                                    <span class="text-xs">Admin Training Session</span>
+                                 </li>
+                                 <li class="flex items-start gap-2 text-gray-700 font-medium">
+                                    <span class="text-blue-500 text-xs">✅</span>
+                                    <span class="text-xs">Lifetime Core Updates</span>
                                  </li>
                               @endif
                            </ul>
                         </div>
 
                         <a href="{{ url('/register', $plan->id) }}"
-                           class="block w-full py-5 text-center font-bold text-lg rounded-2xl transition-all duration-300 {{ $isFeatured ? 'bg-brand-600 text-white hover:bg-brand-700 shadow-xl shadow-brand-500/30' : 'bg-gray-900 text-white hover:bg-brand-600' }}">
-                           {{ $plan->price == 0 ? 'Start Free Trial' : 'Get Started Now' }}
+                           class="block w-full py-4 text-center font-bold text-base rounded-xl transition-all duration-300 {{ $isFeatured ? 'bg-brand-600 text-white hover:bg-brand-700 shadow-lg shadow-brand-500/20' : 'bg-gray-900 text-white hover:bg-brand-600' }}">
+                           {{ $plan->price == 0 ? 'Try for Free' : 'Get Started' }}
                         </a>
                      </div>
                   </div>
                @endforeach
             </div>
+         </div>
          </div>
       </section>
 
