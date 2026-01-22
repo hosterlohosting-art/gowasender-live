@@ -707,7 +707,7 @@ body {
     color: #aebac1;
 }
 
-.navbar-vertical .navbar-nav .nav-link.active i {
+.user-layout .navbar-vertical .navbar-nav .nav-link.active i {
     color: #ffffff !important;
 }
 
@@ -772,12 +772,24 @@ body {
 }
 
 /* Active State Icons - Force Square Highlight & Centering */
-.g-sidenav-hidden .sidenav .navbar-nav .nav-link.active {
+.user-layout.g-sidenav-hidden .sidenav .navbar-nav .nav-link.active {
     background: rgba(37, 211, 102, 0.1) !important;
     color: var(--wa-green) !important;
     border-radius: 12px !important;
     border-right: none !important;
-    /* Remove the vertical line in mini mode */
+    width: 46px !important;
+    height: 46px !important;
+    margin: 4px auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+}
+
+.admin-layout.g-sidenav-hidden .sidenav .navbar-nav .nav-link.active {
+    background: #f6f9fc !important;
+    color: #5e72e4 !important;
+    border-radius: 12px !important;
     width: 46px !important;
     height: 46px !important;
     margin: 4px auto !important;
@@ -832,12 +844,18 @@ body {
     /* Hide toggler when collapsed to focus on brand icon */
 }
 
-/* Fix "Black Bar" by Forcing White Background */
-.g-sidenav-hidden .sidenav,
-.g-sidenav-hidden .sidenav .scrollbar-inner,
-.g-sidenav-hidden .sidenav .navbar-inner {
+/* Fix "Black Bar" by Forcing correct backgrounds */
+.admin-layout.g-sidenav-hidden .sidenav,
+.admin-layout.g-sidenav-hidden .sidenav .scrollbar-inner,
+.admin-layout.g-sidenav-hidden .sidenav .navbar-inner {
     background-color: white !important;
-    /* Back to white */
+    overflow-y: hidden !important;
+}
+
+.user-layout.g-sidenav-hidden .sidenav,
+.user-layout.g-sidenav-hidden .sidenav .scrollbar-inner,
+.user-layout.g-sidenav-hidden .sidenav .navbar-inner {
+    background-color: #111b21 !important;
     overflow-y: hidden !important;
 }
 
@@ -976,6 +994,23 @@ body {
     color: #5e72e4 !important;
     background-color: #f6f9fc !important;
     border-radius: 0.375rem;
+}
+
+.admin-layout .navbar-vertical .navbar-nav .nav-link {
+    color: #525f7f !important;
+}
+
+.admin-layout .navbar-vertical .navbar-nav .nav-link:hover {
+    color: #5e72e4 !important;
+    background-color: #f6f9fc !important;
+}
+
+.admin-layout .navbar-vertical .navbar-nav .nav-link i {
+    color: #8898aa;
+}
+
+.admin-layout .navbar-vertical .navbar-nav .nav-link.active i {
+    color: #5e72e4 !important;
 }
 
 /* -------------------------------------------------------------------------- */
