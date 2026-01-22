@@ -1,3 +1,79 @@
+/* -------------------------------------------------------------------------- */
+/*                          HYPER-MODERN DESIGN SYSTEM                        */
+/* -------------------------------------------------------------------------- */
+
+:root {
+    --primary-gradient: linear-gradient(135deg, #075E54 0%, #128C7E 100%);
+    --secondary-gradient: linear-gradient(135deg, #25D366 0%, #34B7F1 100%);
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --soft-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    --premium-radius: 16px;
+    --wa-green: #25D366;
+    --wa-dark: #111b21;
+}
+
+/* Fix for "Hiding Bars" and accessibility */
+.scrollbar-inner > .scroll-content {
+    scrollbar-width: thin !important;
+    scrollbar-color: var(--wa-green) transparent !important;
+}
+
+.scrollbar-inner > .scroll-content::-webkit-scrollbar {
+    height: 6px !important;
+    display: block !important;
+}
+
+.scrollbar-inner > .scroll-content::-webkit-scrollbar-thumb {
+    background: var(--wa-green) !important;
+    border-radius: 10px !important;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Premium Card Style */
+.premium-card {
+    background: white;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--premium-radius) !important;
+    box-shadow: var(--soft-shadow) !important;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.premium-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
+}
+
+.premium-btn {
+    border-radius: 50px !important;
+    padding: 10px 25px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+}
+
+.premium-btn-primary {
+    background: var(--primary-gradient) !important;
+    color: white !important;
+}
+
+.premium-btn-primary:hover {
+    box-shadow: 0 5px 15px rgba(18, 140, 126, 0.4) !important;
+    transform: scale(1.02);
+}
+
 .scroll::-webkit-scrollbar {
     display: none;
 }

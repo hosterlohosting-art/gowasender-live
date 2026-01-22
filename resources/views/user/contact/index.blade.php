@@ -1,20 +1,22 @@
 @extends('layouts.main.app')
 @section('head')
 @include('layouts.main.headersection',[
-'title' => __('Contact List'),
+'title' => __('Contacts Book'),
 'buttons' =>[
 	[
-		'name'=>__('Create Contact'),
+		'name'=>'<i class="fas fa-plus mr-1"></i>'. __('Create Contact'),
 		'url'=> route('user.contact.create'),
+        'components' => 'class="btn btn-sm premium-btn premium-btn-primary"'
 	],
 	[
-		'name'=>__('Contact Groups'),
+		'name'=>'<i class="fas fa-users mr-1"></i>'. __('Groups'),
 		'url'=> route('user.group.index'),
+        'components' => 'class="btn btn-sm premium-btn btn-white border ml-2"'
 	],
 	[
-		'name'=>__('Import Contacts'),
+		'name'=>'<i class="fas fa-file-import mr-1"></i>'. __('Import'),
 		'url'=>'#',
-		'components'=>'data-toggle="modal" data-target="#import-contact"', 
+		'components'=>'data-toggle="modal" data-target="#import-contact" class="btn btn-sm premium-btn btn-white border ml-2"', 
 		'is_button'=>true
 	]
 ]])
@@ -26,56 +28,49 @@
 @section('content')
 <div class="row justify-content-center">
 	<div class="col-12">
-		<div class="armi">
-			<div class="col">
-				<div class="card card-stats">
-					<div class="card-body">
-						<div class="armi">
+		<div class="row animate-fade-in-up">
+			<div class="col-xl-6">
+				<div class="card premium-card">
+					<div class="card-body p-4">
+						<div class="row align-items-center">
 							<div class="col">
-								<span class="h2 font-weight-bold mb-0 total-transfers" id="total-device">
-									{{ $total_contacts }}
-								</span>
+								<h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Total Contacts') }}</h6>
+								<span class="h2 font-weight-800 mb-0 total-transfers" id="total-device">{{ $total_contacts }}</span>
 							</div>
 							<div class="col-auto">
-								<div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
-									<i class="fi  fi-rs-address-book mt-2"></i>
+								<div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow-lg">
+									<i class="fas fa-address-book"></i>
 								</div>
 							</div>
 						</div>
-						<p class="mt-3 mb-0 text-sm">
-						</p><h5 class="card-title  text-muted mb-0">{{ __('Total Contacts') }}</h5>
-						<p></p>
 					</div>
 				</div>
 			</div>
-			<div class="col">
-				<div class="card card-stats">
-					<div class="card-body">
-						<div class="armi">
+			<div class="col-xl-6">
+				<div class="card premium-card">
+					<div class="card-body p-4">
+						<div class="row align-items-center">
 							<div class="col">
-								<span class="h2 font-weight-bold mb-0 total-transfers" id="total-active">
-								  {{ $limit }}
-								</span>
+								<h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Plan Limit') }}</h6>
+								<span class="h2 font-weight-800 mb-0 total-transfers" id="total-active">{{ $limit }}</span>
 							</div>
 							<div class="col-auto">
-								<div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
-									<i class="fas fa-signal"></i>
+								<div class="icon icon-shape bg-gradient-success text-white rounded-circle shadow-lg">
+									<i class="fas fa-id-card"></i>
 								</div>
 							</div>
 						</div>
-						<p class="mt-3 mb-0 text-sm">
-						</p><h5 class="card-title  text-muted mb-0">{{ __('Contacts statics') }}</h5>
-						<p></p>
 					</div>
 				</div>
 			</div>
-			
 		</div>
 
 		@if(count($contacts ?? []) > 0)
-		<div class="card">
-			
-			<div class="card-body">
+		<div class="card premium-card mt-4">
+            <div class="card-header bg-white border-0 py-3">
+                <h3 class="mb-0 font-weight-bold"><i class="fas fa-user-friends text-primary mr-2"></i>{{ __('Contact List') }}</h3>
+            </div>
+			<div class="card-body p-0">
 				<div class="row">
 					<div class="col-sm-12 table-responsive">
 						<table class="table col-12">

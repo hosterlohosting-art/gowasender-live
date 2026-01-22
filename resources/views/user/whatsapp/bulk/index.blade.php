@@ -5,17 +5,18 @@
 @section('head')
 @include('layouts.main.headersection',['buttons'=>[
 	[
-		'name'=>'<i class="ni ni-send"></i>&nbsp'. __('Send Bulk Message'),
+		'name'=>'<i class="fas fa-rocket mr-1"></i>'. __('Send Bulk Message'),
 		'url'=>route('user.bulk-message.create'),
-		'is_button'=>false
+		'is_button'=>false,
+        'components' => 'class="btn btn-sm premium-btn premium-btn-primary"'
 	],
 	[
-		'name'=>'<i class="ni ni-send"></i>&nbsp'. __('Send Bulk Message With Template'),
+		'name'=>'<i class="fas fa-layer-group mr-1"></i>'. __('Send With Template'),
 		'url'=>'#',
-		'components'=>'data-toggle="modal" data-target="#send-template-bulk" id=""',
+		'components'=>'data-toggle="modal" data-target="#send-template-bulk" class="btn btn-sm premium-btn btn-white border ml-2"',
 		'is_button'=>true
 	]
-],'title' => 'Transaction History'])
+],'title' => 'Bulk Message History'])
 @endsection
 @section('content')
 <div class="modal fade" id="send-template-bulk" tabindex="-1" aria-labelledby="editModal" aria-hidden="true">
@@ -120,64 +121,64 @@
 </div>
 <div class="row justify-content-center">
    <div class="col-12">
-      <div class="armi">
-         <div class="col">
-            <div class="card card-stats">
-               <div class="card-body">
-                  <div class="armi">
+      <div class="row animate-fade-in-up">
+         <div class="col-xl-4 col-md-6">
+            <div class="card premium-card overflow-hidden">
+               <div class="card-body p-4">
+                  <div class="row align-items-center">
                      <div class="col">
-                        <span class="h2 font-weight-bold mb-0 total-transfers">{{ number_format($total) }}</span>
+                        <h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Total Sent') }}</h6>
+                        <span class="h2 font-weight-800 mb-0 total-transfers">{{ number_format($total) }}</span>
                      </div>
                      <div class="col-auto">
-                        <div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
-                           <i class="fi fi-rs-rocket-lunch mt-2"></i>
+                        <div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow-lg">
+                           <i class="fas fa-paper-plane"></i>
                         </div>
                      </div>
                   </div>
-                  <p class="mt-3 mb-0 text-sm">
-                  </p>
-                  <h5 class="card-title  text-muted mb-0">{{ __('Total Messages Sent') }}</h5>
-                  <p></p>
+                  <div class="mt-3 mb-0 text-sm">
+                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> Lifetime</span>
+                  </div>
                </div>
             </div>
          </div>
-         <div class="col">
-            <div class="card card-stats">
-               <div class="card-body">
-                  <div class="armi">
+         <div class="col-xl-4 col-md-6">
+            <div class="card premium-card overflow-hidden">
+               <div class="card-body p-4">
+                  <div class="row align-items-center">
                      <div class="col">
-                        <span class="h2 font-weight-bold mb-0 pending-transfers">{{ number_format($last30_messages ?? 0) }}</span>
+                        <h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Last 30 Days') }}</h6>
+                        <span class="h2 font-weight-800 mb-0 pending-transfers">{{ number_format($last30_messages ?? 0) }}</span>
                      </div>
                      <div class="col-auto">
-                        <div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
-                           <i class="ni ni-calendar-grid-58"></i>
+                        <div class="icon icon-shape bg-gradient-success text-white rounded-circle shadow-lg">
+                           <i class="fas fa-calendar-alt"></i>
                         </div>
                      </div>
                   </div>
-                  <p class="mt-3 mb-0 text-sm">
-                  </p>
-                  <h5 class="card-title  text-muted mb-0">{{ __('Last 30 days Messages') }}</h5>
-                  <p></p>
+                  <div class="mt-3 mb-0 text-sm">
+                    <span class="text-primary mr-2"><i class="fa fa-chart-line"></i> Monthly Activity</span>
+                  </div>
                </div>
             </div>
          </div>
-         <div class="col">
-            <div class="card card-stats">
-               <div class="card-body">
-                  <div class="armi">
+         <div class="col-xl-4 col-md-6">
+            <div class="card premium-card overflow-hidden">
+               <div class="card-body p-4">
+                  <div class="row align-items-center">
                      <div class="col">
-                        <span class="h2 font-weight-bold mb-0 completed-transfers">{{ number_format($today_transaction) }}</span>
+                        <h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Today') }}</h6>
+                        <span class="h2 font-weight-800 mb-0 completed-transfers">{{ number_format($today_transaction) }}</span>
                      </div>
                      <div class="col-auto">
-                        <div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
-                           <i class="fi fi-rs-calendar-day mt-2"></i>
+                        <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow-lg">
+                           <i class="fas fa-history"></i>
                         </div>
                      </div>
                   </div>
-                  <p class="mt-3 mb-0 text-sm">
-                  </p>
-                  <h5 class="card-title  text-muted mb-0">{{ __('Today\'s Transaction') }}</h5>
-                  <p></p>
+                  <div class="mt-3 mb-0 text-sm">
+                    <span class="text-info mr-2"><i class="fa fa-clock"></i> Active Today</span>
+                  </div>
                </div>
             </div>
          </div>

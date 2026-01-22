@@ -1,32 +1,47 @@
 <!-- Nav items -->
 <style>
-  /* Custom Sidebar Styles */
   .navbar-nav .nav-link {
-    padding: 0.75rem 1rem;
-    margin-bottom: 0.25rem;
-    border-radius: 0.5rem;
-    transition: all 0.2s ease;
+    padding: 0.85rem 1.25rem;
+    margin: 0.25rem 0.75rem;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-weight: 500;
+    color: #4a5568 !important;
+    display: flex;
+    align-items: center;
   }
 
   .navbar-nav .nav-link:hover {
-    background-color: #f6f9fc;
-    transform: translateX(4px);
+    background-color: #f7fafc;
+    color: #1a202c !important;
+    transform: translateX(5px);
   }
 
   .navbar-nav .nav-link.active {
-    background: linear-gradient(87deg, #5e72e4 0, #825ee4 100%) !important;
-    color: #fff !important;
-    box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
-    /* shadow-md */
+    background: linear-gradient(135deg, #128C7E 0%, #075E54 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(18, 140, 126, 0.25);
   }
 
   .navbar-nav .nav-link.active i {
-    color: #fff !important;
+    color: #ffffff !important;
   }
 
   .navbar-nav .nav-link i {
-    min-width: 2rem;
+    min-width: 1.75rem;
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: center;
+    margin-right: 0.75rem;
+  }
+
+  .navbar-heading {
+    padding: 1.5rem 1.5rem 0.75rem !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    color: #a0aec0 !important;
   }
 </style>
 <ul class="navbar-nav">
@@ -73,53 +88,48 @@
   <li class="nav-item">
     <a class="nav-link {{ Request::is('user/chatbot*') ? 'active' : '' }}" href="{{ route('user.chatbot.index') }}">
       <i class="fas fa-robot"></i>
-      <span class="nav-link-text">{{ __('Chatbot (Auto Reply)') }}</span>
+      <span class="nav-link-text">{{ __('Auto Reply') }}</span>
     </a>
   </li>
-  {{-- FLOW BUILDER --}}
   <li class="nav-item">
     <a class="nav-link {{ Request::is('user/flows*') ? 'active' : '' }}" href="{{ route('user.flows.index') }}">
       <i class="fas fa-project-diagram"></i>
       <span class="nav-link-text">{{ __('Flow Builder') }}</span>
     </a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link {{ Request::is('user/apps*') ? 'active' : '' }}" href="{{ route('user.apps.index') }}">
-      <i class="fi fi-rs-apps-add"></i>
-      <span class="nav-link-text">{{ __('My Apps') }}</span>
-    </a>
-  </li>
-  <!-- if ---->
-  <!--------------------->
+
+  <h6 class="navbar-heading">{{ __('Contacts & Content') }}</h6>
   <li class="nav-item">
     <a class="nav-link {{ Request::is('user/contact*') ? 'active' : '' }}" href="{{ route('user.contact.index') }}">
-      <i class="fi  fi-rs-address-book"></i>
-      <span class="nav-link-text">{{ __('Contacts Book') }}</span>
+      <i class="fas fa-address-book"></i>
+      <span class="nav-link-text">{{ __('Contact List') }}</span>
     </a>
   </li>
   <li class="nav-item">
     <a class="nav-link {{ Request::is('user/template*') ? 'active' : '' }}" href="{{ url('user/template') }}">
-      <i class="fi  fi-rs-template-alt"></i>
-      <span class="nav-link-text">{{ __('My Templates') }}</span>
+      <i class="fas fa-layer-group"></i>
+      <span class="nav-link-text">{{ __('Message Templates') }}</span>
     </a>
   </li>
+
+  <h6 class="navbar-heading">{{ __('Campaigns') }}</h6>
   <li class="nav-item">
     <a class="nav-link {{ Request::is('user/bulk-message*') ? 'active' : '' }}" href="{{ url('user/bulk-message') }}">
-      <i class="fi fi-rs-rocket-lunch"></i>
-      <span class="nav-link-text">{{ __('Send Bulk Message') }}</span>
+      <i class="fas fa-mail-bulk"></i>
+      <span class="nav-link-text">{{ __('Bulk Sending') }}</span>
     </a>
   </li>
   <li class="nav-item">
     <a class="nav-link {{ Request::is('user/schedule-message*') ? 'active' : '' }}"
       href="{{ url('user/schedule-message') }}">
-      <i class="ni ni-calendar-grid-58"></i>
-      <span class="nav-link-text">{{ __('Scheduled Message') }}</span>
+      <i class="fas fa-calendar-alt"></i>
+      <span class="nav-link-text">{{ __('Scheduling') }}</span>
     </a>
   </li>
   <li class="nav-item ">
     <a class="nav-link {{ Request::is('user/logs*') ? 'active' : '' }}" href="{{ url('user/logs') }}">
-      <i class="ni ni-ui-04"></i>
-      <span class="nav-link-text">{{ __('Message Log') }}</span>
+      <i class="fas fa-history"></i>
+      <span class="nav-link-text">{{ __('Activity Logs') }}</span>
     </a>
   </li>
 </ul>

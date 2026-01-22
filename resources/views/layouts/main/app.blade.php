@@ -73,7 +73,7 @@
     @include('layouts.main.header')
     @yield('head')
     <!-- Page content -->
-    <div class="container-fluid mt--6">
+    <div class="container-fluid">
 
       @yield('content')
 

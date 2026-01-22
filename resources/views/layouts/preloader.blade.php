@@ -38,10 +38,11 @@
         if (preloader) {
             setTimeout(function () {
                 preloader.style.opacity = '0';
+                preloader.style.pointerEvents = 'none';
                 setTimeout(function () {
                     preloader.style.display = 'none';
                 }, 500);
-            }, 800); // Small delay to let user see the branding
+            }, 800);
         }
     });
 </script>

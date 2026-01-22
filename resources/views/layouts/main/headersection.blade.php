@@ -1,42 +1,22 @@
-<div class="header pb-6">
+<div class="header-section py-4 border-bottom bg-white mb-4 animate-fade-in-down">
   @if(!Request::is('user/dashboard'))
     <div class="container-fluid">
-      <div class="header-body">
-        <div class="row align-items-center py-4">
-          <div class="col-lg-12 col-12">
-            <div class="d-flex align-items-center flex-wrap">
-              @isset($prev)
-                <a href="{{ url($prev) }}" class="btn btn-outline-primary btn-sm btn-icon mr-2"><i
-                    class="fas fa-arrow-left"></i></a>
-              @endisset
-              <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
-                <ol class="breadcrumb breadcrumb-links">
-                  <li class="breadcrumb-item"><a href="{{ url('/login') }}"><i class="fas fa-home"></i></a></li>
-                  @if(isset($title))
-                    <li class="breadcrumb-item"><a href="#">{!! $title ?? '' !!}</a></li>
-                  @endif
-                  @foreach(request()->segments() as $segment)
-                    <li class="breadcrumb-item"><a href="#">{{ Str::limit($segment, 28) }}</a></li>
-                  @endforeach
-                </ol>
-              </nav>
-            </div>
-
-            <!-- Moved Buttons to Left Side -->
-            @isset($buttons)
-              <div class="d-inline-block ml-4">
-                @foreach($buttons as $button)
-                  @if(isset($button['is_button']) && $button['is_button'] == true)
-                    <button type="button" {!! $button['components'] ?? '' !!}
-                      class="btn btn-sm btn-neutral">{!! $button['name'] ?? '' !!}</button>
-                  @else
-                    <a href="{{ $button['url'] ?? '' }}" {!! $button['components'] ?? '' !!}
-                      class="btn btn-sm btn-neutral">{!! $button['name'] ?? '' !!}</a>
-                  @endif
-                @endforeach
-              </div>
-            @endisset
-          </div>
+      <div class="row align-items-center">
+        <div class="col-12 col-md-6">
+          <h1 class="h2 font-weight-800 text-dark mb-0 ls-1">{!! $title ?? '' !!}</h1>
+        </div>
+        <div class="col-12 col-md-6 text-md-right mt-3 mt-md-0">
+          @isset($buttons)
+            @foreach($buttons as $button)
+              @if(isset($button['is_button']) && $button['is_button'] == true)
+                <button type="button" {!! $button['components'] ?? '' !!}
+                  class="btn btn-sm premium-btn btn-white border">{!! $button['name'] ?? '' !!}</button>
+              @else
+                <a href="{{ $button['url'] ?? '' }}" {!! $button['components'] ?? '' !!} @if(isset($button['components']) && str_contains($button['components'], 'premium-btn')) {!! $button['components'] !!} @else
+                class="btn btn-sm premium-btn btn-white border" @endif>{!! $button['name'] ?? '' !!}</a>
+              @endif
+            @endforeach
+          @endisset
         </div>
       </div>
     </div>

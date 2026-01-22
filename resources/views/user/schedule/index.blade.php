@@ -1,91 +1,84 @@
 @extends('layouts.main.app')
 @section('head')
 @include('layouts.main.headersection',[
-'title'   => __('Schedule Message'),
+'title'   => __('Message Scheduling'),
 'buttons' =>[
 	[
-	'name'=>'<i class="ni ni-calendar-grid-58"></i>&nbspCreate Schedule',
+	'name'=>'<i class="fas fa-calendar-plus mr-1"></i>'. __('Create Schedule'),
 	'url'=> route('user.schedule-message.create'),
+    'components' => 'class="btn btn-sm premium-btn premium-btn-primary"'
 	]
 ]])
 @endsection
 @section('content')
 <div class="row justify-content-center">
 	<div class="col-12">
-		<div class="row d-flex justify-content-between flex-wrap">
-			<div class="col">
-				<div class="card card-stats">
-					<div class="card-body">
-						<div class="row">
+		<div class="row animate-fade-in-up">
+			<div class="col-xl-3 col-md-6">
+				<div class="card premium-card">
+					<div class="card-body p-4">
+						<div class="row align-items-center">
 							<div class="col">
-								<span class="h2 font-weight-bold mb-0 total-transfers">{{ number_format($totalSchedule ?? 0) }}</span>
+								<h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Total') }}</h6>
+								<span class="h2 font-weight-800 mb-0 total-transfers">{{ number_format($totalSchedule ?? 0) }}</span>
 							</div>
 							<div class="col-auto">
-								<div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
-									<i class="ni ni-calendar-grid-58 "></i>
+								<div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow-lg">
+									<i class="fas fa-calendar-alt"></i>
 								</div>
 							</div>
 						</div>
-						<p class="mt-3 mb-0 text-sm">
-						</p><h5 class="card-title  text-muted mb-0">{{ __('Total Schedules') }}</h5>
-						<p></p>
 					</div>
 				</div>
 			</div>
-			<div class="col">
-				<div class="card card-stats">
-					<div class="card-body">
-						<div class="row">
+			<div class="col-xl-3 col-md-6">
+				<div class="card premium-card">
+					<div class="card-body p-4">
+						<div class="row align-items-center">
 							<div class="col">
-								<span class="h2 font-weight-bold mb-0 total-transfers">{{ number_format($pendingSchedule ?? 0) }}</span>
+								<h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Pending') }}</h6>
+								<span class="h2 font-weight-800 mb-0 total-transfers">{{ number_format($pendingSchedule ?? 0) }}</span>
 							</div>
 							<div class="col-auto">
-								<div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
-									<i class="fi fi-rs-calendar-clock mt-2"></i>
+								<div class="icon icon-shape bg-gradient-warning text-white rounded-circle shadow-lg">
+									<i class="fas fa-clock"></i>
 								</div>
 							</div>
 						</div>
-						<p class="mt-3 mb-0 text-sm">
-						</p><h5 class="card-title  text-muted mb-0">{{ __('Total Pending Schedules') }}</h5>
-						<p></p>
 					</div>
 				</div>
 			</div>
-			<div class="col">
-				<div class="card card-stats">
-					<div class="card-body">
-						<div class="row">
+			<div class="col-xl-3 col-md-6">
+				<div class="card premium-card">
+					<div class="card-body p-4">
+						<div class="row align-items-center">
 							<div class="col">
-								<span class="h2 font-weight-bold mb-0 completed-transfers">{{ number_format($deliveredSchedule?? 0)  }}</span>
+								<h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Executed') }}</h6>
+								<span class="h2 font-weight-800 mb-0 completed-transfers">{{ number_format($deliveredSchedule?? 0)  }}</span>
 							</div>
 							<div class="col-auto">
-								<div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
-									<i class="fi fi-rs-rocket-lunch mt-2"></i>
+								<div class="icon icon-shape bg-gradient-success text-white rounded-circle shadow-lg">
+									<i class="fas fa-check-double"></i>
 								</div>
 							</div>
 						</div>
-						<p class="mt-3 mb-0 text-sm">
-						</p><h5 class="card-title  text-muted mb-0">{{ __('Schedules Executed') }}</h5>
-						<p></p>
 					</div>
 				</div>
 			</div>
-			<div class="col">
-				<div class="card card-stats">
-					<div class="card-body">
-						<div class="row">
+			<div class="col-xl-3 col-md-6">
+				<div class="card premium-card">
+					<div class="card-body p-4">
+						<div class="row align-items-center">
 							<div class="col">
-								<span class="h2 font-weight-bold mb-0 pending-transfers">{{ number_format($failedSchedule ?? 0) }}</span>
+								<h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Failed') }}</h6>
+								<span class="h2 font-weight-800 mb-0 pending-transfers">{{ number_format($failedSchedule ?? 0) }}</span>
 							</div>
 							<div class="col-auto">
-								<div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
-									<i class="fi fi-rs-calendar-xmark mt-2"></i>
+								<div class="icon icon-shape bg-gradient-danger text-white rounded-circle shadow-lg">
+									<i class="fas fa-exclamation-triangle"></i>
 								</div>
 							</div>
 						</div>
-						<p class="mt-3 mb-0 text-sm">
-						</p><h5 class="card-title  text-muted mb-0">{{ __('Failed Schedules') }}</h5>
-						<p></p>
 					</div>
 				</div>
 			</div>
@@ -107,10 +100,11 @@
 		@endif
 
 		@if(count($posts) > 0)
-		<div class="card">
-			
-			<div class="card-body">
-				<h3>{{ __('Schedules') }}</h3>
+		<div class="card premium-card mt-4">
+            <div class="card-header bg-white border-0 py-3">
+                <h3 class="mb-0 font-weight-bold"><i class="fas fa-calendar-alt text-primary mr-2"></i>{{ __('Scheduled Campaigns') }}</h3>
+            </div>
+			<div class="card-body p-0">
 				<div class="row">
 					<div class="col-sm-12 table-responsive">
 						<table class="table col-12">

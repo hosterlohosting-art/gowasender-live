@@ -11,29 +11,22 @@
     @endphp
 
     @php
-    $buttons = [
+@include('layouts.main.headersection', [
+    'title' => 'Chatbot & Auto Reply',
+    'buttons' => [
         [
-            'name' => '<i class="fas fa-plus"></i> &nbspCreate Reply',
+            'name' => '<i class="fas fa-plus mr-1"></i>'. __('Create Rule'),
             'url' => '#',
-            'components' => 'data-toggle="modal" data-target="#send-template-bulk" id="send-template-bulks"',
+            'components' => 'data-toggle="modal" data-target="#send-template-bulk" class="btn btn-sm premium-btn premium-btn-primary"',
+            'is_button' => true,
+        ],
+        [
+            'name' => '<i class="fas fa-cog mr-1"></i>'. __('Default Reply'),
+            'url' => '#',
+            'components' => 'data-toggle="modal" data-target="#send-template-default" class="btn btn-sm premium-btn btn-white border ml-2"',
             'is_button' => true,
         ]
-    ];
-
-    if (!$hideDefaultReplyButton) {
-        $buttons[] = [
-            'name' => '<i class="fas fa-circle"></i> &nbspDefault Reply',
-            'url' => '#',
-            'components' => 'data-toggle="modal" data-target="#send-template-default" id="send-template-defaults"',
-            'is_button' => true,
-        ];
-    }
-    
-@endphp
-
-@include('layouts.main.headersection', [
-    'title' => 'Automatic Replies',
-    'buttons' => $buttons
+    ]
 ])
 
 
@@ -42,67 +35,55 @@
 @section('content')
 <div class="row justify-content-center">
 	<div class="col-12">
-		<div class="armi">
-			<div class="col">
-				<div class="card card-stats">
-					<div class="card-body">
-						<div class="armi">
+		<div class="row animate-fade-in-up">
+			<div class="col-xl-4 col-md-6">
+				<div class="card premium-card">
+					<div class="card-body p-4">
+						<div class="row align-items-center">
 							<div class="col">
-								<span class="h2 font-weight-bold mb-0 total-transfers" >
-									{{ number_format($total_replies) }}
-								</span>
+								<h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Total Rules') }}</h6>
+								<span class="h2 font-weight-800 mb-0 total-transfers" >{{ number_format($total_replies) }}</span>
 							</div>
 							<div class="col-auto">
-								<div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
-									<i class="fas  fa-robot"></i>
+								<div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow-lg">
+									<i class="fas fa-robot"></i>
 								</div>
 							</div>
 						</div>
-						<p class="mt-3 mb-0 text-sm">
-						</p><h5 class="card-title  text-muted mb-0">{{ __('Total Replies') }}</h5>
-						<p></p>
 					</div>
 				</div>
 			</div>
-			<div class="col">
-				<div class="card card-stats">
-					<div class="card-body">
-						<div class="armi">
+			<div class="col-xl-4 col-md-6">
+				<div class="card premium-card">
+					<div class="card-body p-4">
+						<div class="row align-items-center">
 							<div class="col">
-								<span class="h2 font-weight-bold mb-0 total-transfers" >
-									{{ number_format($template_replies) }}
-								</span>
+								<h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Template Based') }}</h6>
+								<span class="h2 font-weight-800 mb-0 total-transfers" >{{ number_format($template_replies) }}</span>
 							</div>
 							<div class="col-auto">
-								<div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
-									<i class="fi fi-rs-test mt-2"></i>
+								<div class="icon icon-shape bg-gradient-success text-white rounded-circle shadow-lg">
+									<i class="fas fa-layer-group"></i>
 								</div>
 							</div>
 						</div>
-						<p class="mt-3 mb-0 text-sm">
-						</p><h5 class="card-title  text-muted mb-0">{{ __('Template Replies') }}</h5>
-						<p></p>
 					</div>
 				</div>
 			</div>
-			<div class="col">
-				<div class="card card-stats">
-					<div class="card-body">
-						<div class="armi">
+			<div class="col-xl-4 col-md-6">
+				<div class="card premium-card">
+					<div class="card-body p-4">
+						<div class="row align-items-center">
 							<div class="col">
-								<span class="h2 font-weight-bold mb-0 completed-transfers" >
-									{{ number_format($text_replies) }}
-								</span>
+								<h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Text Based') }}</h6>
+								<span class="h2 font-weight-800 mb-0 completed-transfers" >{{ number_format($text_replies) }}</span>
 							</div>
 							<div class="col-auto">
-								<div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
-									<i class=" fi-rs-text-check mt-2"></i>
+								<div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow-lg">
+									<i class="fas fa-comment-alt"></i>
 								</div>
 							</div>
 						</div>
-						<p class="mt-3 mb-0 text-sm">
-						</p><h5 class="card-title  text-muted mb-0">{{ __('Text Replies') }}</h5>
-						<p></p>
 					</div>
 				</div>
 			</div>
@@ -138,12 +119,11 @@
 			</div>
 		</div>
 		@else
-		<div class="card">
-			
-			<div class="card-body">
-			<div class="card-header pb-0">
-              <h3 style="font-weight:700;">Auto Responder</h6>
+		<div class="card premium-card mt-4">
+			<div class="card-header bg-white border-0 py-3">
+              <h3 class="mb-0 font-weight-bold"><i class="fas fa-reply-all text-primary mr-2"></i>{{ __('Auto Responder Rules') }}</h3>
             </div>
+			<div class="card-body p-0">
 				<div class="row">
 					<div class="col-sm-12 table-responsive">
 						<table class="table col-12">

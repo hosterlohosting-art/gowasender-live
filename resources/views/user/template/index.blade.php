@@ -1,81 +1,72 @@
 @extends('layouts.main.app')
 @section('head')
-@include('layouts.main.headersection',['title'=> 'All Templates','buttons'=>[
+@include('layouts.main.headersection',['title'=> 'Message Templates','buttons'=>[
 	[
-		'name'=>'<i class="fas fa-plus"></i> &nbspCreate Template',
+		'name'=>'<i class="fas fa-plus mr-1"></i>'. __('Create Template'),
 		'url'=> route('user.template.create'),
+        'components' => 'class="btn btn-sm premium-btn premium-btn-primary"'
 	],
 	[
-        'name' => '<button class="btn btn-primary btn-sm check-status">' . __('Load Meta templates') . '</button>',
+        'name' => '<i class="fas fa-sync-alt mr-1"></i>' . __('Load Meta Templates'),
+        'url' => '#',
+        'components' => 'class="btn btn-sm premium-btn btn-white border ml-2 check-status"',
         'is_button' => true,
-        ],
+    ],
 ]])
 @endsection
 @section('content')
 
 <div class="row justify-content-center">
 	<div class="col-12">
-		<div class="armi">
-			<div class="col">
-				<div class="card card-stats">
-					<div class="card-body">
-						<div class="armi">
+		<div class="row animate-fade-in-up">
+			<div class="col-xl-4 col-md-6">
+				<div class="card premium-card">
+					<div class="card-body p-4">
+						<div class="row align-items-center">
 							<div class="col">
-								<span class="h2 font-weight-bold mb-0 total-transfers" id="total-device">
-								   {{ $limit }}
-								</span>
+								<h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Total Templates') }}</h6>
+								<span class="h2 font-weight-800 mb-0 total-transfers" id="total-device">{{ $limit }}</span>
 							</div>
 							<div class="col-auto">
-								<div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
-									<i class="fi fi-rs-layers mt-2"></i>
+								<div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow-lg">
+									<i class="fas fa-layer-group"></i>
 								</div>
 							</div>
 						</div>
-						<p class="mt-3 mb-0 text-sm">
-						</p><h5 class="card-title  text-muted mb-0">{{ __('Total Templates') }}</h5>
-						<p></p>
 					</div>
 				</div>
 			</div>
-			<div class="col">
-				<div class="card card-stats">
-					<div class="card-body">
-						<div class="armi">
+			<div class="col-xl-4 col-md-6">
+				<div class="card premium-card">
+					<div class="card-body p-4">
+						<div class="row align-items-center">
 							<div class="col">
-								<span class="h2 font-weight-bold mb-0 total-transfers" id="total-active">
-									{{ $active_templates }}
-								</span>
+								<h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Active') }}</h6>
+								<span class="h2 font-weight-800 mb-0 total-transfers" id="total-active">{{ $active_templates }}</span>
 							</div>
 							<div class="col-auto">
-								<div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
-									<i class="fi fi-rs-template mt-2"></i>
+								<div class="icon icon-shape bg-gradient-success text-white rounded-circle shadow-lg">
+									<i class="fas fa-check-circle"></i>
 								</div>
 							</div>
 						</div>
-						<p class="mt-3 mb-0 text-sm">
-						</p><h5 class="card-title  text-muted mb-0">{{ __('Active Templates') }}</h5>
-						<p></p>
 					</div>
 				</div>
 			</div>
-			<div class="col">
-				<div class="card card-stats">
-					<div class="card-body">
-						<div class="armi">
+			<div class="col-xl-4 col-md-6">
+				<div class="card premium-card">
+					<div class="card-body p-4">
+						<div class="row align-items-center">
 							<div class="col">
-								<span class="h2 font-weight-bold mb-0 completed-transfers" id="total-inactive">
-								  {{ $inactive_templates }}
-							    </span>
+								<h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Inactive') }}</h6>
+								<span class="h2 font-weight-800 mb-0 completed-transfers" id="total-inactive">{{ $inactive_templates }}</span>
 							</div>
 							<div class="col-auto">
-								<div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
-									<i class="fi  fi-rs-template-alt mt-2"></i>
+								<div class="icon icon-shape bg-gradient-danger text-white rounded-circle shadow-lg">
+									<i class="fas fa-times-circle"></i>
 								</div>
 							</div>
 						</div>
-						<p class="mt-3 mb-0 text-sm">
-						</p><h5 class="card-title  text-muted mb-0">{{ __('Inactive Templates') }}</h5>
-						<p></p>
 					</div>
 				</div>
 			</div>
@@ -101,8 +92,11 @@
 		</div>
 
 		@else
-		<div class="card">
-			<div class="card-body">
+		<div class="card premium-card mt-4">
+            <div class="card-header bg-white border-0 py-3">
+                <h3 class="mb-0 font-weight-bold"><i class="fas fa-layer-group text-primary mr-2"></i>{{ __('Templates List') }}</h3>
+            </div>
+			<div class="card-body p-0">
 				<div class="row">
 					<div class="col-sm-12 table-responsive">
 					<div class="form-group">

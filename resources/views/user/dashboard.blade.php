@@ -111,108 +111,88 @@
         </div>
     </div>
 
-    <!-- Stats Grid (Refined Premium Cards) -->
     <div class="row">
         <!-- Stat Card 1 -->
         <div class="col-xl-3 col-md-6">
-            <div class="card card-stats border-0 shadow-lg mb-4 hover-translate-y" style="border-radius: 15px;">
-                <div class="card-body">
-                    <div class="row">
+            <div class="card premium-card overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
                         <div class="col">
-                            <h5 class="card-title text-uppercase text-muted mb-0 font-weight-bold text-xs">Connected Devices
-                            </h5>
-                            <span class="h2 font-weight-800 mb-0 text-dark" id="total-device">
+                            <h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Connected') }}</h6>
+                            <span class="h2 font-weight-800 mb-0 total-transfers" id="total-device text-dark">
                                 <i class="fas fa-spinner fa-spin text-muted small"></i>
                             </span>
                         </div>
                         <div class="col-auto">
-                            <div class="icon icon-shape bg-gradient-success text-white rounded-circle shadow">
+                            <div class="icon icon-shape bg-gradient-success text-white rounded-circle shadow-lg">
                                 <i class="fas fa-server"></i>
                             </div>
                         </div>
                     </div>
-                    <p class="mt-3 mb-0 text-sm">
-                        <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> Active</span>
-                        <span class="text-nowrap text-muted">Real-time status</span>
-                    </p>
                 </div>
             </div>
         </div>
 
         <!-- Stat Card 2 -->
         <div class="col-xl-3 col-md-6">
-            <div class="card card-stats border-0 shadow-lg mb-4 hover-translate-y" style="border-radius: 15px;">
-                <div class="card-body">
-                    <div class="row">
+            <div class="card premium-card overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
                         <div class="col">
-                            <h5 class="card-title text-uppercase text-muted mb-0 font-weight-bold text-xs">Total Messages
-                            </h5>
-                            <span class="h2 font-weight-800 mb-0 text-dark" id="total-messages">
+                            <h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Messages Sent') }}
+                            </h6>
+                            <span class="h2 font-weight-800 mb-0 total-transfers" id="total-messages text-dark">
                                 <i class="fas fa-spinner fa-spin text-muted small"></i>
                             </span>
                         </div>
                         <div class="col-auto">
-                            <div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
-                                <i class="ni ni-spaceship"></i>
+                            <div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow-lg">
+                                <i class="fas fa-paper-plane"></i>
                             </div>
                         </div>
                     </div>
-                    <p class="mt-3 mb-0 text-sm">
-                        <span class="text-primary mr-2"><i class="fa fa-arrow-up"></i> Sent</span>
-                        <span class="text-nowrap text-muted">Lifetime volume</span>
-                    </p>
                 </div>
             </div>
         </div>
 
         <!-- Stat Card 3 -->
         <div class="col-xl-3 col-md-6">
-            <div class="card card-stats border-0 shadow-lg mb-4 hover-translate-y" style="border-radius: 15px;">
-                <div class="card-body">
-                    <div class="row">
+            <div class="card premium-card overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
                         <div class="col">
-                            <h5 class="card-title text-uppercase text-muted mb-0 font-weight-bold text-xs">Pending Schedules
-                            </h5>
-                            <span class="h2 font-weight-800 mb-0 text-dark" id="total-schedule">
+                            <h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Pending') }}</h6>
+                            <span class="h2 font-weight-800 mb-0 total-transfers" id="total-schedule text-dark">
                                 <i class="fas fa-spinner fa-spin text-muted small"></i>
                             </span>
                         </div>
                         <div class="col-auto">
-                            <div class="icon icon-shape bg-gradient-warning text-white rounded-circle shadow">
-                                <i class="ni ni-calendar-grid-58"></i>
+                            <div class="icon icon-shape bg-gradient-warning text-white rounded-circle shadow-lg">
+                                <i class="fas fa-clock"></i>
                             </div>
                         </div>
                     </div>
-                    <p class="mt-3 mb-0 text-sm">
-                        <span class="text-warning mr-2"><i class="fas fa-clock"></i> Queued</span>
-                        <span class="text-nowrap text-muted">Awaiting delivery</span>
-                    </p>
                 </div>
             </div>
         </div>
 
         <!-- Stat Card 4 -->
         <div class="col-xl-3 col-md-6">
-            <div class="card card-stats border-0 shadow-lg mb-4 hover-translate-y" style="border-radius: 15px;">
-                <div class="card-body">
-                    <div class="row">
+            <div class="card premium-card overflow-hidden">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
                         <div class="col">
-                            <h5 class="card-title text-uppercase text-muted mb-0 font-weight-bold text-xs">Total Contacts
-                            </h5>
-                            <span class="h2 font-weight-800 mb-0 text-dark" id="total-contacts">
+                            <h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Audience') }}</h6>
+                            <span class="h2 font-weight-800 mb-0 total-transfers" id="total-contacts text-dark">
                                 <i class="fas fa-spinner fa-spin text-muted small"></i>
                             </span>
                         </div>
                         <div class="col-auto">
-                            <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
-                                <i class="ni ni-collection"></i>
+                            <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow-lg">
+                                <i class="fas fa-users"></i>
                             </div>
                         </div>
                     </div>
-                    <p class="mt-3 mb-0 text-sm">
-                        <span class="text-info mr-2"><i class="fas fa-users"></i> Audience</span>
-                        <span class="text-nowrap text-muted">Total reach</span>
-                    </p>
                 </div>
             </div>
         </div>
@@ -253,13 +233,12 @@
         @endif
     </div>
 
-    <!-- Charts Section -->
     <div class="row">
         <!-- Messages Transaction Chart -->
         <div class="col-xl-8">
-            <div class="card shadow-lg border-0" style="border-radius: 20px;">
+            <div class="card premium-card border-0">
                 <div class="card-header bg-transparent d-flex align-items-center justify-content-between py-3">
-                    <h6 class="h4 text-dark mb-0 ls-1 text-uppercase font-weight-bold">Messages Transaction</h6>
+                    <h6 class="h4 text-dark mb-0 ls-1 text-uppercase font-weight-bold">Activity Overview</h6>
                     <div class="card-header-action">
                         <select class="form-control border-0 bg-light shadow-none cursor-pointer text-dark font-weight-bold"
                             id="period" style="width: 140px; border-radius: 8px;">
@@ -279,9 +258,9 @@
 
         <!-- Messages Type Doughnut -->
         <div class="col-xl-4">
-            <div class="card shadow-lg border-0" style="border-radius: 20px;">
+            <div class="card premium-card border-0">
                 <div class="card-header bg-transparent d-flex align-items-center justify-content-between py-3">
-                    <h6 class="h4 text-dark mb-0 ls-1 text-uppercase font-weight-bold">Message Types</h6>
+                    <h6 class="h4 text-dark mb-0 ls-1 text-uppercase font-weight-bold">Distribution</h6>
                     <div class="card-header-action">
                         <select class="form-control border-0 bg-light shadow-none cursor-pointer text-dark font-weight-bold"
                             id="messagesTypes" style="width: 120px; border-radius: 8px;">
