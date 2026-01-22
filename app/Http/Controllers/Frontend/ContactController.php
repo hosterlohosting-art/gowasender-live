@@ -21,6 +21,7 @@ class ContactController extends Controller
     public function index()
     {
         $this->metadata('seo_contact');
+        $contact_page = get_option('contact-page', true);
         return view('frontend.contact', compact('contact_page'));
     }
 
@@ -54,7 +55,7 @@ class ContactController extends Controller
             Session::flash('success', __('Thanks for contact with us we will contact you soon'));
 
             return back();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Session::flash('error', __('Something wrong'));
 
             return back();

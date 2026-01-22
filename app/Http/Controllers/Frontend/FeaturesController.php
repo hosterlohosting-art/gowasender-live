@@ -23,6 +23,8 @@ class FeaturesController extends Controller
 
         $this->metadata('seo_features');
 
+        $features = Post::where('type', 'feature')->where('featured', 1)->where('lang', app()->getLocale())->with('preview', 'excerpt')->latest()->take(6)->get();
+
         return view('frontend.features', compact('features'));
     }
 }
