@@ -47,17 +47,17 @@
                            <ul class="space-y-4 mb-10">
                               <li class="flex items-center gap-3 text-gray-600">
                                  <div class="w-2 h-2 rounded-full bg-brand-500"></div>
-                                 <span><strong>{{ $details->messages_limit == -1 ? 'Unlimited' : ($details->messages_limit ?? 0) }}</strong>
+                                 <span><strong>{{ ($details->messages_limit ?? 0) == -1 ? 'Unlimited' : ($details->messages_limit ?? 0) }}</strong>
                                     Bulks / Month</span>
                               </li>
                               <li class="flex items-center gap-3 text-gray-600">
                                  <div class="w-2 h-2 rounded-full bg-brand-500"></div>
-                                 <span><strong>{{ $details->device_limit == -1 ? 'Unlimited' : ($details->device_limit ?? 0) }}</strong>
+                                 <span><strong>{{ ($details->device_limit ?? 0) == -1 ? 'Unlimited' : ($details->device_limit ?? 0) }}</strong>
                                     WhatsApp Accounts</span>
                               </li>
                               <li class="flex items-center gap-3 text-gray-600">
                                  <div class="w-2 h-2 rounded-full bg-brand-500"></div>
-                                 <span><strong>{{ $details->contact_limit == -1 ? 'Unlimited' : ($details->contact_limit ?? 0) }}</strong>
+                                 <span><strong>{{ ($details->contact_limit ?? 0) == -1 ? 'Unlimited' : ($details->contact_limit ?? 0) }}</strong>
                                     Contacts</span>
                               </li>
                               <li class="flex items-center gap-3 text-gray-600 opacity-60">
@@ -107,7 +107,7 @@
                @foreach($faqs->take(4) as $faq)
                   <div class="border-b border-gray-100 pb-6">
                      <h4 class="font-bold text-gray-900 mb-2">{{ $faq->title }}</h4>
-                     <p class="text-gray-500 leading-relaxed">{{ $faq->excerpt->value ?? '' }}</p>
+                     <p class="text-gray-500 leading-relaxed">{{ $faq->excerpt->value ?? $faq->excerpt ?? '' }}</p>
                   </div>
                @endforeach
             </div>
