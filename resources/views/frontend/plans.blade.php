@@ -22,7 +22,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                @foreach($plans ?? [] as $plan)
                   @php
-                     $details = json_decode($plan->data ?? '{}') ?? (object) [];
+                     $details = is_string($plan->data) ? json_decode($plan->data ?? '{}') : (object) ($plan->data ?? []);
                      $isFeatured = $plan->is_recommended == 1;
                    @endphp
                   <div class="relative group">

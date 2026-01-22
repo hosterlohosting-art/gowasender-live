@@ -33,7 +33,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => ['auth', 'a
 	Route::resource('about', ADMIN\AboutController::class);
 	Route::resource('section', ADMIN\SectionController::class);
 	Route::resource('message-transactions', ADMIN\TransactionController::class);
-	Route::resource('app-settings', ADMIN\AppSettingsController::class);
+	// Route::resource('app-settings', ADMIN\AppSettingsController::class);
 	Route::resource('developer-settings', ADMIN\DeveloperSettingsController::class);
 	Route::resource('partner', ADMIN\PartnerController::class);
 	Route::resource('update', ADMIN\UpdateController::class);
