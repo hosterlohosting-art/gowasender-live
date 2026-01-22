@@ -24,12 +24,13 @@
                   @php
                      $details = (object) (is_array($plan->data) ? $plan->data : json_decode($plan->data ?? '{}', true));
                      $isFeatured = $plan->is_recommended == 1;
+                     $title = strtoupper($plan->title);
                    @endphp
                   <div class="relative group">
                      @if($isFeatured)
                         <div
                            class="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand-600 text-white px-6 py-1 rounded-full text-xs font-bold uppercase tracking-widest z-20 shadow-lg">
-                           Recommended</div>
+                           MOST RECOMMENDED</div>
                      @endif
 
                      <div
@@ -39,41 +40,93 @@
                            <div class="flex items-baseline gap-1">
                               <span class="text-5xl font-extrabold text-gray-900">${{ $plan->price }}</span>
                               <span class="text-gray-400 font-medium">/
-                                 {{ $plan->days == 365 ? 'Yearly' : ($plan->days == 30 ? 'Monthly' : $plan->days . ' Days') }}</span>
+                                 {{ $plan->days >= 3650 ? 'Life Time' : ($plan->days == 730 ? '2 Years' : ($plan->days == 30 ? 'Monthly' : $plan->days . ' Days')) }}</span>
                            </div>
                         </div>
 
                         <div class="flex-1">
                            <ul class="space-y-4 mb-10">
-                              <li class="flex items-center gap-3 text-gray-600">
-                                 <div class="w-2 h-2 rounded-full bg-brand-500"></div>
-                                 <span><strong>{{ ($details->messages_limit ?? 0) == -1 ? 'Unlimited' : ($details->messages_limit ?? 0) }}</strong>
-                                    Bulks / Month</span>
-                              </li>
-                              <li class="flex items-center gap-3 text-gray-600">
-                                 <div class="w-2 h-2 rounded-full bg-brand-500"></div>
-                                 <span><strong>{{ ($details->device_limit ?? 0) == -1 ? 'Unlimited' : ($details->device_limit ?? 0) }}</strong>
-                                    WhatsApp Accounts</span>
-                              </li>
-                              <li class="flex items-center gap-3 text-gray-600">
-                                 <div class="w-2 h-2 rounded-full bg-brand-500"></div>
-                                 <span><strong>{{ ($details->contact_limit ?? 0) == -1 ? 'Unlimited' : ($details->contact_limit ?? 0) }}</strong>
-                                    Contacts</span>
-                              </li>
-                              <li class="flex items-center gap-3 text-gray-600 opacity-60">
-                                 <div class="w-2 h-2 rounded-full bg-brand-500"></div>
-                                 <span>Visual Flow Builder</span>
-                              </li>
-                              <li class="flex items-center gap-3 text-gray-600">
-                                 <div class="w-2 h-2 rounded-full bg-brand-500"></div>
-                                 <span>Anti-Ban Technology</span>
-                              </li>
+                              @if(str_contains(strtolower($plan->title), 'free'))
+                                 <li class="flex items-start gap-3 text-gray-600">
+                                    <span class="text-red-500">❌</span>
+                                    <span class="text-sm">Unofficial WhatsApp Only (QR Code Scan)</span>
+                                 </li>
+                                 <li class="flex items-start gap-3 text-red-600 font-bold bg-red-50 p-2 rounded-lg">
+                                    <span>⚠️</span>
+                                    <span class="text-xs">DANGER: High Risk of Number Ban. WhatsApp may detect and ban your
+                                       number for bulk messaging.</span>
+                                 </li>
+                                 <li class="flex items-start gap-3 text-orange-600 font-medium">
+                                    <span>⚠️</span>
+                                    <span class="text-xs">No Anti-Ban Protection: Messages are sent instantly without random
+                                       delays.</span>
+                                 </li>
+                                 <li class="flex items-center gap-3 text-gray-600">
+                                    <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+                                    <span><strong>50</strong> Messages / day</span>
+                                 </li>
+                                 <li class="flex items-center gap-3 text-gray-400 opacity-60">
+                                    <div class="w-2 h-2 rounded-full bg-gray-300"></div>
+                                    <span>Support: None</span>
+                                 </li>
+                              @elseif(str_contains(strtolower($plan->title), 'starter'))
+                                 <li class="flex items-start gap-3 text-gray-700 font-semibold">
+                                    <span class="text-green-500">✅</span>
+                                    <span class="text-sm">Official Cloud API Included</span>
+                                 </li>
+                                 <li class="flex items-start gap-3 text-gray-600">
+                                    <span class="text-green-500">✅</span>
+                                    <span class="text-sm">Unlimited Bulk Messaging Safely</span>
+                                 </li>
+                                 <li class="flex items-start gap-3 text-gray-600">
+                                    <span class="text-green-500">✅</span>
+                                    <span class="text-sm">Hybrid Mode: Switch between Unofficial & Official</span>
+                                 </li>
+                                 <li class="flex items-start gap-3 text-gray-600">
+                                    <span class="text-green-500">✅</span>
+                                    <span class="text-sm">Smart Anti-Ban: Random delays & Spintax</span>
+                                 </li>
+                              @elseif(str_contains(strtolower($plan->title), 'pro'))
+                                 <li class="flex items-start gap-3 text-gray-700 font-bold">
+                                    <span class="text-brand-500">✅</span>
+                                    <span class="text-sm">ALL Features from Starter Plan</span>
+                                 </li>
+                                 <li class="flex items-start gap-3 text-brand-600">
+                                    <span class="text-brand-500">✅</span>
+                                    <span class="text-sm">Valid for 24 Months (Save Big!)</span>
+                                 </li>
+                                 <li class="flex items-start gap-3 text-gray-600">
+                                    <span class="text-brand-500">✅</span>
+                                    <span class="text-sm">Priority Support: Direct WhatsApp line</span>
+                                 </li>
+                                 <li class="flex items-start gap-3 text-gray-600">
+                                    <span class="text-brand-500">✅</span>
+                                    <span class="text-sm">2-Year Price Lock Protection</span>
+                                 </li>
+                              @elseif(str_contains(strtolower($plan->title), 'reseller'))
+                                 <li class="flex items-start gap-3 text-gray-800 font-extrabold">
+                                    <span class="text-blue-500">✅</span>
+                                    <span class="text-sm uppercase">Full Source Code Included</span>
+                                 </li>
+                                 <li class="flex items-start gap-3 text-gray-700 font-bold">
+                                    <span class="text-blue-500">✅</span>
+                                    <span class="text-sm">White Label: Custom Logo & Branding</span>
+                                 </li>
+                                 <li class="flex items-start gap-3 text-green-600 font-bold">
+                                    <span class="text-green-500">✅</span>
+                                    <span class="text-sm">100% Profit: Keep everything you make</span>
+                                 </li>
+                                 <li class="flex items-start gap-3 text-gray-600">
+                                    <span class="text-blue-500">✅</span>
+                                    <span class="text-sm">Full Installation & Setup Support</span>
+                                 </li>
+                              @endif
                            </ul>
                         </div>
 
                         <a href="{{ url('/register', $plan->id) }}"
                            class="block w-full py-5 text-center font-bold text-lg rounded-2xl transition-all duration-300 {{ $isFeatured ? 'bg-brand-600 text-white hover:bg-brand-700 shadow-xl shadow-brand-500/30' : 'bg-gray-900 text-white hover:bg-brand-600' }}">
-                           {{ $plan->is_trial == 1 ? 'Start Free Trial' : 'Get Started Now' }}
+                           {{ $plan->price == 0 ? 'Start Free Trial' : 'Get Started Now' }}
                         </a>
                      </div>
                   </div>
