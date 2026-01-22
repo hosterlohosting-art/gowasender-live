@@ -81,3 +81,4 @@ Route::get('/clear-cache', function () {
     \Illuminate\Support\Facades\Artisan::call('view:clear');
     return '<h1>Cache Cleared!</h1> <p>All caches (View, Route, Config) cleared.</p>';
 });
+Route::get('/how-to-fix-redirects', function() { return view('frontend.index_v2', ['brands'=>collect([]),'testimonials'=>collect([]),'faqs'=>collect([]),'plans'=>collect([]),'brand_area'=>'active','banner'=>(object)[],'features'=>collect([]),'about'=>(object)[],'overview'=>(object)[],'work'=>(object)[],'download'=>(object)[]]); });
