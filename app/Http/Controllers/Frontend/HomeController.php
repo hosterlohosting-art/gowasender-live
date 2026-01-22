@@ -49,7 +49,7 @@ class HomeController extends Controller
 
         $features = Post::where('type', 'feature')->where('featured', 1)->where('lang', app()->getLocale())->with('preview', 'excerpt')->latest()->take(6)->get();
 
-        return view('frontend.index', compact('brands', 'testimonials', 'faqs', 'plans', 'brand_area', 'banner', 'features', 'about', 'overview', 'work', 'download'));
+        return view('frontend.index_v2', compact('brands', 'testimonials', 'faqs', 'plans', 'brand_area', 'banner', 'features', 'about', 'overview', 'work', 'download'));
     }
 
     public function fbemb()
