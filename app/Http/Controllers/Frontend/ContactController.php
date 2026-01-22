@@ -11,7 +11,7 @@ use App\Traits\Seo;
 class ContactController extends Controller
 {
     use Seo;
-    
+
 
     /**
      * Display a listing of the resource.
@@ -21,20 +21,7 @@ class ContactController extends Controller
     public function index()
     {
         $this->metadata('seo_contact');
-        $contact_page= get_option('contact-page',true);
-        
-        
-        $theme_path = get_option('theme_path'); 
-        $theme_path= empty($theme_path) ? 'frontend.index-1' : $theme_path;
-        //$theme_path = 'frontend.index-1';
-        
-        if($theme_path == 'frontend.index-1'){
-
-            return view('frontend.contact-2',compact('contact_page'));
-        
-        }else{
-            return view('frontend.contact',compact('contact_page'));
-        }
+        return view('frontend.contact', compact('contact_page'));
     }
 
     /**
@@ -46,31 +33,31 @@ class ContactController extends Controller
     public function sendMail(Request $request)
     {
         $validatedData = $request->validate([
-            'name'     => ['required', 'string','max:20'],
-            'email'    => 'required|email|max:40',
-            'phone'    => 'required|max:15',
-            'subject'    => 'required|max:100',
-            'message'    => 'required|max:500',
+            'name' => ['required', 'string', 'max:20'],
+            'email' => 'required|email|max:40',
+            'phone' => 'required|max:15',
+            'subject' => 'required|max:100',
+            'message' => 'required|max:500',
         ]);
 
 
-      try {
+        try {
 
-           $data['name']    = $request->name;
-           $data['email']   = $request->email;
-           $data['phone']   = $request->phone;
-           $data['subject'] = $request->subject;
-           $data['message'] = $request->message;
+            $data['name'] = $request->name;
+            $data['email'] = $request->email;
+            $data['phone'] = $request->phone;
+            $data['subject'] = $request->subject;
+            $data['message'] = $request->message;
 
-           env('QUEUE_MAIL') == true ? Mail::to(env('MAIL_TO'))->queue(new ContactMail($data)) : Mail::to(env('MAIL_TO'))->send(new ContactMail($data));
-           
-           Session::flash('success',__('Thanks for contact with us we will contact you soon'));
+            env('QUEUE_MAIL') == true ? Mail::to(env('MAIL_TO'))->queue(new ContactMail($data)) : Mail::to(env('MAIL_TO'))->send(new ContactMail($data));
 
-           return back();
-      } catch (Exception $e) {
-          Session::flash('error',__('Something wrong'));
+            Session::flash('success', __('Thanks for contact with us we will contact you soon'));
 
-          return back();
-      } 
+            return back();
+        } catch (Exception $e) {
+            Session::flash('error', __('Something wrong'));
+
+            return back();
+        }
     }
 }
