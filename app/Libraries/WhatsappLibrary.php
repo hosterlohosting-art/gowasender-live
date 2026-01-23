@@ -16,11 +16,12 @@ class WhatsappLibrary
         $this->clientHandler = new GuzzleClientHandler();
         $this->client = new GuzzleClient();
     }
-    
-    public function fetchProfile($phoneNumberId, $accessToken){
+
+    public function fetchProfile($phoneNumberId, $accessToken)
+    {
         $apiVersion = 'v20.0';
         $url = "https://graph.facebook.com/{$apiVersion}/{$phoneNumberId}/whatsapp_business_profile";
-    
+
         try {
             $response = $this->client->get($url, [
                 'headers' => [
@@ -30,7 +31,7 @@ class WhatsappLibrary
                     'fields' => 'about,address,description,email,profile_picture_url,websites,vertical',
                 ],
             ]);
-    
+
             // Check if the request was successful (status code 200)
             if ($response->getStatusCode() == 200) {
                 $result = json_decode($response->getBody(), true);
@@ -39,7 +40,7 @@ class WhatsappLibrary
                 // Handle unexpected status code
                 return ['error' => 'Unexpected status code: ' . $response->getStatusCode()];
             }
-    
+
         } catch (\Exception $e) {
             // Handle Guzzle exceptions or any other exceptions that might occur
             return ['error' => $e->getMessage()];
@@ -112,16 +113,13 @@ class WhatsappLibrary
 
     public function createTemplate($templateRawData, $header, $body, $footer, $buttons, $accountId, $accessToken)
     {
-        
-        
         $client = new \GuzzleHttp\Client();
         $url = "https://graph.facebook.com/v20.0/{$accountId}/message_templates";
-        $templateName = $templateRawData['template_name'];
-        if (!strpos($templateName, '_')) {
-            $convertedName = str_replace(' ', '_', $templateName);
-        } else {
-            $convertedName = $templateName;
-        }
+
+        // --- SANITIZATION: Force lowercase and replace all non-alphanumeric with underscores ---
+        $templateName = strtolower($templateRawData['template_name']);
+        $convertedName = preg_replace('/[^a-z0-9]/', '_', $templateName);
+
         $templateData = [
             "name" => $convertedName,
             "category" => $templateRawData['category'],
@@ -131,82 +129,92 @@ class WhatsappLibrary
                 $body,
             ],
         ];
-        
-       if (!empty($header)) {
-    $templateData["components"][] = $header;
-}
 
-if (!empty($footer)) {
-    $templateData["components"][] = $footer;
-}
+        if (!empty($header)) {
+            $templateData["components"][] = $header;
+        }
 
-if (!empty($buttons)) {
-    $templateData["components"][] = $buttons;
-}
+        if (!empty($footer)) {
+            $templateData["components"][] = $footer;
+        }
 
-        
-       //dd($templateData);
+        if (!empty($buttons)) {
+            $templateData["components"][] = $buttons;
+        }
 
-        $response = $client->post($url, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-            ],
-            'json' => $templateData,
-        ]);
+        try {
+            $response = $client->post($url, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $accessToken,
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => $templateData,
+            ]);
 
-        $responseData = json_decode($response->getBody(), true);
-        $status_code = $response->getStatusCode();
+            return [
+                'status' => $response->getStatusCode(),
+                'body' => json_decode($response->getBody(), true)
+            ];
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $response = $e->getResponse();
+            $responseBody = json_decode($response->getBody()->getContents(), true);
 
-        // Handle the API response as needed
-        // ...
-        
-        return $status_code;
+            return [
+                'status' => $response->getStatusCode(),
+                'error' => $responseBody['error']['message'] ?? 'Unknown Meta API Error',
+                'body' => $responseBody
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status' => 500,
+                'error' => $e->getMessage()
+            ];
+        }
     }
 
     public function getHeaderTextComponent($templateRawData, $media = null)
-{
-    $headerType = $templateRawData['header_type'];
-    $headerExample = [];
+    {
+        $headerType = $templateRawData['header_type'];
+        $headerExample = [];
 
-    foreach ($templateRawData as $key => $value) {
-        if (strpos($key, 'text_parameter_') === 0) {
-            $parameterIndex = substr($key, strlen('text_parameter_'));
-            $headerExample[] = $value;
+        foreach ($templateRawData as $key => $value) {
+            if (strpos($key, 'text_parameter_') === 0) {
+                $parameterIndex = substr($key, strlen('text_parameter_'));
+                $headerExample[] = $value;
+            }
         }
+
+        $headerComponent = [
+            "type" => "HEADER",
+            "format" => $headerType,
+        ];
+
+        if ($headerType === "text") {
+            $text = $templateRawData['text_header'];
+            $headerComponent["text"] = $text;
+
+            if (!empty($headerExample)) {
+                $headerComponent["example"] = [
+                    "header_text" => $headerExample,
+                ];
+            }
+        } elseif ($headerType === "media") {
+            $format = $templateRawData['media_type']; // For MEDIA headers only
+            $headerComponent["format"] = $format;
+
+            if (!empty($media)) {
+                $headerComponent["example"] = [
+                    "header_handle" => $media,
+                ];
+            }
+        } elseif ($headerType === "none") {
+            $headerComponent = [];
+        } else {
+            $headerComponent = [];
+        }
+
+        return $headerComponent;
     }
-
-    $headerComponent = [
-        "type" => "HEADER",
-        "format" => $headerType,
-    ];
-
-    if ($headerType === "text") {
-        $text = $templateRawData['text_header'];
-        $headerComponent["text"] = $text;
-
-        if (!empty($headerExample)) {
-            $headerComponent["example"] = [
-                "header_text" => $headerExample,
-            ];
-        }
-    } elseif ($headerType === "media") {
-        $format = $templateRawData['media_type']; // For MEDIA headers only
-        $headerComponent["format"] = $format;
-
-        if (!empty($media)) {
-            $headerComponent["example"] = [
-                "header_handle" => $media,
-            ];
-        }
-    } elseif ($headerType === "none") {
-        $headerComponent = [];
-    } else {
-        $headerComponent = [];
-    }
-
-    return $headerComponent;
-}
 
 
     public function getBodyTextComponent($templateRawData)
@@ -282,8 +290,8 @@ if (!empty($buttons)) {
                     "type" => "QUICK_REPLY",
                     "text" => $button['displaytext'],
                 ];
-            }else{
-                
+            } else {
+
                 $formattedButton = [];
             }
 
@@ -295,10 +303,10 @@ if (!empty($buttons)) {
                 "type" => "BUTTONS",
                 "buttons" => $formattedButtons,
             ];
-        }else{
+        } else {
             $buttonComponent = [];
         }
-        
+
 
         return $buttonComponent;
     }
@@ -335,19 +343,39 @@ if (!empty($buttons)) {
         $client = new \GuzzleHttp\Client();
         $url = "https://graph.facebook.com/v20.0/{$templateId}";
         $templateData = [$header, $body, $footer, $buttons];
-        $response = $client->post($url, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'application/json',
-            ],
-            'json' => $templateData,
-        ]);
 
-        $responseData = json_decode($response->getBody(), true);
-        return $responseData;
+        try {
+            $response = $client->post($url, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $accessToken,
+                    'Content-Type' => 'application/json',
+                ],
+                'json' => $templateData,
+            ]);
+
+            return [
+                'status' => $response->getStatusCode(),
+                'body' => json_decode($response->getBody(), true)
+            ];
+        } catch (\GuzzleHttp\Exception\ClientException $e) {
+            $response = $e->getResponse();
+            $responseBody = json_decode($response->getBody()->getContents(), true);
+
+            return [
+                'status' => $response->getStatusCode(),
+                'error' => $responseBody['error']['message'] ?? 'Unknown Meta API Error',
+                'body' => $responseBody
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status' => 500,
+                'error' => $e->getMessage()
+            ];
+        }
     }
 
-    public function retrieveUrl($media_id, $accessToken){
+    public function retrieveUrl($media_id, $accessToken)
+    {
         $client = new \GuzzleHttp\Client();
         $url = "https://graph.facebook.com/v20.0/{$media_id}";
         $response = $client->get($url, [
@@ -355,12 +383,12 @@ if (!empty($buttons)) {
                 'Authorization' => 'Bearer ' . $accessToken,
             ],
         ]);
-        
+
         // Check if the request was successful (status code 200)
         if ($response->getStatusCode() === 200) {
             // Parse the JSON response
             $responseData = json_decode($response->getBody(), true);
-            
+
             // Check if the URL key exists in the response data
             if (isset($responseData['url'])) {
                 // Return the retrieved URL
@@ -370,30 +398,30 @@ if (!empty($buttons)) {
                         'Authorization' => 'Bearer ' . $accessToken,
                     ],
                 ]);
-                if ($mediaData->getStatusCode() === 200){
+                if ($mediaData->getStatusCode() === 200) {
                     $imageContent = $mediaData->getBody();
                     $contentType = $mediaData->getHeader('Content-Type')[0];
 
                     $extensionMap = [
-                        'image/jpeg'=> 'jpg',
-                        'image/png'=> 'png',
-                        'audio/mpeg'=> 'mp3',
-                        'video/mp4'=> 'mp4',
-                        'audio/aac'=> 'aac',
-                        'audio/amr'=> 'amr',
-                        'audio/ogg'=> 'ogg',
-                        'audio/mp4'=> 'mp4',
-                        'text/plain'=> 'txt',
-                        'application/pdf'=> 'pdf',
-                        'application/vnd.ms-powerpoint'=> 'ppt',
-                        'application/msword'=> 'doc',
-                        'application/vnd.ms-excel'=> 'xls',
-                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'=> 'docx',
-                        'application/vnd.openxmlformats-officedocument.presentationml.presentation'=> 'pptx',
-                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'=> 'xlsx',
-                        'video/3gp'=> '3gp',
-                        'image/webp'=> 'webp'
-                        
+                        'image/jpeg' => 'jpg',
+                        'image/png' => 'png',
+                        'audio/mpeg' => 'mp3',
+                        'video/mp4' => 'mp4',
+                        'audio/aac' => 'aac',
+                        'audio/amr' => 'amr',
+                        'audio/ogg' => 'ogg',
+                        'audio/mp4' => 'mp4',
+                        'text/plain' => 'txt',
+                        'application/pdf' => 'pdf',
+                        'application/vnd.ms-powerpoint' => 'ppt',
+                        'application/msword' => 'doc',
+                        'application/vnd.ms-excel' => 'xls',
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'docx',
+                        'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'pptx',
+                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'xlsx',
+                        'video/3gp' => '3gp',
+                        'image/webp' => 'webp'
+
                         // Add more mappings as necessary
                     ];
                     $extension = $extensionMap[$contentType] ?? 'unknown';
@@ -405,40 +433,41 @@ if (!empty($buttons)) {
                 }
             }
         }
-        
+
         // Return null or handle the error as needed
         return null;
     }
-    
+
     // December 2023
-    
-    public function loadTemplatesFromWhatsApp($businessId, $accessToken, $after=""){
+
+    public function loadTemplatesFromWhatsApp($businessId, $accessToken, $after = "")
+    {
         $client = new \GuzzleHttp\Client();
-        $url="https://graph.facebook.com/v20.0/{$businessId}/message_templates";
+        $url = "https://graph.facebook.com/v20.0/{$businessId}/message_templates";
         $queryParams = [
             'fields' => 'name,category,language,quality_score,components,status',
             'limit' => 100
         ];
-        if($after!=""){
-            $queryParams['after']=$after;
+        if ($after != "") {
+            $queryParams['after'] = $after;
         }
 
-         $response = $client->get($url, [
-    'headers' => [
-        'Authorization' => 'Bearer ' . $accessToken,
-    ],
-    'query' => $queryParams,
-]);
+        $response = $client->get($url, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $accessToken,
+            ],
+            'query' => $queryParams,
+        ]);
 
-    
+
 
         // Handle the response here
         if ($response->getStatusCode() === 200) {
             $responseData = json_decode($response->getBody(), true);
             return $responseData;
-        }else {
+        } else {
             // Handle error response
-           return false;
+            return false;
         }
     }
 
@@ -448,97 +477,96 @@ if (!empty($buttons)) {
         //dd($message);
         $client = new \GuzzleHttp\Client();
         $url = "https://graph.facebook.com/v20.0/{$accountId}/messages";
-        
+
         $components = json_decode($message->updated_parameters);
         //dd($components);
-if (!empty($components) && count($components) > 0){
-foreach ($components as $component) {
-    // Check if the component type is 'HEADER' and has parameters
-    if ($component->type === 'HEADER' && isset($component->parameters)) {
-        // Iterate through parameters
-        foreach ($component->parameters as $parameter) {
-            // Check if the parameter type is 'image' and has a 'link' property
-            if ($parameter->type === 'image' && isset($parameter->image->link)) {
-                // Use the saveFile function to get the image link
-                $imageLink = $this->saveFile($message, 'header_image');
-                $parameter->image->link = $imageLink;
+        if (!empty($components) && count($components) > 0) {
+            foreach ($components as $component) {
+                // Check if the component type is 'HEADER' and has parameters
+                if ($component->type === 'HEADER' && isset($component->parameters)) {
+                    // Iterate through parameters
+                    foreach ($component->parameters as $parameter) {
+                        // Check if the parameter type is 'image' and has a 'link' property
+                        if ($parameter->type === 'image' && isset($parameter->image->link)) {
+                            // Use the saveFile function to get the image link
+                            $imageLink = $this->saveFile($message, 'header_image');
+                            $parameter->image->link = $imageLink;
+                        }
+
+                        if ($parameter->type === 'document' && isset($parameter->document->link)) {
+                            $docLink = $this->saveFile($message, 'header_document');
+                            $parameter->document->link = $docLink;
+                        }
+                    }
+                }
             }
-            
-            if ($parameter->type === 'document' && isset($parameter->document->link)){
-                 $docLink = $this->saveFile($message, 'header_document');
-                 $parameter->document->link = $docLink;
+        } else if ($message->type && empty($components)) {
+
+            if ($message->type == 'IMAGE') {
+                $components = [
+                    [
+                        "type" => "HEADER",
+                        "parameters" => [
+                            [
+                                "type" => "image",
+                                "image" => [
+                                    "link" => $message->image_example
+                                ]
+                            ]
+                        ]
+                    ]
+                ];
+            } else if ($message->type == 'DOCUMENT') {
+                $components = [
+                    [
+                        "type" => "HEADER",
+                        "parameters" => [
+                            [
+                                "type" => "document",
+                                "document" => [
+                                    "link" => $message->doc_example
+                                ]
+                            ]
+                        ]
+                    ]
+                ];
             }
         }
-    }
-}
-}
-else if($message->type && empty($components)){
-    
-    if($message->type == 'IMAGE'){
-        $components = [
-            [
-                "type" => "HEADER",
-                "parameters" => [
-                    [
-                        "type" => "image",
-                        "image" => [
-                            "link" => $message->image_example
-                        ]
-                    ]
-                ]
-            ]
-        ];
-    }else if($message->type == 'DOCUMENT'){
-        $components = [
-            [
-                "type" => "HEADER",
-                "parameters" => [
-                    [
-                        "type" => "document",
-                        "document" => [
-                            "link" => $message->doc_example
-                        ]
-                    ]
-                ]
-            ]
-        ];
-    }
-}
 
-            $requestData = [
-        'messaging_product' => 'whatsapp',
-        'to' => $message->phone,
-        'type' => 'template',
-        'template' => [
-            'name' => $message->template_text,
-            'language' => [
-                'code' => $message->language ?? 'en_US',
+        $requestData = [
+            'messaging_product' => 'whatsapp',
+            'to' => $message->phone,
+            'type' => 'template',
+            'template' => [
+                'name' => $message->template_text,
+                'language' => [
+                    'code' => $message->language ?? 'en_US',
+                ],
             ],
-        ],
-    ];
-    
-    if (!empty($components) && count($components) > 0) {
-        $requestData['template']['components'] = $components;
-    }
-    
-    $response = $client->post($url, [
-        'headers' => [
-            'Authorization' => 'Bearer ' . $accessToken,
-            'Content-Type' => 'application/json',
-        ],
-        'json' => $requestData,
-    ]);
-    
-    $statusCode = $response->getStatusCode();
+        ];
+
+        if (!empty($components) && count($components) > 0) {
+            $requestData['template']['components'] = $components;
+        }
+
+        $response = $client->post($url, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json',
+            ],
+            'json' => $requestData,
+        ]);
+
+        $statusCode = $response->getStatusCode();
         $content = json_decode($response->getBody(), true);
-        
+
         return $statusCode;
 
         // Handle the response as needed based on $statusCode and $content
-    
-}
+
+    }
 
 
-    
+
 
 }

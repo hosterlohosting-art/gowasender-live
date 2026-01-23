@@ -118,8 +118,9 @@
 								<tr>
 									<th class="col-3">{{ __('Template Name') }}</th>
 									<th class="col-2">{{ __('Type') }}</th>
-									<th class="col-1">{{ __('Status') }}</th>
-									<th class="col-2 text-right">{{ __('Action') }}</th>
+									<th class="col-2">{{ __('WhatsApp API') }}</th>
+									<th class="col-2">{{ __('Status') }}</th>
+									<th class="col-3 text-right">{{ __('Action') }}</th>
 								</tr>
 							</thead>
 							<tbody class="tbody">
@@ -128,7 +129,19 @@
 										<td>
 											{{ $template->title }}
 										</td>
-										<td>{{ $template->type }}</td>
+										<td>
+											<span class="badge badge-soft-primary text-uppercase">{{ str_replace('-', ' ', $template->type) }}</span>
+										</td>
+										<td>
+											@if($template->cloudapi)
+												<div class="d-flex align-items-center">
+													<i class="fab fa-whatsapp text-success mr-2"></i>
+													<span class="text-xs font-weight-bold">{{ $template->cloudapi->phone ?? $template->cloudapi->name }}</span>
+												</div>
+											@else
+												<span class="text-muted small">{{ __('All/Local') }}</span>
+											@endif
+										</td>
 										<td><span class="badge {{ badge($template->status)['class'] }}">{{ $template->status == 1 ? 'active' : 'inactive'  }}</span> </td>
 										<td>
 											<div class="btn-group mb-2 float-right">

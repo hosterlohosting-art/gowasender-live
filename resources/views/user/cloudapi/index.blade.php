@@ -3,8 +3,13 @@
 @section('head')
     {{-- Ideally, pass $buttons from the Controller. If you must keep it here, this is fine. --}}
     @include('layouts.main.headersection', [
-        'title' => __('CloudApi'),
-        'buttons' => $buttons ?? [] // Use the variable passed from controller
+        'title' => __('WhatsApp API'),
+        'buttons' => [
+            [
+                'name' => '<i class="fas fa-plus"></i> ' . __('Add New API'),
+                'url' => route('user.cloudapi.create'),
+            ]
+        ]
     ])
 @endsection
 
@@ -149,15 +154,13 @@
                 </div>
             </div>
             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 layout-spacing">
-                <a href="{{ route('user.cloudapi.create') }}">
-                    <div class="widget widget-three add-project p-0">
-                        <div class="iq-card dash-hover-blank d-flex align-items-center iq-card-block iq-card-stretch iq-card-height">
-                            <div class="iq-card-body text-center">
-                                <h5 class=""> {{ __('Add New WhatsApp API') }}</h5>
-                            </div>
-                        </div>
+                <div class="widget iq-card dash-hover-blank d-flex align-items-center iq-card-block iq-card-stretch iq-card-height p-4">
+                    <div class="iq-card-body text-center w-100">
+                        <i class="fas fa-plug font-45 text-muted mb-3"></i>
+                        <h5 class="text-muted"> {{ __('No more APIs found.') }}</h5>
+                        <p class="small text-muted mb-0">{{ __('Use the button in the header to add more.') }}</p>
                     </div>
-                </a>
+                </div>
             </div>
         @endforelse
     </div>

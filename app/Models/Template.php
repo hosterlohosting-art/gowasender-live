@@ -47,4 +47,9 @@ class Template extends Model
     {
         return $this->hasMany('App\Models\Smstransaction');
     }
+
+    public function cloudapi()
+    {
+        return $this->belongsTo('App\Models\CloudApi');
+    }
 }
