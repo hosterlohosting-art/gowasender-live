@@ -174,19 +174,38 @@ $('#messagesTypes').on('change', function () {
 
 function initMessage() {
   var $chart = $('#chart-sales');
+  if (!$chart.length) return;
+
   var salesChart = new Chart($chart, {
     type: 'line',
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       scales: {
         yAxes: [{
           gridLines: {
-            color: Charts.colors.gray[200],
-            zeroLineColor: Charts.colors.gray[200]
+            color: '#e9ecef',
+            zeroLineColor: '#e9ecef',
+            drawBorder: false,
           },
           ticks: {
-
+            beginAtZero: true,
+            padding: 10,
+            fontColor: '#8898aa'
+          }
+        }],
+        xAxes: [{
+          gridLines: {
+            display: false
+          },
+          ticks: {
+            padding: 10,
+            fontColor: '#8898aa'
           }
         }]
+      },
+      legend: {
+        display: false
       }
     },
     data: {
@@ -194,7 +213,12 @@ function initMessage() {
       datasets: [{
         label: 'Messages',
         data: messagesTransactionValues,
-        borderColor: ' #25D366'
+        borderColor: '#25D366',
+        backgroundColor: 'rgba(37, 211, 102, 0.1)',
+        fill: true,
+        pointRadius: 4,
+        pointBackgroundColor: '#25D366',
+        lineTension: 0.4
       }]
     }
   });

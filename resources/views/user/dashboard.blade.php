@@ -100,7 +100,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             <h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Connected') }}</h6>
-                            <span class="h2 font-weight-800 mb-0 total-transfers" id="total-device text-dark">
+                            <span class="h2 font-weight-800 mb-0 total-transfers text-dark" id="total-device">
                                 <i class="fas fa-spinner fa-spin text-muted small"></i>
                             </span>
                         </div>
@@ -122,7 +122,7 @@
                         <div class="col">
                             <h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Messages Sent') }}
                             </h6>
-                            <span class="h2 font-weight-800 mb-0 total-transfers" id="total-messages text-dark">
+                            <span class="h2 font-weight-800 mb-0 total-transfers text-dark" id="total-messages">
                                 <i class="fas fa-spinner fa-spin text-muted small"></i>
                             </span>
                         </div>
@@ -143,7 +143,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             <h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Pending') }}</h6>
-                            <span class="h2 font-weight-800 mb-0 total-transfers" id="total-schedule text-dark">
+                            <span class="h2 font-weight-800 mb-0 total-transfers text-dark" id="total-schedule">
                                 <i class="fas fa-spinner fa-spin text-muted small"></i>
                             </span>
                         </div>
@@ -164,7 +164,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             <h6 class="text-uppercase text-muted mb-1 font-weight-bold text-xs">{{ __('Audience') }}</h6>
-                            <span class="h2 font-weight-800 mb-0 total-transfers" id="total-contacts text-dark">
+                            <span class="h2 font-weight-800 mb-0 total-transfers text-dark" id="total-contacts">
                                 <i class="fas fa-spinner fa-spin text-muted small"></i>
                             </span>
                         </div>
@@ -215,11 +215,11 @@
     </div>
 
     <div class="row">
-        <!-- Messages Transaction Chart -->
+        <!-- Activity Overview & Recent Chats -->
         <div class="col-xl-8">
-            <div class="card premium-card border-0">
+            <div class="card premium-card border-0 mb-4">
                 <div class="card-header bg-transparent d-flex align-items-center justify-content-between py-3">
-                    <h6 class="h4 text-dark mb-0 ls-1 text-uppercase font-weight-bold">Activity Overview</h6>
+                    <h6 class="h4 text-dark mb-0 ls-1 text-uppercase font-weight-bold">Messages Activity</h6>
                     <div class="card-header-action">
                         <select class="form-control border-0 bg-light shadow-none cursor-pointer text-dark font-weight-bold"
                             id="period" style="width: 140px; border-radius: 8px;">
@@ -235,17 +235,61 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Recent Conversations (Added) -->
+            <div class="card premium-card border-0">
+                <div class="card-header bg-transparent py-3">
+                    <h6 class="h4 text-dark mb-0 ls-1 text-uppercase font-weight-bold">Recent Conversations</h6>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-items-center table-flush">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col" class="text-xs font-weight-800 text-uppercase">Contact</th>
+                                <th scope="col" class="text-xs font-weight-800 text-uppercase">Last Message</th>
+                                <th scope="col" class="text-xs font-weight-800 text-uppercase text-right">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($chatMessages as $message)
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar avatar-xs rounded-circle bg-soft-primary text-primary mr-2 font-weight-bold">
+                                            {{ strtoupper(substr($message->contact->name ?? 'U', 0, 1)) }}
+                                        </div>
+                                        <span class="text-sm font-weight-700 text-dark">{{ $message->contact->phone ?? 'New User' }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="text-sm text-muted text-truncate d-inline-block" style="max-width: 200px;">
+                                        {{ $message->message }}
+                                    </span>
+                                </td>
+                                <td class="text-right text-xs font-weight-600 text-muted">
+                                    {{ \Carbon\Carbon::parse($message->updated_at)->diffForHumans() }}
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="3" class="text-center py-4 text-muted small">No recent activity</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
-        <!-- Messages Type Doughnut -->
+        <!-- Sidebar Analytics: Distribution & Top Template -->
         <div class="col-xl-4">
-            <div class="card premium-card border-0">
+            <div class="card premium-card border-0 mb-4">
                 <div class="card-header bg-transparent d-flex align-items-center justify-content-between py-3">
                     <h6 class="h4 text-dark mb-0 ls-1 text-uppercase font-weight-bold">Distribution</h6>
                     <div class="card-header-action">
                         <select class="form-control border-0 bg-light shadow-none cursor-pointer text-dark font-weight-bold"
                             id="messagesTypes" style="width: 120px; border-radius: 8px;">
-                            <option value="7">Last 7 Days</option>
+                            <option value="7">7 Days</option>
                             <option value="1">Today</option>
                             <option value="30">30 Days</option>
                         </select>
@@ -253,10 +297,25 @@
                 </div>
                 <div class="card-body">
                     <div class="chart">
-                        <canvas id="chart-doughnut" class="chart-canvas" height="280"></canvas>
+                        <canvas id="chart-doughnut" class="chart-canvas" height="300"></canvas>
                     </div>
                 </div>
             </div>
+
+            @if($templates)
+            <div class="card premium-card border-0 bg-gradient-success">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon icon-shape bg-white text-success rounded-circle mr-3">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h6 class="text-white text-uppercase ls-1 mb-0 font-weight-bold">Top Performing Template</h6>
+                    </div>
+                    <h3 class="text-white font-weight-800 mb-1">{{ $templates->title }}</h3>
+                    <p class="text-white-50 small mb-0">{{ __('Used') }} {{ $mostUsedTemplateId->template_count }} {{ __('times in the last 30 days') }}</p>
+                </div>
+            </div>
+            @endif
         </div>
     </div>
 
