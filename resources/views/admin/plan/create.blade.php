@@ -81,14 +81,13 @@
                          <input type="number" name="plan_data[contact_limit]" required="" class="form-control">
                     </div>
                 </div>
-                <!--div class="from-group row mt-2">
-                    <label class="col-lg-12">{{ __('CloudApi Limit') }}</label>
+                <div class="from-group row mt-2">
+                    <label class="col-lg-12">{{ __('WhatsApp API Limit') }}</label>
                     <div class="col-lg-12">
-                         <input type="number" name="plan_data[device_limit]" required="" class="form-control">
+                         <input type="number" name="plan_data[cloudapi_limit]" required="" value="1" class="form-control">
+                         <small class="text-muted">{{ __('Enter -1 for unlimited APIs') }}</small>
                     </div>
-                    
-                </div-->
-                <input type="hidden" name="plan_data[cloudapi_limit]" required="" value="1" class="form-control">
+                </div>
               
                 <div class="from-group row mt-2">
                     <label class="col-lg-12">{{ __('Template Limit') }}</label>

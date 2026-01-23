@@ -77,7 +77,13 @@
                     </div>
                 </div>
 
-                <input type="hidden" name="plan_data[cloudapi_limit]"  value="1" required="" class="form-control">
+                <div class="from-group row mt-2">
+                    <label class="col-lg-12">{{ __('WhatsApp API Limit') }}</label>
+                    <div class="col-lg-12">
+                         <input type="number" name="plan_data[cloudapi_limit]" value="{{ $plan->data['cloudapi_limit'] ?? 1 }}" required="" class="form-control">
+                         <small class="text-muted">{{ __('Enter -1 for unlimited APIs') }}</small>
+                    </div>
+                </div>
                
                 <div class="from-group row mt-2">
                     <label class="col-lg-12">{{ __('Template Limit') }}</label>
