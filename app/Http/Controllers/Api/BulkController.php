@@ -15,6 +15,7 @@ use App\Models\ChatMessage;
 use App\Models\App;
 use App\Models\CloudApi;
 use App\Models\Reply;
+use App\Models\Smstransaction;
 use App\Services\ChatbotService;
 use App\Traits\Cloud;
 use App\Traits\Notifications;
@@ -35,6 +36,19 @@ class BulkController extends Controller
             return response()->json(['error' => 'Invalid Auth'], 401);
 
         return response()->json(['message' => 'Request Processed'], 200);
+    }
+
+    // --- 2. HELPER: SAVE bot transaction ---
+    public function saveBotTransaction($cloudapi, $to, $template_id = null)
+    {
+        $transaction = new Smstransaction();
+        $transaction->user_id = $cloudapi->user_id;
+        $transaction->cloudapi_id = $cloudapi->id;
+        $transaction->from = $cloudapi->phone;
+        $transaction->to = $to;
+        $transaction->template_id = $template_id;
+        $transaction->type = 'chatbot'; // Matches dashboard logic
+        $transaction->save();
     }
 
     // --- 2. HELPER: SAVE CHAT ---
@@ -164,7 +178,7 @@ class BulkController extends Controller
 
                     if ($isMatch) {
                         $flowTriggered = true;
-                        $this->processFlowChain($startNode, $nodes, $request_from, $whatsapp_api, $userChat);
+                        $this->processFlowChain($startNode, $nodes, $request_from, $whatsapp_api, $userChat, $cloudapi);
                         break;
                     }
                 }
@@ -181,6 +195,7 @@ class BulkController extends Controller
                 if ($reply && $reply->reply_type == 'text' && !empty($reply->reply)) {
                     $whatsapp_api->sendTextMessage($request_from, $reply->reply);
                     $this->saveMessageToUserChat($userChat, $reply->reply, 'sent', 'bot_' . time());
+                    $this->saveBotTransaction($cloudapi, $request_from, $reply->template_id ?? null);
                 } else {
                     $defaultReply = Reply::where('user_id', $cloudapi->user_id)
                         ->where('cloudapi_id', $cloudapi->id)
@@ -190,6 +205,7 @@ class BulkController extends Controller
                     if ($defaultReply && !empty($defaultReply->reply)) {
                         $whatsapp_api->sendTextMessage($request_from, $defaultReply->reply);
                         $this->saveMessageToUserChat($userChat, $defaultReply->reply, 'sent', 'bot_' . time());
+                        $this->saveBotTransaction($cloudapi, $request_from, $defaultReply->template_id ?? null);
                     }
                 }
             }
@@ -203,7 +219,7 @@ class BulkController extends Controller
     }
 
     // --- RECURSIVE FLOW PROCESSOR ---
-    private function processFlowChain($currentNode, $allNodes, $to, $api, $userChat)
+    private function processFlowChain($currentNode, $allNodes, $to, $api, $userChat, $cloudapi)
     {
 
         $connections = $currentNode['outputs']['output_1']['connections'] ?? [];
@@ -218,18 +234,19 @@ class BulkController extends Controller
                 sleep(1);
 
                 // 2. EXECUTE
-                $this->executeNode($nextNode, $to, $api, $userChat);
+                $this->executeNode($nextNode, $to, $api, $userChat, $cloudapi);
 
                 // 3. LOOP
-                $this->processFlowChain($nextNode, $allNodes, $to, $api, $userChat);
+                $this->processFlowChain($nextNode, $allNodes, $to, $api, $userChat, $cloudapi);
             }
         }
     }
 
     // --- EXECUTE NODE LOGIC ---
-    private function executeNode($node, $to, $api, $userChat)
+    private function executeNode($node, $to, $api, $userChat, $cloudapi)
     {
         try {
+            $this->saveBotTransaction($cloudapi, $to);
             $nodeType = $node['name'];
             $data = $node['data'];
 

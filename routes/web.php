@@ -69,10 +69,6 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 
 //**======================== Utility Routes ====================**//
 
-
-
-
-
 // Route to Clear Cache
 Route::get('/clear-cache', function () {
     \Illuminate\Support\Facades\Artisan::call('route:clear');
@@ -81,4 +77,23 @@ Route::get('/clear-cache', function () {
     \Illuminate\Support\Facades\Artisan::call('view:clear');
     return '<h1>Cache Cleared!</h1> <p>All caches (View, Route, Config) cleared.</p>';
 });
-Route::get('/how-to-fix-redirects', function() { return view('frontend.index_v2', ['brands'=>collect([]),'testimonials'=>collect([]),'faqs'=>collect([]),'plans'=>collect([]),'brand_area'=>'active','banner'=>(object)[],'features'=>collect([]),'about'=>(object)[],'overview'=>(object)[],'work'=>(object)[],'download'=>(object)[]]); });
+
+// Utility Route: Run Migrations via URL
+Route::get('/run-migrate', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        $output = \Illuminate\Support\Facades\Artisan::output();
+        return '<h1>Migrations Completed!</h1><pre>' . $output . '</pre><br><a href="/user/dashboard">Go back to Dashboard</a>';
+    } catch (\Exception $e) {
+        return '<h1>Migration Failed</h1><p>' . $e->getMessage() . '</p>';
+    }
+});
+
+// Utility Route: Clear All Cache
+Route::get('/clear-all-cache', function () {
+    \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+    return '<h1>All Cache Cleared</h1><p>The system has been optimized.</p><br><a href="/user/dashboard">Go back to Dashboard</a>';
+});
+
+Route::get('/how-to-fix-redirects', function () {
+    return view('frontend.index_v2', ['brands' => collect([]), 'testimonials' => collect([]), 'faqs' => collect([]), 'plans' => collect([]), 'brand_area' => 'active', 'banner' => (object) [], 'features' => collect([]), 'about' => (object) [], 'overview' => (object) [], 'work' => (object) [], 'download' => (object) []]); });
