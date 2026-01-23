@@ -17,67 +17,70 @@
 
             <div class="section-body">
                 <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>My Flows</h4>
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="table-responsive">
-                                    <table class="table table-striped">
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Status</th>
-                                            <th>Last Updated</th>
-                                            <th>Action</th>
-                                        </tr>
+                    @forelse($flows as $flow)
+                        <div class="col-xl-4 col-md-6 mb-4 animate-fade-in-up"
+                            style="animation-delay: {{ $loop->index * 0.1 }}s">
+                            <div class="card premium-card h-100 shadow-sm border-0">
+                                <div class="card-body p-4 d-flex flex-column">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div class="icon icon-shape bg-soft-success text-success rounded-circle shadow-sm">
+                                            <i class="fas fa-project-diagram"></i>
+                                        </div>
+                                        @if($flow->status)
+                                            <span class="badge badge-pill badge-success shadow-none font-weight-bold"
+                                                style="background: rgba(37, 211, 102, 0.1); color: #128C7E;">{{ __('ACTIVE') }}</span>
+                                        @else
+                                            <span class="badge badge-pill badge-danger shadow-none font-weight-bold"
+                                                style="background: rgba(234, 67, 53, 0.1); color: #ea4335;">{{ __('INACTIVE') }}</span>
+                                        @endif
+                                    </div>
 
-                                        @forelse($flows as $flow)
-                                            <tr>
-                                                <td>{{ $flow->name }}</td>
-                                                <td>
-                                                    @if($flow->status)
-                                                        <div class="badge badge-success">Active</div>
-                                                    @else
-                                                        <div class="badge badge-danger">Inactive</div>
-                                                    @endif
-                                                </td>
-                                                <td>{{ \Carbon\Carbon::parse($flow->updated_at)->diffForHumans() }}</td>
-                                                <td>
-                                                    <a href="{{ route('user.flows.edit', $flow->id) }}"
-                                                        class="btn btn-primary btn-sm">Edit</a>
-                                                    <a href="{{ route('user.flows.delete', $flow->id) }}"
-                                                        class="btn btn-danger btn-sm"
-                                                        onclick="return confirm('Are you sure?')">Delete</a>
-                                                </td>
-                                            </tr>
-                                        @empty
-                                            <tr>
-                                                <td colspan="4" class="text-center py-6">
-                                                    <div
-                                                        class="empty-state d-flex flex-column align-items-center justify-content-center">
-                                                        <div class="icon-shape bg-gradient-primary text-white rounded-circle shadow-lg mb-4"
-                                                            style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
-                                                            <i class="fas fa-project-diagram fa-3x"></i>
-                                                        </div>
-                                                        <h4 class="text-dark font-weight-bold mb-2">No Automation Flows Yet</h4>
-                                                        <p class="text-muted mb-4" style="max-width: 400px;">Create your first
-                                                            automated flow to engage with your customers 24/7. It's easy!</p>
-                                                        <a href="{{ route('user.flows.create') }}"
-                                                            class="btn btn-primary btn-lg shadow-lg rounded-pill px-5"
-                                                            style="background: linear-gradient(87deg, #5e72e4 0, #825ee4 100%) !important; border: none;">
-                                                            <i class="fas fa-plus mr-2"></i> Create Your First Flow
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforelse
+                                    <h4 class="h3 font-weight-800 text-dark mb-1">{{ $flow->name }}</h4>
+                                    <p class="text-muted small mb-4">
+                                        <i class="far fa-clock mr-1"></i> {{ __('Updated') }}
+                                        {{ \Carbon\Carbon::parse($flow->updated_at)->diffForHumans() }}
+                                    </p>
 
-                                    </table>
+                                    <div class="mt-auto d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                            <a href="{{ route('user.flows.edit', $flow->id) }}"
+                                                class="btn btn-sm btn-white border shadow-none rounded-pill px-3">
+                                                <i class="fas fa-edit mr-1"></i> {{ __('Edit') }}
+                                            </a>
+                                            <a href="{{ route('user.flows.delete', $flow->id) }}"
+                                                class="btn btn-sm btn-outline-danger shadow-none rounded-pill px-3 ml-2 delete-confirm">
+                                                <i class="fas fa-trash mr-1"></i> {{ __('Delete') }}
+                                            </a>
+                                        </div>
+
+                                        <a href="{{ route('user.flows.edit', $flow->id) }}"
+                                            class="btn btn-icon-only btn-neutral rounded-circle shadow-none">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @empty
+                        <div class="col-12">
+                            <div class="card premium-card border-0 text-center py-6">
+                                <div class="card-body">
+                                    <div class="icon-shape bg-soft-primary text-primary rounded-circle shadow-lg mb-4 mx-auto"
+                                        style="width: 100px; height: 100px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-magic fa-3x"></i>
+                                    </div>
+                                    <h2 class="text-dark font-weight-800 mb-2">{{ __('No Automation Flows Yet') }}</h2>
+                                    <p class="text-muted mb-4 mx-auto" style="max-width: 500px;">
+                                        {{ __('Create your first automated flow to engage with your customers 24/7. Turn conversations into conversions effortlessly.') }}
+                                    </p>
+                                    <a href="{{ route('user.flows.create') }}"
+                                        class="btn premium-btn premium-btn-primary shadow-lg">
+                                        <i class="fas fa-plus mr-2"></i> {{ __('Create Your First Flow') }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforelse
                 </div>
             </div>
         </section>

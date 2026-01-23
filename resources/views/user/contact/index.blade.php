@@ -66,78 +66,93 @@
 		</div>
 
 		@if(count($contacts ?? []) > 0)
-		<div class="card premium-card mt-4">
-            <div class="card-header bg-white border-0 py-3">
-                <h3 class="mb-0 font-weight-bold"><i class="fas fa-user-friends text-primary mr-2"></i>{{ __('Contact List') }}</h3>
+		<div class="card premium-card mt-4 overflow-hidden border-0 shadow-sm">
+            <div class="card-header bg-white border-0 py-4 d-flex justify-content-between align-items-center">
+                <h3 class="mb-0 font-weight-800 text-dark">
+                    <i class="fas fa-user-friends text-success mr-2"></i>{{ __('Verified Contacts') }}
+                </h3>
+                <div class="badge badge-soft-primary px-3 py-2 rounded-pill font-weight-bold">
+                    {{ count($contacts) }} {{ __('Total') }}
+                </div>
             </div>
-			<div class="card-body p-0">
-				<div class="row">
-					<div class="col-sm-12 table-responsive">
-						<table class="table col-12">
-							<thead>
-								<tr>
-									<th class="col-3">{{ __('Contact Name') }}</th>
-									<th class="col-4">{{ __('Group') }}</th>
-									<th class="col-7 text-right">{{ __('Whatsapp Number') }}</th>
-									
-									<th class="col-2 text-right">{{ __('Action') }}</th>
-								</tr>
-							</thead>
-							<tbody class="tbody">
-								@foreach($contacts ?? [] as $contact)
-								<tr>
-									<td>
-										{{ $contact->name }}
-									</td>
-									<td>
-										@foreach($contact->groupcontact as $groupcontact)
-										<span class="badge badge-primary">{{ $groupcontact->name }}</span>
-										@endforeach
-									</td>
-									<td class="text-right">
-										{{ $contact->phone }}
-									</td>									
-									<td>
-										<div class="btn-group mb-2 float-right">
-											<button class="btn btn-neutral btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												{{ __('Action') }}
-											</button>
-											<div class="dropdown-menu">
-												<a class="dropdown-item has-icon edit-contact" href="#" 
-												data-action="{{ route('user.contact.update',$contact->id) }}" 
-												data-name="{{ $contact->name }}"  
-												data-phone="{{ $contact->phone }}"
-												data-groupid="{{ $contact->groupcontact[0]->id ?? '' }}"
-												data-param = "{{ implode(',', array_filter([$contact->param1, $contact->param2, $contact->param3, $contact->param4, $contact->param5, $contact->param6, $contact->param7])) }}"
-												data-toggle="modal" 
-												data-target="#editModal"
-												>
-												<i class="ni ni-align-left-2"></i>{{ __('Edit') }}</a>
-												<a class="dropdown-item has-icon delete-confirm" href="javascript:void(0)" data-action="{{ route('user.contact.destroy',$contact->id) }}"><i class="fas fa-trash"></i>{{ __('Remove Number') }}</a>
-											</div>
-										</div>
-									</td>
-								</tr>
+			<div class="table-responsive">
+				<table class="table align-items-center table-flush">
+					<thead class="thead-light">
+						<tr>
+							<th scope="col" class="font-weight-800 text-uppercase tracking-wider">{{ __('Contact Details') }}</th>
+							<th scope="col" class="font-weight-800 text-uppercase tracking-wider text-center">{{ __('Groups') }}</th>
+							<th scope="col" class="font-weight-800 text-uppercase tracking-wider text-right">{{ __('Whatsapp Number') }}</th>
+							<th scope="col" class="text-right"></th>
+						</tr>
+					</thead>
+					<tbody class="list">
+						@foreach($contacts ?? [] as $contact)
+						<tr>
+							<td>
+								<div class="d-flex align-items-center">
+									<div class="avatar avatar-sm rounded-circle bg-soft-primary text-primary mr-3 font-weight-bold">
+										{{ strtoupper(substr($contact->name, 0, 1)) }}
+									</div>
+									<span class="mb-0 text-sm font-weight-700 text-dark">{{ $contact->name }}</span>
+								</div>
+							</td>
+							<td class="text-center">
+								@foreach($contact->groupcontact as $groupcontact)
+								<span class="badge badge-pill badge-soft-success font-weight-bold mx-1" style="background: rgba(37, 211, 102, 0.1); color: #128C7E;">{{ $groupcontact->name }}</span>
 								@endforeach
-							</tbody>
-						</table>
-						<div class="d-flex justify-content-center">{{ $contacts->links('vendor.pagination.bootstrap-4') }}</div>
-					</div>
-				</div>
+							</td>
+							<td class="text-right font-weight-700 text-dark">
+								<i class="fab fa-whatsapp text-success mr-1"></i> {{ $contact->phone }}
+							</td>									
+							<td class="text-right">
+								<div class="dropdown">
+									<button class="btn btn-sm btn-icon-only text-light shadow-none" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<i class="fas fa-ellipsis-v"></i>
+									</button>
+									<div class="dropdown-menu dropdown-menu-right shadow border-0">
+										<a class="dropdown-item edit-contact py-2" href="#" 
+											data-action="{{ route('user.contact.update',$contact->id) }}" 
+											data-name="{{ $contact->name }}"  
+											data-phone="{{ $contact->phone }}"
+											data-groupid="{{ $contact->groupcontact[0]->id ?? '' }}"
+											data-param = "{{ implode(',', array_filter([$contact->param1, $contact->param2, $contact->param3, $contact->param4, $contact->param5, $contact->param6, $contact->param7])) }}"
+											data-toggle="modal" 
+											data-target="#editModal"
+										>
+											<i class="fas fa-edit text-primary mr-3"></i>{{ __('Edit Contact') }}
+										</a>
+										<div class="dropdown-divider"></div>
+										<a class="dropdown-item delete-confirm py-2 text-danger" href="javascript:void(0)" data-action="{{ route('user.contact.destroy',$contact->id) }}">
+											<i class="fas fa-trash-alt mr-3"></i>{{ __('Remove Number') }}
+										</a>
+									</div>
+								</div>
+							</td>
+						</tr>
+						@endforeach
+					</tbody>
+				</table>
+			</div>
+			<div class="card-footer bg-white border-0 py-4">
+				<div class="d-flex justify-content-end">{{ $contacts->links('vendor.pagination.bootstrap-4') }}</div>
 			</div>
 		</div>
 		@else
-		<div class="card shadow-lg border-0">
-			<div class="card-body py-6 text-center">
-				<div class="icon-shape bg-gradient-primary text-white rounded-circle shadow-lg mb-4" style="width: 80px; height: 80px; display: inline-flex; align-items: center; justify-content: center;">
-					<i class="fi fi-rs-address-book fa-3x"></i>
+		<div class="card premium-card border-0 shadow-sm mt-4">
+			<div class="card-body py-7 text-center">
+				<div class="icon-shape bg-soft-success text-success rounded-circle shadow-lg mb-4 mx-auto" style="width: 100px; height: 100px; display: inline-flex; align-items: center; justify-content: center;">
+					<i class="fas fa-address-book fa-3x"></i>
 				</div>
-				<h4 class="text-dark font-weight-bold mb-2">{{ __('No Contacts Found') }}</h4>
-				<p class="text-muted mb-4" style="max-width: 400px; margin: 0 auto;">{{ __('Import or create contacts to start sending messages.') }}</p>
-				<a href="{{ route('user.contact.create') }}" class="btn btn-primary btn-lg shadow-lg rounded-pill px-5" 
-				   style="background: linear-gradient(87deg, #5e72e4 0, #825ee4 100%) !important; border: none;">
-					<i class="fas fa-plus mr-2"></i> {{ __('Create Contact') }}
-				</a>
+				<h2 class="text-dark font-weight-800 mb-2">{{ __('Start Your Audience') }}</h2>
+				<p class="text-muted mb-5 mx-auto" style="max-width: 500px;">{{ __('Your contact book is empty. Import your existing customers or add new ones manually to begin your automation journey.') }}</p>
+				<div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+					<a href="{{ route('user.contact.create') }}" class="btn premium-btn premium-btn-primary mb-3 mb-sm-0 mx-2">
+						<i class="fas fa-plus mr-2"></i> {{ __('Create Contact') }}
+					</a>
+					<a href="#" data-toggle="modal" data-target="#import-contact" class="btn premium-btn btn-white border mx-2">
+						<i class="fas fa-file-import mr-2"></i> {{ __('Import CSV') }}
+					</a>
+				</div>
 			</div>
 		</div>
 		@endif
