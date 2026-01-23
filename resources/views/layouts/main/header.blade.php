@@ -1,8 +1,7 @@
-<nav class="navbar navbar-top navbar-expand navbar-light bg-white border-bottom"
-   style="height: 70px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);">
+<nav class="navbar navbar-top navbar-expand navbar-light border-bottom">
    <div class="container-fluid">
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-         <!-- LEFT: Logo & Mobile Toggler -->
+         <!-- LEFT: Logo & Mobile Toggler & Page Title -->
          <div class="d-flex align-items-center">
             <div class="sidenav-toggler sidenav-toggler-dark d-xl-none mr-3" data-action="sidenav-pin"
                data-target="#sidenav-main">
@@ -17,6 +16,11 @@
                <img src="{{ asset('assets/img/brand/blue.png') }}" class="navbar-brand-img" alt="Logo"
                   style="height: 35px;">
             </a>
+
+            <!-- Desktop View: Page Title -->
+            <div class="navbar-left-section d-none d-xl-flex align-items-center ml-2">
+               <h1 class="page-title-text mb-0">{!! $title ?? '' !!}</h1>
+            </div>
          </div>
 
          <!-- RIGHT: User Tools -->
