@@ -89,6 +89,17 @@ Route::get('/run-migrate', function () {
     }
 });
 
+// Utility Route: Run Seeders (FAQs) via URL
+Route::get('/run-seed', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'FaqSeeder', '--force' => true]);
+        $output = \Illuminate\Support\Facades\Artisan::output();
+        return '<h1>Seeding Completed!</h1><pre>' . $output . '</pre><br><a href="/user/dashboard">Go back to Dashboard</a>';
+    } catch (\Exception $e) {
+        return '<h1>Seeding Failed</h1><p>' . $e->getMessage() . '</p>';
+    }
+});
+
 // Utility Route: Clear All Cache
 Route::get('/clear-all-cache', function () {
     \Illuminate\Support\Facades\Artisan::call('optimize:clear');
@@ -96,4 +107,5 @@ Route::get('/clear-all-cache', function () {
 });
 
 Route::get('/how-to-fix-redirects', function () {
-    return view('frontend.index_v2', ['brands' => collect([]), 'testimonials' => collect([]), 'faqs' => collect([]), 'plans' => collect([]), 'brand_area' => 'active', 'banner' => (object) [], 'features' => collect([]), 'about' => (object) [], 'overview' => (object) [], 'work' => (object) [], 'download' => (object) []]); });
+    return view('frontend.index_v2', ['brands' => collect([]), 'testimonials' => collect([]), 'faqs' => collect([]), 'plans' => collect([]), 'brand_area' => 'active', 'banner' => (object) [], 'features' => collect([]), 'about' => (object) [], 'overview' => (object) [], 'work' => (object) [], 'download' => (object) []]);
+});

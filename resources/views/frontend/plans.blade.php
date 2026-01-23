@@ -194,11 +194,8 @@
       <!-- FAQ Preview -->
       <section class="py-24 bg-white">
          <div class="container mx-auto px-6 max-w-4xl">
-            <div class="text-center mb-16">
-               <h2 class="text-3xl font-display font-bold text-gray-900">Pricing FAQs</h2>
-            </div>
             <div class="space-y-6">
-               @foreach($faqs->take(4) as $faq)
+               @foreach($faqs->take(10) as $faq)
                   <div class="border-b border-gray-100 pb-6">
                      <h4 class="font-bold text-gray-900 mb-2">{{ $faq->title }}</h4>
                      <p class="text-gray-500 leading-relaxed">{{ $faq->excerpt->value ?? $faq->excerpt ?? '' }}</p>
