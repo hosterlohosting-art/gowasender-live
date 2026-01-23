@@ -101,6 +101,7 @@
         });
     </script>
     @stack('js')
+    @include('components.ai-chatbot')
 </body>
 
 </html>

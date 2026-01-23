@@ -116,6 +116,7 @@
     <script src="{{ asset('assets/plugins/apex/apexcharts.min.js') }}"></script>
     <script src="{{ asset('assets/js/dashboard_1.js') }}"></script>
   @endif
+  @include('components.ai-chatbot')
 </body>
 
 </html>
