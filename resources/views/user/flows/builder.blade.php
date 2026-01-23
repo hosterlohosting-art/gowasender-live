@@ -227,6 +227,18 @@
                 <input type="hidden" id="flow_id" value="{{ $flow->id ?? '' }}">
 
                 <div class="ml-auto d-flex align-items-center">
+                    {{-- DEVICE SELECTOR --}}
+                    <div class="mr-3" style="width: 250px;">
+                        <select id="cloudapi_id" class="form-control form-control-sm shadow-sm" style="border-radius: 8px; font-weight: 600;">
+                            <option value="">-- {{ __('Attach to WhatsApp Number') }} --</option>
+                            @foreach($cloudapis ?? [] as $api)
+                                <option value="{{ $api->id }}" {{ (isset($flow) && $flow->cloudapi_id == $api->id) ? 'selected' : '' }}>
+                                    {{ $api->name }} ({{ $api->phone }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     {{-- BACK BUTTON --}}
                     <a href="{{ route('user.flows.index') }}" class="btn btn-secondary btn-sm mr-2 shadow-sm"
                         style="background:white; color:#333; border:1px solid #ddd;">
@@ -506,8 +518,14 @@
         function saveFlow() {
             var exportData = editor.export();
             var name = document.getElementById('flow_name').value;
+            var cloudapi_id = document.getElementById('cloudapi_id').value;
             var id = document.getElementById('flow_id').value;
             var btn = document.getElementById('saveBtn');
+
+            if (!cloudapi_id) {
+                 Swal.fire('Warning', 'Please select a WhatsApp number for this flow.', 'warning');
+                 return;
+            }
 
             btn.innerHTML = 'Saving...';
             btn.disabled = true;
@@ -515,7 +533,7 @@
             fetch('{{ route('user.flows.store') }}', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
-                body: JSON.stringify({ id: id, name: name, flow_data: exportData })
+                body: JSON.stringify({ id: id, name: name, cloudapi_id: cloudapi_id, flow_data: exportData })
             })
                 .then(response => response.json())
                 .then(data => {

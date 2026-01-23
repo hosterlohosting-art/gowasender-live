@@ -132,7 +132,11 @@ class BulkController extends Controller
             $notification->save();
 
             // --- C. BRAIN ENGINE (Flows / Bot) ---
-            $flows = DB::table('flows')->where('user_id', $cloudapi->user_id)->where('status', 1)->get();
+            $flows = DB::table('flows')
+                ->where('user_id', $cloudapi->user_id)
+                ->where('cloudapi_id', $cloudapi->id) // ONLY trigger flows assigned to THIS device
+                ->where('status', 1)
+                ->get();
             $flowTriggered = false;
 
             $whatsapp_api = new WhatsAppCloudApi([

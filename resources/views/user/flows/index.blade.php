@@ -36,6 +36,24 @@
                                     </div>
 
                                     <h4 class="h3 font-weight-800 text-dark mb-1">{{ $flow->name }}</h4>
+
+                                    @if($flow->device_name)
+                                        <div class="mb-2">
+                                            <span class="badge badge-pill badge-primary-soft text-primary font-weight-bold"
+                                                style="font-size: 0.7rem;">
+                                                <i class="fab fa-whatsapp mr-1"></i> {{ __('Assigned to:') }}
+                                                {{ $flow->device_name }} ({{ $flow->device_phone }})
+                                            </span>
+                                        </div>
+                                    @else
+                                        <div class="mb-2">
+                                            <span class="badge badge-pill badge-soft-warning text-warning font-weight-bold"
+                                                style="font-size: 0.7rem;">
+                                                <i class="fas fa-exclamation-triangle mr-1"></i> {{ __('Unassigned') }}
+                                            </span>
+                                        </div>
+                                    @endif
+
                                     <p class="text-muted small mb-4">
                                         <i class="far fa-clock mr-1"></i> {{ __('Updated') }}
                                         {{ \Carbon\Carbon::parse($flow->updated_at)->diffForHumans() }}
