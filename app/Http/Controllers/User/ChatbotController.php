@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Reply;
 use App\Models\Template;
 use App\Models\CloudApi;
-use App\Models\Device;
+// use App\Models\Device;
 use App\Models\Group;
 use App\Models\Groupcontact;
 use App\Traits\Cloud;

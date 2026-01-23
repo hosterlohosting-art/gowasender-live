@@ -45,7 +45,6 @@ class CustomTextController extends Controller
 
         $phoneCodes = file_exists('uploads/phonecode.json') ? json_decode(file_get_contents('uploads/phonecode.json')) : [];
         $cloudapis = CloudApi::where('user_id', Auth::id())->where('status', 1)->latest()->get();
-        // $devices = Device::where('user_id', Auth::id())->latest()->get();
         $templates = template::where('type', 'meta-template')->where('user_id', Auth::id())->where('status', 1)->get();
 
         return view('user.singlesend.create', compact('phoneCodes', 'cloudapis', 'templates'));
@@ -106,30 +105,18 @@ class CustomTextController extends Controller
     //sent custom text msg request to api
     public function sentCustomText(Request $request, $type)
     {
-        if ($request->gateway_type == 'official') {
-            $cloudapi = CloudApi::findOrFail($request->cloudapi);
+        $cloudapi = CloudApi::findOrFail($request->cloudapi);
 
-            $whatsapp_app_cloud_api = new WhatsAppCloudApi([
-                'from_phone_number_id' => $cloudapi->phone_number_id,
-                'access_token' => $cloudapi->access_token,
-            ]);
-            /*
-            } else {
-                $device = Device::where('user_id', Auth::id())->where('uuid', $request->device)->firstOrFail();
-                if ($device->status != 1) {
-                    return response()->json([
-                        'message' => __('Selected device is disconnected. Please connect it first.')
-                    ], 401);
-                }
-            */
-        }
+        $whatsapp_app_cloud_api = new WhatsAppCloudApi([
+            'from_phone_number_id' => $cloudapi->phone_number_id,
+            'access_token' => $cloudapi->access_token,
+        ]);
 
         $wa_lib = new WhatsappLibrary();
 
         $validated = $request->validate([
             'phone' => ['required', new Phone],
             'cloudapi' => ['required'],
-            // 'device' => ['required_if:gateway_type,unofficial'],
         ]);
 
         if (getUserPlanData('messages_limit') == false) {
@@ -147,34 +134,6 @@ class CustomTextController extends Controller
         }
 
         $phone = str_replace('+', '', $request->phone);
-
-        /*
-        // Handle Unofficial Device Sending
-        if ($request->gateway_type == 'unofficial') {
-            $message = $request->message;
-
-            // For now, only supporting plain text in this quick integration
-            // but the user wants Free Text Input.
-
-            $response = $this->sendDeviceMessage($device->uuid, $phone, $message);
-
-            if (isset($response['success']) && $response['success']) {
-                $logs['user_id'] = Auth::id();
-                $logs['from'] = $device->name;
-                $logs['to'] = $phone;
-                $logs['type'] = 'single-send';
-                $this->saveLog($logs);
-
-                return response()->json([
-                    'message' => __('Message sent successfully via device..!!'),
-                ], 200);
-            }
-
-            return response()->json([
-                'message' => $response['message'] ?? __('Failed to send message via device')
-            ], 500);
-        }
-        */
 
         // Existing Official API Logic
         $cloudapi = CloudApi::where('user_id', Auth::id())->where('status', 1)->findorFail($request->cloudapi);

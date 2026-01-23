@@ -91,35 +91,6 @@ class BulkController extends Controller
         $contact = Contact::where('user_id', Auth::id())->where('phone', $phone)->first();
         $user = User::where('id', Auth::id())->first();
 
-        /*
-        // Check if sending via Unofficial Device
-        if ($request->gateway_type == 'unofficial' || (!is_numeric($request->cloudapi) && strlen($request->cloudapi) > 10)) {
-            $device = Device::where('user_id', Auth::id())->where('uuid', $request->cloudapi)->firstOrFail();
-            if ($device->status != 1) {
-                return response()->json([
-                    'message' => __('Selected device is disconnected. Please connect it first.')
-                ], 401);
-            }
-
-            $response = $this->sendDeviceMessage($device->uuid, $phone, $request->message);
-
-            if (isset($response['success']) && $response['success']) {
-                $logs['user_id'] = Auth::id();
-                $logs['from'] = $device->name;
-                $logs['to'] = $phone;
-                $logs['type'] = 'bulk-message';
-                $this->saveLog($logs);
-
-                return response()->json([
-                    'message' => __('Message sent successfully via device..!!'),
-                ], 200);
-            }
-
-            return response()->json([
-                'message' => $response['message'] ?? __('Failed to send message via device')
-            ], 500);
-        }
-        */
 
         // Official Cloud API Logic
         $cloudapi = CloudApi::where('user_id', Auth::id())->where('status', 1)->findorFail($request->cloudapi);
@@ -507,7 +478,7 @@ class BulkController extends Controller
 
         $cloudapi = CloudApi::where('user_id', Auth::id())->where('status', 1)->where('uuid', $cloudapi_id)->first();
         if (!$cloudapi) {
-            $cloudapi = Device::where('user_id', Auth::id())->where('status', 1)->where('uuid', $cloudapi_id)->firstOrFail();
+            abort(404, 'Selected Official API not found.');
         }
 
         $cloudapis = CloudApi::where('user_id', Auth::id())->where('status', 1)->latest()->get();

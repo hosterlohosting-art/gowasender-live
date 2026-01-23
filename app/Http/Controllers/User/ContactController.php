@@ -172,33 +172,6 @@ class ContactController extends Controller
             ], 401);
         }
 
-        /*
-        if ($request->gateway_type == 'unofficial') {
-            $validated = $request->validate([
-                'message' => ['required', 'max:1000'],
-                'group' => ['required'],
-                'device' => ['required']
-            ]);
-
-            $group = Group::where('user_id', Auth::id())->whereHas('groupcontacts')->findorFail($request->group);
-            $device = Device::where('user_id', Auth::id())->where('status', 1)->where('uuid', $request->device)->firstOrFail();
-
-            $urlParams = [
-                'custom-text', // ID placeholder
-                $group->id,
-                $device->uuid,
-                'none', // header placeholder
-                urlencode($request->message), // body placeholder
-            ];
-
-            $redirectUrl = url('user/sent-bulk-with-template/' . implode('/', array_map('urlencode', $urlParams)));
-
-            return response()->json([
-                'message' => __('Redirecting to bulk sending page'),
-                'redirect' => $redirectUrl
-            ], 200);
-        }
-        */
 
         $validated = $request->validate([
             'template' => ['required'],
