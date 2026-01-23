@@ -102,6 +102,46 @@
     </script>
     @stack('js')
     @include('components.ai-chatbot')
+
+    {{-- Floating WhatsApp Support Widget --}}
+    <a href="https://wa.me/18044854344" target="_blank"
+        class="wa-btn-floating shadow-glow hover:scale-110 transition-transform" title="Get Support on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <style>
+        .wa-btn-floating {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: #25D366;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            z-index: 9999;
+            box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.15);
+            animation: wa-pulse 2s infinite;
+        }
+
+        @keyframes wa-pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+            }
+        }
+    </style>
 </body>
 
 </html>
