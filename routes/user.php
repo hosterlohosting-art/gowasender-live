@@ -90,6 +90,9 @@ Route::group(['prefix' => 'user', 'as' => 'user.', 'middleware' => ['auth', 'use
    Route::resource('group', USER\GroupController::class);
    Route::resource('role', USER\RoleController::class);
 
+   // Tutorial Routes
+   Route::get('tutorial/cloud-api', [USER\TutorialController::class, 'cloudapi'])->name('tutorial.cloudapi');
+
 });
 
 

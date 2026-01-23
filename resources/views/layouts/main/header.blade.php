@@ -112,7 +112,7 @@
 
             <!-- Help Icon (Gradient Circle) -->
             <li class="nav-item ml-3 d-none d-md-block">
-               <a href="#" class="nav-link pr-0">
+               <a href="{{ route('user.tutorial.cloudapi') }}" class="nav-link pr-0">
                   <div class="help-icon-circle">
                      <i class="fas fa-question" style="font-size: 14px;"></i>
                   </div>
