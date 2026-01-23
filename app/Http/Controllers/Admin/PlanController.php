@@ -131,8 +131,9 @@ class PlanController extends Controller
         $plan->save();
 
         // --- SYNC START: Update all users assigned to this plan ---
+        $planDataString = is_array($plan->data) ? json_encode($plan->data) : $plan->data;
         User::where('plan_id', $plan->id)->update([
-            'plan' => json_encode($plan->data)
+            'plan' => $planDataString
         ]);
         // --- SYNC END ---
 

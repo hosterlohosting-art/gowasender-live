@@ -38,19 +38,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected $cast = [
-        'meta' => 'json',
-        'plan' => 'json'
-    ];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
         'two_factor_expires_at' => 'datetime',
+        'meta' => 'json',
+        'plan' => 'json'
     ];
 
     public function generateTwoFactorCode()
