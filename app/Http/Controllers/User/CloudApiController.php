@@ -31,14 +31,27 @@ class CloudApiController extends Controller
     public function index()
     {
         $cloudapis = CloudApi::where('user_id', Auth::id())->get();
+
+        // --- NOTIFICATION SYNC: Get all unread whatsapp notifications for this user ---
+        $unreadNotifications = \App\Models\Notification::where('user_id', Auth::id())
+            ->where('comment', 'whatsapp-message')
+            ->where('seen', 0)
+            ->get();
+
         foreach ($cloudapis as $cloudapi) {
+            // 1. Transaction Count
             $transactionCount = Smstransaction::where('user_id', Auth::id())
                 ->where('cloudapi_id', $cloudapi->id)
                 ->count();
-
-            // Add the count as a property to the CloudApi model
             $cloudapi->smstransaction_count = $transactionCount;
+
+            // 2. Unread Message Count (Device Specific)
+            // We search for notifications where the URL contains this device's UUID
+            $cloudapi->unread_messages_count = $unreadNotifications->filter(function ($n) use ($cloudapi) {
+                return strpos($n->url, $cloudapi->uuid) !== false;
+            })->count();
         }
+
         return view('user.cloudapi.index', compact('cloudapis'));
     }
 

@@ -8,7 +8,7 @@ class ChatMessage extends Model
 {
     use HasFactory;
 
-    
+
     protected $table = 'chat_messages';
 
     protected $fillable = [
@@ -25,10 +25,15 @@ class ChatMessage extends Model
         'updated_at',
     ];
 
-   
+
 
     public function cloudapi()
     {
         return $this->belongsTo('App\Models\CloudApi');
+    }
+
+    public function contact()
+    {
+        return $this->belongsTo('App\Models\Contact', 'phone_number', 'phone');
     }
 }
