@@ -15,17 +15,15 @@ use App\Models\ChatMessage;
 use App\Models\App;
 use App\Models\CloudApi;
 use App\Models\Reply;
-use App\Models\Device;
 use App\Services\ChatbotService;
 use App\Traits\Cloud;
 use App\Traits\Notifications;
-use App\Traits\DeviceTrait;
 use DB;
 use Exception;
 
 class BulkController extends Controller
 {
-    use Cloud, Notifications, DeviceTrait;
+    use Cloud, Notifications;
 
     // --- 1. SEND MESSAGE API (Standard) ---
     public function submitRequest(Bulkrequest $request)
@@ -59,13 +57,11 @@ class BulkController extends Controller
     // --- 3. THE BRAIN (WEBHOOK) ---
     public function webHook(Request $request, $cloudapi_id)
     {
-        $gateway_uuid = str_replace(['cloudapi_', 'device_'], '', $cloudapi_id);
-
-        $cloudapi = CloudApi::where('uuid', $gateway_uuid)->first();
-        $device = !$cloudapi ? Device::where('uuid', $gateway_uuid)->first() : null;
-
-        if (!$cloudapi && !$device) {
-            return response()->json(['error' => 'Invalid Gateway ID'], 404);
+        $cloudapi = CloudApi::where('uuid', $cloudapi_id)->first();
+        if (!$cloudapi) {
+            return response()->json([
+                'error' => 'Invalid CloudApi ID'
+            ], 404);
         }
 
         if ($request->input('hub_mode') === 'subscribe') {
@@ -74,60 +70,45 @@ class BulkController extends Controller
 
         try {
             $payload = $request->all();
+            $changeValue = $payload['entry'][0]['changes'][0]['value'] ?? null;
 
-            // Handle Unofficial Device Message Payload
-            if ($device) {
-                // Assuming the node.js server sends a simplified payload
-                // Adjust based on your node server's webhook format
-                $request_from = $payload['from'] ?? ($payload['data']['from'] ?? null);
-                $message = $payload['message'] ?? ($payload['data']['text'] ?? '');
-                $message_id = $payload['id'] ?? 'dev_' . time();
-                $type = 'text';
-            } else {
-                // Official Cloud API Payload
-                $changeValue = $payload['entry'][0]['changes'][0]['value'] ?? null;
-                if (isset($changeValue['statuses']))
-                    return response()->json(['message' => 'Status'], 200);
-                if (!isset($changeValue['messages']))
-                    return response()->json(['message' => 'No msg'], 200);
-
-                $messageEntry = $changeValue['messages'][0];
-                $request_from = $messageEntry['from'];
-                $message_id = $messageEntry['id'];
-                $type = $messageEntry['type'];
-                $message = '';
-
-                if ($type == 'text')
-                    $message = $messageEntry['text']['body'];
-                elseif ($type == 'button')
-                    $message = $messageEntry['button']['text'];
-                elseif ($type == 'interactive') {
-                    $message = $messageEntry['interactive']['button_reply']['title']
-                        ?? $messageEntry['interactive']['list_reply']['title']
-                        ?? 'Interactive';
-                } else
-                    $message = $type;
+            if (isset($changeValue['statuses'])) {
+                return response()->json(['message' => 'Status Updated'], 200);
             }
 
-            if (!$request_from)
-                return response()->json(['message' => 'Invalid source'], 200);
+            if (!isset($changeValue['messages'])) {
+                return response()->json(['message' => 'No new messages'], 200);
+            }
+
+            $messageEntry = $changeValue['messages'][0];
+            $request_from = $messageEntry['from'];
+            $message_id = $messageEntry['id'];
+            $type = $messageEntry['type'];
+            $message = '';
+
+            if ($type == 'text') {
+                $message = $messageEntry['text']['body'];
+            } elseif ($type == 'button') {
+                $message = $messageEntry['button']['text'];
+            } elseif ($type == 'interactive') {
+                $message = $messageEntry['interactive']['button_reply']['title']
+                    ?? $messageEntry['interactive']['list_reply']['title']
+                    ?? 'Interactive';
+            } else {
+                $message = $type;
+            }
 
             // --- A. SAVE INCOMING MESSAGE ---
-            $gateway_id = $cloudapi ? $cloudapi->id : null;
-            // Note: If you add device_id to ChatMessage later, use it here.
-            // For now, mapping to user chats via phone number.
-            $userChat = ChatMessage::where('phone_number', $request_from);
-            if ($cloudapi)
-                $userChat = $userChat->where('cloudapi_id', $cloudapi->id);
-            $userChat = $userChat->first();
+            $userChat = ChatMessage::where('cloudapi_id', $cloudapi->id)
+                ->where('phone_number', $request_from)
+                ->first();
 
             if ($userChat) {
                 $this->saveMessageToUserChat($userChat, $message, 'received', $message_id);
             } else {
                 $newUserChat = new ChatMessage();
                 $newUserChat->phone_number = $request_from;
-                if ($cloudapi)
-                    $newUserChat->cloudapi_id = $cloudapi->id;
+                $newUserChat->cloudapi_id = $cloudapi->id;
                 $newUserChat->message_history = json_encode([
                     [
                         'chatID' => $message_id,
@@ -143,32 +124,21 @@ class BulkController extends Controller
 
             // --- B. CREATE SYSTEM NOTIFICATION ---
             $notification = new \App\Models\Notification();
-            $notification->user_id = $cloudapi ? $cloudapi->user_id : $device->user_id;
+            $notification->user_id = $cloudapi->user_id;
             $notification->title = __("New WhatsApp Message from ") . $request_from;
             $notification->comment = 'whatsapp-message';
-            $notification->url = $cloudapi ? "/user/cloudapi/chats/" . $cloudapi->uuid : "/user/device";
+            $notification->url = "/user/cloudapi/chats/" . $cloudapi->uuid;
             $notification->seen = 0;
             $notification->save();
 
-            // --- C. BRAIN ENGINE (Flows / Bot / AI) ---
-            $user_id = $cloudapi ? $cloudapi->user_id : $device->user_id;
-
-            // 1. FLOW BUILDER ENGINE
-            $flows = DB::table('flows')->where('user_id', $user_id)->where('status', 1)->get();
+            // --- C. BRAIN ENGINE (Flows / Bot) ---
+            $flows = DB::table('flows')->where('user_id', $cloudapi->user_id)->where('status', 1)->get();
             $flowTriggered = false;
 
-            // Helper to send reply based on gateway
-            $sendReply = function ($to, $msg) use ($cloudapi, $device) {
-                if ($cloudapi) {
-                    $api = new WhatsAppCloudApi([
-                        'from_phone_number_id' => $cloudapi->phone_number_id,
-                        'access_token' => $cloudapi->access_token,
-                    ]);
-                    $api->sendTextMessage($to, $msg);
-                } elseif ($device) {
-                    $this->sendDeviceMessage($device->uuid, $to, $msg);
-                }
-            };
+            $whatsapp_api = new WhatsAppCloudApi([
+                'from_phone_number_id' => $cloudapi->phone_number_id,
+                'access_token' => $cloudapi->access_token,
+            ]);
 
             foreach ($flows as $flow) {
                 $flowData = json_decode($flow->flow_data, true);
@@ -176,89 +146,46 @@ class BulkController extends Controller
                 $startNode = collect($nodes)->firstWhere('name', 'start');
 
                 if ($startNode) {
-                    $keyword = $startNode['data']['keyword'] ?? '';
+                    $triggerKeyword = $startNode['data']['keyword'] ?? '';
                     $condition = $startNode['data']['condition'] ?? 'equal';
                     $isMatch = false;
 
-                    if (!empty($keyword)) {
-                        if ($condition === 'equal' && strtolower(trim($message)) == strtolower(trim($keyword)))
+                    if (!empty($triggerKeyword)) {
+                        if ($condition === 'equal' && strtolower(trim($message)) == strtolower(trim($triggerKeyword))) {
                             $isMatch = true;
-                        elseif ($condition === 'contains' && stripos($message, $keyword) !== false)
+                        } elseif ($condition === 'contains' && stripos($message, $triggerKeyword) !== false) {
                             $isMatch = true;
+                        }
                     }
 
                     if ($isMatch) {
                         $flowTriggered = true;
-                        if ($cloudapi) {
-                            $whatsapp_api = new WhatsAppCloudApi([
-                                'from_phone_number_id' => $cloudapi->phone_number_id,
-                                'access_token' => $cloudapi->access_token,
-                            ]);
-                            $this->processFlowChain($startNode, $nodes, $request_from, $whatsapp_api, $userChat);
-                        } else {
-                            // Unofficial Device Flow support could be added here if processFlowChain is made gateway-agnostic
-                            $sendReply($request_from, "Flow triggered but full device chain not yet implemented.");
-                        }
+                        $this->processFlowChain($startNode, $nodes, $request_from, $whatsapp_api, $userChat);
                         break;
                     }
                 }
             }
 
-            // 2. SIMPLE CHATBOT & AI FALLBACK
             if (!$flowTriggered) {
-                $replies = Reply::where('user_id', $user_id);
-                if ($cloudapi)
-                    $replies = $replies->where('cloudapi_id', $cloudapi->id);
-                $replies = $replies->get();
+                $reply = Reply::where('user_id', $cloudapi->user_id)
+                    ->where('cloudapi_id', $cloudapi->id)
+                    ->where(function ($query) use ($message) {
+                        $query->where('keyword', 'like', "%$message%")
+                            ->orWhere('keyword', $message);
+                    })->first();
 
-                $sent = false;
-                foreach ($replies as $reply) {
-                    $should_send = false;
-                    if ($reply->match_type == 'equal') {
-                        if (strtolower(trim($message)) == strtolower(trim($reply->keyword)))
-                            $should_send = true;
-                    } else {
-                        if (stripos($message, $reply->keyword) !== false)
-                            $should_send = true;
-                    }
+                if ($reply && $reply->reply_type == 'text' && !empty($reply->reply)) {
+                    $whatsapp_api->sendTextMessage($request_from, $reply->reply);
+                    $this->saveMessageToUserChat($userChat, $reply->reply, 'sent', 'bot_' . time());
+                } else {
+                    $defaultReply = Reply::where('user_id', $cloudapi->user_id)
+                        ->where('cloudapi_id', $cloudapi->id)
+                        ->where('keyword', 'default')
+                        ->first();
 
-                    if ($should_send) {
-                        // Priority 1: AI Agent (If API Key is set in rule)
-                        if (!empty($reply->api_key)) {
-                            $chatbotService = new ChatbotService();
-                            $behavior = $reply->reply ?? 'You are a helpful assistant.';
-                            $aiResponse = $chatbotService->generateResponse($message, $reply->api_key, $behavior);
-                            $sendReply($request_from, $aiResponse);
-                            $this->saveMessageToUserChat($userChat, $aiResponse, 'sent', 'ai_' . time());
-                            $sent = true;
-                        }
-                        // Priority 2: Static Text Reply
-                        elseif ($reply->reply_type == 'text' && !empty($reply->reply)) {
-                            $sendReply($request_from, $reply->reply);
-                            $this->saveMessageToUserChat($userChat, $reply->reply, 'sent', 'bot_' . time());
-                            $sent = true;
-                        }
-                        break;
-                    }
-                }
-
-                if (!$sent) {
-                    $defaultQuery = Reply::where('user_id', $user_id)->where('keyword', 'default');
-                    if ($cloudapi)
-                        $defaultQuery = $defaultQuery->where('cloudapi_id', $cloudapi->id);
-                    $defaultReply = $defaultQuery->first();
-
-                    if ($defaultReply) {
-                        if (!empty($defaultReply->api_key)) {
-                            $chatbotService = new ChatbotService();
-                            $behavior = $defaultReply->reply ?? 'You are a helpful assistant.';
-                            $aiResponse = $chatbotService->generateResponse($message, $defaultReply->api_key, $behavior);
-                            $sendReply($request_from, $aiResponse);
-                            $this->saveMessageToUserChat($userChat, $aiResponse, 'sent', 'ai_' . time());
-                        } else {
-                            $sendReply($request_from, $defaultReply->reply);
-                            $this->saveMessageToUserChat($userChat, $defaultReply->reply, 'sent', 'bot_' . time());
-                        }
+                    if ($defaultReply && !empty($defaultReply->reply)) {
+                        $whatsapp_api->sendTextMessage($request_from, $defaultReply->reply);
+                        $this->saveMessageToUserChat($userChat, $defaultReply->reply, 'sent', 'bot_' . time());
                     }
                 }
             }

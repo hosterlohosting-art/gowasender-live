@@ -139,14 +139,9 @@
 							<tbody class="tbody">
 								@foreach($replies ?? [] as $reply)
 								@if ($reply->keyword != 'default' && $reply->match_type != 'like')
-								@php
-									$params = json_decode($reply->parameters, true);
-									$device_uuid = $params['device_uuid'] ?? null;
-									$device = $device_uuid ? \App\Models\Device::where('uuid', $device_uuid)->first() : null;
-								@endphp
 								<tr>
 									<td>{{ $reply->keyword }}</td>
-									<td>{{ $device ? ($device->name . ' (Unofficial)') : ($reply->cloudapi->phone ?? '') }}</td>
+									<td>{{ $reply->cloudapi->phone ?? '' }}</td>
 									<td><span class="badge badge-sm @if($reply->reply_type=='template') bg-gradient-success @else bg-gradient-secondary @endif">{{ $reply->reply_type }}</span></td>
 									<td>{{ $reply->match_type == 'equal' ? 'Whole Word' : 'Similar Word' }}</td>
 									<td>
@@ -162,7 +157,7 @@
 												data-reply="{{ $reply->reply }}"
 												data-matchtype="{{ $reply->match_type }}"
 												data-replytype="{{ $reply->reply_type }}"
-												data-device="{{ $device_uuid ?? $reply->cloudapi_id }}"
+												data-device="{{ $reply->cloudapi_id }}"
 												data-toggle="modal" 
 												data-target="#editModal"
 												>
@@ -251,20 +246,9 @@
 						<label>{{ __('Select Gateway') }}</label>
 						<select name="cloudapi" class="form-control">
 							<option value="" disabled selected>{{ __('Select Gateway') }}</option>
-							@if(count($cloudapis) > 0)
-							<optgroup label="{{ __('Official Cloud API') }}">
-								@foreach($cloudapis as $cloudapi)
-								<option value="{{ $cloudapi->id }}">{{ $cloudapi->name }} - {{ $cloudapi->phone }}</option>
-								@endforeach
-							</optgroup>
-							@endif
-							@if(count($devices) > 0)
-							<optgroup label="{{ __('Unofficial Device') }}">
-								@foreach($devices as $device)
-								<option value="{{ $device->uuid }}">{{ $device->name }} (Unofficial)</option>
-								@endforeach
-							</optgroup>
-							@endif
+							@foreach($cloudapis as $cloudapi)
+							<option value="{{ $cloudapi->id }}">{{ $cloudapi->name }} - {{ $cloudapi->phone }}</option>
+							@endforeach
 						</select>
 					</div>
 					<div class="form-group">
@@ -346,20 +330,9 @@
 						<label>{{ __('Select Gateway') }}</label>
 						<select name="cloudapi" class="form-control">
 							<option value="" disabled selected>{{ __('Select Gateway') }}</option>
-							@if(count($cloudapis) > 0)
-							<optgroup label="{{ __('Official Cloud API') }}">
-								@foreach($cloudapis as $cloudapi)
-								<option value="{{ $cloudapi->id }}">{{ $cloudapi->name }} - {{ $cloudapi->phone }}</option>
-								@endforeach
-							</optgroup>
-							@endif
-							@if(count($devices) > 0)
-							<optgroup label="{{ __('Unofficial Device') }}">
-								@foreach($devices as $device)
-								<option value="{{ $device->uuid }}">{{ $device->name }} (Unofficial)</option>
-								@endforeach
-							</optgroup>
-							@endif
+							@foreach($cloudapis as $cloudapi)
+							<option value="{{ $cloudapi->id }}">{{ $cloudapi->name }} - {{ $cloudapi->phone }}</option>
+							@endforeach
 						</select>
 					</div>
 						
@@ -443,20 +416,9 @@
         <div class="form-group">
             <label>{{ __('Select Gateway') }}</label>
             <select name="cloudapi" id="device" class="form-control">
-                @if(count($cloudapis) > 0)
-                <optgroup label="{{ __('Official Cloud API') }}">
-                    @foreach($cloudapis as $cloudapi)
-                    <option value="{{ $cloudapi->id }}">{{ $cloudapi->name }} - {{ $cloudapi->phone }}</option>
-                    @endforeach
-                </optgroup>
-                @endif
-                @if(count($devices) > 0)
-                <optgroup label="{{ __('Unofficial Device') }}">
-                    @foreach($devices as $device)
-                    <option value="{{ $device->uuid }}">{{ $device->name }} (Unofficial)</option>
-                    @endforeach
-                </optgroup>
-                @endif
+                @foreach($cloudapis as $cloudapi)
+                <option value="{{ $cloudapi->id }}">{{ $cloudapi->name }} - {{ $cloudapi->phone }}</option>
+                @endforeach
             </select>
         </div>
 
@@ -538,20 +500,9 @@
         <div class="form-group">
             <label>{{ __('Select Gateway') }}</label>
             <select name="cloudapi" id="device" class="form-control">
-                @if(count($cloudapis) > 0)
-                <optgroup label="{{ __('Official Cloud API') }}">
-                    @foreach($cloudapis as $cloudapi)
-                    <option value="{{ $cloudapi->id }}">{{ $cloudapi->name }} - {{ $cloudapi->phone }}</option>
-                    @endforeach
-                </optgroup>
-                @endif
-                @if(count($devices) > 0)
-                <optgroup label="{{ __('Unofficial Device') }}">
-                    @foreach($devices as $device)
-                    <option value="{{ $device->uuid }}">{{ $device->name }} (Unofficial)</option>
-                    @endforeach
-                </optgroup>
-                @endif
+                @foreach($cloudapis as $cloudapi)
+                <option value="{{ $cloudapi->id }}">{{ $cloudapi->name }} - {{ $cloudapi->phone }}</option>
+                @endforeach
             </select>
         </div>
 

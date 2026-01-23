@@ -11,8 +11,8 @@ use App\Rules\Phone;
 use App\Traits\Cloud;
 use App\Models\ChatMessage;
 use App\Libraries\WhatsappLibrary;
-use App\Models\Device;
-use App\Traits\DeviceTrait;
+// // use App\Models\Device;
+// use App\Traits\DeviceTrait;
 use Http;
 use Auth;
 use File;
@@ -32,7 +32,7 @@ use Netflie\WhatsAppCloudApi\Message\ButtonReply\ButtonAction;
 class CustomTextController extends Controller
 {
 
-    use Cloud, DeviceTrait;
+    use Cloud;
     public $whatsapp_app_cloud_api;
     public $wa_lib;
 
@@ -45,10 +45,10 @@ class CustomTextController extends Controller
 
         $phoneCodes = file_exists('uploads/phonecode.json') ? json_decode(file_get_contents('uploads/phonecode.json')) : [];
         $cloudapis = CloudApi::where('user_id', Auth::id())->where('status', 1)->latest()->get();
-        $devices = Device::where('user_id', Auth::id())->latest()->get();
+        // $devices = Device::where('user_id', Auth::id())->latest()->get();
         $templates = template::where('type', 'meta-template')->where('user_id', Auth::id())->where('status', 1)->get();
 
-        return view('user.singlesend.create', compact('phoneCodes', 'cloudapis', 'devices', 'templates'));
+        return view('user.singlesend.create', compact('phoneCodes', 'cloudapis', 'templates'));
     }
 
     public function templateDetails(Request $request)
@@ -113,21 +113,23 @@ class CustomTextController extends Controller
                 'from_phone_number_id' => $cloudapi->phone_number_id,
                 'access_token' => $cloudapi->access_token,
             ]);
-        } else {
-            $device = Device::where('user_id', Auth::id())->where('uuid', $request->device)->firstOrFail();
-            if ($device->status != 1) {
-                return response()->json([
-                    'message' => __('Selected device is disconnected. Please connect it first.')
-                ], 401);
-            }
+            /*
+            } else {
+                $device = Device::where('user_id', Auth::id())->where('uuid', $request->device)->firstOrFail();
+                if ($device->status != 1) {
+                    return response()->json([
+                        'message' => __('Selected device is disconnected. Please connect it first.')
+                    ], 401);
+                }
+            */
         }
 
         $wa_lib = new WhatsappLibrary();
 
         $validated = $request->validate([
             'phone' => ['required', new Phone],
-            'cloudapi' => ['required_if:gateway_type,official'],
-            'device' => ['required_if:gateway_type,unofficial'],
+            'cloudapi' => ['required'],
+            // 'device' => ['required_if:gateway_type,unofficial'],
         ]);
 
         if (getUserPlanData('messages_limit') == false) {
@@ -146,6 +148,7 @@ class CustomTextController extends Controller
 
         $phone = str_replace('+', '', $request->phone);
 
+        /*
         // Handle Unofficial Device Sending
         if ($request->gateway_type == 'unofficial') {
             $message = $request->message;
@@ -171,6 +174,7 @@ class CustomTextController extends Controller
                 'message' => $response['message'] ?? __('Failed to send message via device')
             ], 500);
         }
+        */
 
         // Existing Official API Logic
         $cloudapi = CloudApi::where('user_id', Auth::id())->where('status', 1)->findorFail($request->cloudapi);
@@ -446,7 +450,7 @@ class CustomTextController extends Controller
                     $logs['template_id'] = $template->id ?? null;
                     $logs['wamid'] = $id;
                     $this->saveLog($logs);
-                    $this->saveMessageToUserChat($id, $userChat, $template->title, $template->type, $request->phone, $cloudapi->id);
+                    $this->saveMessageToUserChat($userChat, $template->title, $template->type, $request->phone, $cloudapi->id);
                     return response()->json([
                         'message' => __("Message send Successfully"),
                     ], 200);
@@ -472,7 +476,7 @@ class CustomTextController extends Controller
                     $logs['type'] = 'single-send';
                     $logs['template_id'] = $template->id ?? null;
                     $logs['wamid'] = $id;
-                    $this->saveMessageToUserChat($id, $userChat, $template->title, $template->type, $request->phone, $cloudapi->id);
+                    $this->saveMessageToUserChat($userChat, $template->title, $template->type, $request->phone, $cloudapi->id);
 
                     return response()->json([
                         'message' => __("Message send Successfully"),
@@ -503,7 +507,7 @@ class CustomTextController extends Controller
             $address = '';
 
             try {
-                $response = $whatsapp_app_cloud_api->sendLocation($phone, $longitude, $latitude, $name, $address);
+                $response = $whatsapp_app_cloud_api->sendLocation($phone, (float) $latitude, (float) $longitude, $name);
                 $logs['user_id'] = Auth::id();
                 $logs['cloudapi_id'] = $cloudapi->id;
                 $logs['from'] = $cloudapi->phone;

@@ -7,7 +7,8 @@
           <img src="{{ asset('assets/img/brand/white.png') }}" alt="WA Sender Logo" class="h-10 w-auto">
         </div>
         <p class="text-gray-400 text-sm leading-relaxed mb-8">
-          The world's most trusted WhatsApp marketing platform by Hosterlo. Built for safety, speed, and scale.
+          The world's most trusted WhatsApp marketing platform. <strong>A product of Hosterlo</strong>. Built for
+          safety, speed, and scale.
         </p>
         <div class="flex gap-4">
           <a href="#"

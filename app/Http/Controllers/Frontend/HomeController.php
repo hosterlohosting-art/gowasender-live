@@ -116,4 +116,10 @@ class HomeController extends Controller
 
         return view('frontend.page', compact('page'));
     }
+
+    public function privacy()
+    {
+        $this->metadata('seo_privacy');
+        return view('frontend.privacy');
+    }
 }

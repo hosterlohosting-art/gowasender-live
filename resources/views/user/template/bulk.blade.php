@@ -161,14 +161,9 @@
                                        <td>{{ $contact->name . ' - ' . $contact->phone }}</td>
                                        <td>
                                              <select class="form-control" name="cloudapi">
-                                             @foreach($cloudapis as $row)
-                                                <option value="{{ $row->id }}" {{ ($cloudapi instanceof \App\Models\CloudApi && $row->id == $cloudapi->id) ? 'selected' : ''}}>{{ $row->name . ' - ' . $row->phone }} (Official)</option>
-                                             @endforeach
-                                             @foreach($devices as $row)
-
-
-                                                  <option value="{{ $row->uuid }}" {{ ($cloudapi instanceof \App\Models\Device && $row->uuid == $cloudapi->uuid) ? 'selected' : ''}}>{{ $row->name }} (Unofficial)</option>
-                                             @endforeach
+                                              @foreach($cloudapis as $row)
+                                                 <option value="{{ $row->id }}" {{ ($cloudapi instanceof \App\Models\CloudApi && $row->id == $cloudapi->id) ? 'selected' : ''}}>{{ $row->name . ' - ' . $row->phone }} (Official)</option>
+                                              @endforeach
                                           </select>
                                        </td>
                                        <td>

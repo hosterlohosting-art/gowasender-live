@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Contact;
 use App\Models\Template;
 use App\Models\CloudApi;
-use App\Models\Device;
+// // use App\Models\Device;
 use App\Models\User;
 use App\Rules\Phone;
 use App\Traits\Cloud;
@@ -172,6 +172,7 @@ class ContactController extends Controller
             ], 401);
         }
 
+        /*
         if ($request->gateway_type == 'unofficial') {
             $validated = $request->validate([
                 'message' => ['required', 'max:1000'],
@@ -197,6 +198,7 @@ class ContactController extends Controller
                 'redirect' => $redirectUrl
             ], 200);
         }
+        */
 
         $validated = $request->validate([
             'template' => ['required'],

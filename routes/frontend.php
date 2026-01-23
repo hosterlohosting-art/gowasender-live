@@ -25,6 +25,7 @@ Route::post('/send-mail', [FRONTEND\ContactController::class, 'sendMail'])->name
 Route::get('/features', [FRONTEND\FeaturesController::class, 'index']);
 Route::get('/feature/{slug}', [FRONTEND\FeaturesController::class, 'show']);
 Route::get('/page/{slug}', [FRONTEND\HomeController::class, 'page']);
+Route::get('/privacy-policy', [FRONTEND\HomeController::class, 'privacy']);
 
 Route::resource('install', App\Http\Controllers\Installer\InstallerController::class);
 Route::post('install/verify', [App\Http\Controllers\Installer\InstallerController::class, 'verify'])->name('install.verify');

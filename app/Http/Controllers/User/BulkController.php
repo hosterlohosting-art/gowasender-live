@@ -25,19 +25,19 @@ use App\Models\Group;
 use Carbon\Carbon;
 use App\Traits\Cloud;
 use Http;
-use App\Models\Device;
-use App\Traits\DeviceTrait;
+// use App\Models\Device;
+// use App\Traits\DeviceTrait;
 use Auth;
 use Str;
 class BulkController extends Controller
 {
-    use Cloud, DeviceTrait;
+    use Cloud;
     public $whatsapp_app_cloud_api;
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function index()
     {
@@ -55,20 +55,20 @@ class BulkController extends Controller
             ->count();
 
         $cloudapis = CloudApi::where('user_id', Auth::id())->where('status', 1)->latest()->get();
-        $devices = Device::where('user_id', Auth::id())->latest()->get();
+        // removed unofficial device logic
         $templates = Template::where('user_id', Auth::id())->where('status', 1)->latest()->get();
         $groups = Group::where('user_id', Auth::id())->whereHas('groupcontacts')->latest()->get();
 
-        return view('user.whatsapp.bulk.index', compact('posts', 'total', 'today_transaction', 'last30_messages', 'cloudapis', 'devices', 'templates', 'groups'));
+        return view('user.whatsapp.bulk.index', compact('posts', 'total', 'today_transaction', 'last30_messages', 'cloudapis', 'templates', 'groups'));
     }
 
     public function create()
     {
         $cloudapis = CloudApi::where('user_id', Auth::id())->where('status', 1)->latest()->get();
-        $devices = Device::where('user_id', Auth::id())->latest()->get();
+        // $devices = Device::where('user_id', Auth::id())->latest()->get();
         $groups = Group::where('user_id', Auth::id())->with('contacts')->whereHas('contacts')->latest()->get();
 
-        return view('user.whatsapp.bulk.multiple', compact('cloudapis', 'devices', 'groups'));
+        return view('user.whatsapp.bulk.multiple', compact('cloudapis', 'groups'));
     }
 
 
@@ -77,7 +77,7 @@ class BulkController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -91,6 +91,7 @@ class BulkController extends Controller
         $contact = Contact::where('user_id', Auth::id())->where('phone', $phone)->first();
         $user = User::where('id', Auth::id())->first();
 
+        /*
         // Check if sending via Unofficial Device
         if ($request->gateway_type == 'unofficial' || (!is_numeric($request->cloudapi) && strlen($request->cloudapi) > 10)) {
             $device = Device::where('user_id', Auth::id())->where('uuid', $request->cloudapi)->firstOrFail();
@@ -118,6 +119,7 @@ class BulkController extends Controller
                 'message' => $response['message'] ?? __('Failed to send message via device')
             ], 500);
         }
+        */
 
         // Official Cloud API Logic
         $cloudapi = CloudApi::where('user_id', Auth::id())->where('status', 1)->findorFail($request->cloudapi);
@@ -221,6 +223,11 @@ class BulkController extends Controller
                 'message' => __('Maximum Monthly Messages Limit Exceeded')
             ], 401);
         }
+
+        $whatsapp_app_cloud_api = new WhatsAppCloudApi([
+            'from_phone_number_id' => $app->cloudapi->phone_number_id,
+            'access_token' => $app->cloudapi->access_token,
+        ]);
 
         if (!empty($request->template_id)) {
             $template = Template::where('user_id', $user->id)->where('uuid', $request->template_id)->where('status', 1)->first();
@@ -361,7 +368,7 @@ class BulkController extends Controller
                     $document_name = basename($document_url);
                     $link_id = new LinkID($document_url);
                     try {
-                        $response = $whatsapp_app_cloud_api->sendDocument($request->to, $link_id, $document_name);
+                        $response = $whatsapp_app_cloud_api->sendDocument($request->to, $link_id, $document_name, $document_caption);
                         $logs['user_id'] = Auth::id();
                         $logs['cloudapi_id'] = $app->cloudapi_id;
                         $logs['from'] = $app->cloudapi->phone ?? null;
@@ -397,7 +404,7 @@ class BulkController extends Controller
                 $latitude = $data['location']['degreesLatitude'];
                 $longitude = $data['location']['degreesLongitude'];
                 try {
-                    $response = $whatsapp_app_cloud_api->sendLocation($request->to, $longitude, $latitude, '', $template->title);
+                    $response = $whatsapp_app_cloud_api->sendLocation($request->to, (float) $latitude, (float) $longitude, '', $template->title);
                     $logs['user_id'] = Auth::id();
                     $logs['cloudapi_id'] = $app->cloudapi_id;
                     $logs['from'] = $app->cloudapi->phone ?? null;
@@ -504,9 +511,9 @@ class BulkController extends Controller
         }
 
         $cloudapis = CloudApi::where('user_id', Auth::id())->where('status', 1)->latest()->get();
-        $devices = Device::where('user_id', Auth::id())->where('status', 1)->latest()->get();
+        // $devices = Device::where('user_id', Auth::id())->where('status', 1)->latest()->get();
 
-        return view('user.template.bulk', compact('template', 'templates', 'contacts', 'cloudapi', 'cloudapis', 'devices', 'headerParm', 'body'));
+        return view('user.template.bulk', compact('template', 'templates', 'contacts', 'cloudapi', 'cloudapis', 'headerParm', 'body'));
     }
 
 
@@ -533,6 +540,7 @@ class BulkController extends Controller
         $contact = Contact::where('user_id', Auth::id())->findOrFail($request->contact);
         $user = User::where('id', Auth::id())->first();
 
+        /*
         // Handle Unofficial Device
         if (!$cloudapi) {
             $device = Device::where('user_id', Auth::id())->where('uuid', $request->cloudapi)->first();
@@ -568,6 +576,7 @@ class BulkController extends Controller
                 ], 500);
             }
         }
+        */
 
         abort_if(empty($cloudapi), 404);
 
@@ -716,7 +725,7 @@ class BulkController extends Controller
                 $document_name = basename($document_url);
                 $link_id = new LinkID($document_url);
                 try {
-                    $response = $whatsapp_app_cloud_api->sendDocument($contact->phone, $link_id, $document_name);
+                    $response = $whatsapp_app_cloud_api->sendDocument($contact->phone, $link_id, $document_name, $document_caption);
                     $logs['user_id'] = Auth::id();
                     $logs['cloudapi_id'] = $cloudapi->id;
                     $logs['from'] = $cloudapi->phone ?? null;
@@ -754,7 +763,7 @@ class BulkController extends Controller
             $latitude = $data['location']['degreesLatitude'];
             $longitude = $data['location']['degreesLongitude'];
             try {
-                $response = $whatsapp_app_cloud_api->sendLocation($contact->phone, $longitude, $latitude, '', $template->title);
+                $response = $whatsapp_app_cloud_api->sendLocation($contact->phone, (float) $latitude, (float) $longitude, '', $template->title);
                 $logs['user_id'] = Auth::id();
                 $logs['cloudapi_id'] = $cloudapi->id;
                 $logs['from'] = $cloudapi->phone ?? null;

@@ -22,15 +22,15 @@ class Template extends Model
         'status',
     ];
 
-    protected $casts=[
-        'body'=>'json'
+    protected $casts = [
+        'body' => 'array'
     ];
 
     protected static function boot()
     {
         parent::boot();
 
-        
+
         static::creating(function ($model) {
             if (!$model->uuid) {
                 $model->uuid = Str::uuid()->toString();

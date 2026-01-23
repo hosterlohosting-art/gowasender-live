@@ -16,6 +16,8 @@
           class="{{ Request::is('pricing*') ? 'text-brand-600' : 'hover:text-brand-600' }} transition-colors">Pricing</a>
         <a href="{{ url('/about') }}"
           class="{{ Request::is('about*') ? 'text-brand-600' : 'hover:text-brand-600' }} transition-colors">About</a>
+        <a href="{{ url('/privacy-policy') }}"
+          class="{{ Request::is('privacy-policy*') ? 'text-brand-600' : 'hover:text-brand-600' }} transition-colors">Privacy</a>
         <a href="{{ url('/blogs') }}"
           class="{{ Request::is('blog*') ? 'text-brand-600' : 'hover:text-brand-600' }} transition-colors">Blog</a>
         <a href="{{ url('/contact') }}"
@@ -52,6 +54,7 @@
     <a href="{{ url('/features') }}" class="block text-gray-600 font-bold">Features</a>
     <a href="{{ url('/pricing') }}" class="block text-gray-600 font-bold">Pricing</a>
     <a href="{{ url('/about') }}" class="block text-gray-600 font-bold">About</a>
+    <a href="{{ url('/privacy-policy') }}" class="block text-gray-600 font-bold">Privacy</a>
     <a href="{{ url('/blogs') }}" class="block text-gray-600 font-bold">Blog</a>
     <a href="{{ url('/contact') }}" class="block text-gray-600 font-bold">Contact</a>
     <hr>

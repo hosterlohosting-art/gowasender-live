@@ -25,7 +25,7 @@
       <div class="modal-content">
          <form type="POST" action="{{ route('user.contact.send-template-bulk') }}" class="ajaxform bulk_send_form">
             @csrf
-            <input type="hidden" name="page_url" value="{{ url()->full() }}">
+            <input type="hidden" name="page_url" value="{{ request()->fullUrl() }}">
             <div class="modal-header">
                <h5 class="modal-title" id="exampleModalLabel">{{ __('Send Bulk Message With Template') }}</h5>
                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -34,29 +34,13 @@
             </div>
             <div class="modal-body">
                <div class="form-group">
-                  <label>{{ __('Select Gateway') }}</label>
-                  <select name="gateway_type" class="form-control gateway_type_selector" required>
-                      <option value="official" selected>{{ __('Official WhatsApp API') }}</option>
-                      <option value="unofficial">{{ __('Unofficial WhatsApp (QR Code)') }}</option>
-                  </select>
-               </div>
-
-               <div class="form-group official_gateway_area">
                   <label>{{ __('Select Official API') }}</label>
-                  <select name="cloudapi" class="form-control">
+                  <select name="cloudapi" class="form-control" required>
                       @foreach($cloudapis as $api)
                           <option value="{{ $api->id }}">{{ $api->phone ?? $api->name }}</option>
                       @endforeach
                   </select>
-               </div>
-
-               <div class="form-group unofficial_gateway_area none">
-                  <label>{{ __('Select Unofficial Device') }}</label>
-                  <select name="device" class="form-control">
-                      @foreach($devices as $device)
-                          <option value="{{ $device->uuid }}" {{ $device->status != 1 ? 'disabled' : '' }}>{{ $device->name }} ({{ $device->status == 1 ? __('Connected') : __('Disconnected') }})</option>
-                      @endforeach
-                  </select>
+                  <input type="hidden" name="gateway_type" value="official">
                </div>
 
                <div class="template_area">
@@ -234,28 +218,7 @@
 </div>
 @endsection
 @push('topjs')
-<script>
-    $(document).on('change', '.gateway_type_selector', function() {
-        let val = $(this).val();
-        let modal = $(this).closest('.modal-content');
-        
-        if (val === 'official') {
-            modal.find('.official_gateway_area').show();
-            modal.find('.unofficial_gateway_area').hide();
-            modal.find('.template_area').show();
-            modal.find('.plain_text_area').hide();
-            modal.find('select[name="template"]').attr('required', 'required');
-            modal.find('textarea[name="message"]').removeAttr('required');
-        } else {
-            modal.find('.official_gateway_area').hide();
-            modal.find('.unofficial_gateway_area').show().removeClass('none');
-            modal.find('.template_area').hide();
-            modal.find('.plain_text_area').show().removeClass('none');
-            modal.find('select[name="template"]').removeAttr('required');
-            modal.find('textarea[name="message"]').attr('required', 'required');
-        }
-    });
-</script>
+
 <script>
     // Submit the form when it's ready
     document.addEventListener('DOMContentLoaded', function() {

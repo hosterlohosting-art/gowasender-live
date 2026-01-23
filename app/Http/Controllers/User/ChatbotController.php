@@ -29,10 +29,9 @@ class ChatbotController extends Controller
         $template_replies = Reply::where('user_id', Auth::id())->where('template_id', '!=', null)->count();
         $text_replies = Reply::where('user_id', Auth::id())->where('template_id', null)->count();
         $cloudapis = CloudApi::where('user_id', Auth::id())->where('status', 1)->latest()->get();
-        $devices = Device::where('user_id', Auth::id())->where('status', 1)->latest()->get();
         $groups = Group::where('user_id', Auth::id())->latest()->get();
 
-        return view('user.chatbot.index', compact('templates', 'replies', 'total_replies', 'template_replies', 'text_replies', 'cloudapis', 'devices', 'groups'));
+        return view('user.chatbot.index', compact('templates', 'replies', 'total_replies', 'template_replies', 'text_replies', 'cloudapis', 'groups'));
     }
 
 
@@ -62,14 +61,7 @@ class ChatbotController extends Controller
             $imageLink = $this->saveFile($request, 'header_image');
         }
 
-        $device_uuid = null;
-        if (!is_numeric($request->cloudapi) && strlen($request->cloudapi) > 10) {
-            $device = Device::where('user_id', Auth::id())->where('uuid', $request->cloudapi)->firstOrFail();
-            $device_uuid = $device->uuid;
-            $cloudapi = CloudApi::where('user_id', Auth::id())->first();
-        } else {
-            $cloudapi = CloudApi::where('user_id', Auth::id())->findorFail($request->cloudapi);
-        }
+        $cloudapi = CloudApi::where('user_id', Auth::id())->findorFail($request->cloudapi);
 
         if ($request->reply_type == 'template') {
             $validated = $request->validate([
@@ -84,7 +76,7 @@ class ChatbotController extends Controller
 
         $reply = new Reply;
         $reply->user_id = Auth::id();
-        $reply->cloudapi_id = $cloudapi->id ?? 0;
+        $reply->cloudapi_id = $request->cloudapi;
         $reply->api_key = $request->api_key ?? null;
         $reply->template_id = $request->reply_type == 'template' ? $template->id : null;
         $reply->keyword = $request->keyword;
@@ -94,7 +86,6 @@ class ChatbotController extends Controller
         $parameters = [
             'header_parameters' => $request->header_param !== null ? $request->header_param : ($imageLink ?? null),
             'message_parameters' => $request->body_param,
-            'device_uuid' => $device_uuid
         ];
 
         // Encode the combined array as JSON
@@ -131,14 +122,7 @@ class ChatbotController extends Controller
             $imageLink = $this->saveFile($request, 'header_image');
         }
 
-        $device_uuid = null;
-        if (!is_numeric($request->cloudapi) && strlen($request->cloudapi) > 10) {
-            $device = Device::where('user_id', Auth::id())->where('uuid', $request->cloudapi)->firstOrFail();
-            $device_uuid = $device->uuid;
-            $cloudapi = CloudApi::where('user_id', Auth::id())->first();
-        } else {
-            $cloudapi = CloudApi::where('user_id', Auth::id())->findorFail($request->cloudapi);
-        }
+        $cloudapi = CloudApi::where('user_id', Auth::id())->findorFail($request->cloudapi);
 
         if ($request->reply_type == 'template') {
             $validated = $request->validate([
@@ -153,7 +137,7 @@ class ChatbotController extends Controller
 
         $reply = Reply::where('user_id', Auth::id())->findorFail($id);
         $reply->user_id = Auth::id();
-        $reply->cloudapi_id = $cloudapi->id ?? 0;
+        $reply->cloudapi_id = $request->cloudapi;
         $reply->template_id = $request->reply_type == 'template' ? $template->id : null;
         $reply->keyword = $request->keyword;
         $reply->reply = $request->reply_type != 'template' ? $request->reply : null;
@@ -163,7 +147,6 @@ class ChatbotController extends Controller
         $parameters = [
             'header_parameters' => $request->header_param !== null ? $request->header_param : ($imageLink ?? null),
             'message_parameters' => $request->body_param,
-            'device_uuid' => $device_uuid
         ];
 
         // Encode the combined array as JSON
@@ -174,7 +157,7 @@ class ChatbotController extends Controller
         $reply->save();
 
         return response()->json([
-            'message' => __('Reply Updated Successfully'),
+            'message' => __('Reply Created Successfully'),
             'redirect' => route('user.chatbot.index')
         ], 200);
     }

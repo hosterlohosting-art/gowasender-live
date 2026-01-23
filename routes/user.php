@@ -22,10 +22,10 @@ Route::group(['prefix' => 'user', 'as' => 'user.', 'middleware' => ['auth', 'use
    Route::post('/cloudapi-statics', [USER\CloudApiController::class, 'cloudapiStatics']);
 
    // unofficial device routes
-   Route::resource('device', USER\DeviceController::class);
-   Route::get('device/{uuid}/scan', [USER\DeviceController::class, 'scan'])->name('device.scan');
-   Route::get('device/{uuid}/qr', [USER\DeviceController::class, 'getQr'])->name('device.qr');
-   Route::get('device/{uuid}/status', [USER\DeviceController::class, 'checkStatus'])->name('device.status');
+   // Route::resource('device', USER\DeviceController::class);
+   // Route::get('device/{uuid}/scan', [USER\DeviceController::class, 'scan'])->name('device.scan');
+   // Route::get('device/{uuid}/qr', [USER\DeviceController::class, 'getQr'])->name('device.qr');
+   // Route::get('device/{uuid}/status', [USER\DeviceController::class, 'checkStatus'])->name('device.status');
 
    Route::get('/cloudapi/chats/{uuid}', [USER\ChatController::class, 'chats']);
    Route::get('/get-chats/{uuid}', [USER\ChatController::class, 'chatHistory']);

@@ -118,7 +118,7 @@
                   <h2 class="text-4xl md:text-5xl font-display font-bold text-white mb-6">Ready to scale your business?
                   </h2>
                   <p class="text-brand-100 text-lg mb-10 opacity-90">Join thousands of entrepreneurs who are already
-                     automating their sales funnel with go-wa-sender.</p>
+                     automating their sales funnel with GOWASender — a proud product of Hosterlo.</p>
                   <a href="{{ url('/register') }}"
                      class="inline-block px-10 py-5 bg-white text-brand-600 font-bold text-xl rounded-2xl shadow-xl hover:-translate-y-1 transition duration-300">Start
                      Your Journey Now</a>

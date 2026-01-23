@@ -22,12 +22,6 @@
     </a>
   </li>
 
-  <li class="nav-item">
-    <a class="nav-link {{ Request::is('user/device*') ? 'active' : '' }}" href="{{ route('user.device.index') }}">
-      <i class="fi fi-rs-smartphone"></i>
-      <span class="nav-link-text">{{ __('WhatsApp (Unofficial)') }}</span>
-    </a>
-  </li>
 
   <li class="nav-item">
     <a class="nav-link {{ Request::is('user/sent-text-message*') ? 'active' : '' }}"

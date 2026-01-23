@@ -6,31 +6,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/css/uikit.min.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/vendor/select2/dist/css/select2.min.css') }}">
-    <script>
-        $(document).on('change', '.gateway_type_selector', function () {
-            let mode = $(this).val();
 
-            if (mode === 'official') {
-                $('.official_gateway_area').show();
-                $('.unofficial_gateway_area').hide();
-                // Show Template Tab Pill
-                $('a[href="#mode_4"]').parent().show();
-            } else {
-                $('.official_gateway_area').hide();
-                $('.unofficial_gateway_area').show();
-
-                // If current tab is the Template form (mode_4), switch to mode_1 (Plain Text)
-                if ($('#mode_4').hasClass('active')) {
-                    $('[href="#mode_1"]').tab('show');
-                }
-                // Hide Template Tab Pill
-                $('a[href="#mode_4"]').parent().hide();
-            }
-
-            // Sync all gateway selectors across tabs
-            $('.gateway_type_selector').val(mode);
-        });
-    </script>
 @endpush
 @section('content')
 <div class="row justify-content-center">
@@ -309,7 +285,8 @@
                 <div class="col-xl-4">
                     <div class="card premium-card">
                         <div class="card-header bg-white border-0 py-3">
-                            <h3 class="mb-0 font-weight-bold"><i class="fas fa-user-tag text-primary mr-2"></i>{{__('Recipient')}}</h3>
+                            <h3 class="mb-0 font-weight-bold"><i
+                                    class="fas fa-user-tag text-primary mr-2"></i>{{__('Recipient')}}</h3>
                         </div>
                         <div class="card-body">
                             <div class="campign_elements">
@@ -332,7 +309,8 @@
                 <div class="col-xl-4">
                     <div class="card premium-card">
                         <div class="card-header bg-white border-0 py-3">
-                            <h3 class="mb-0 font-weight-bold"><i class="fas fa-images text-primary mr-2"></i>{{__('Image & Caption')}}</h3>
+                            <h3 class="mb-0 font-weight-bold"><i
+                                    class="fas fa-images text-primary mr-2"></i>{{__('Image & Caption')}}</h3>
                         </div>
                         <div class="card-body">
                             <div class="col-sm-12 p-0">
@@ -340,17 +318,22 @@
                                     <label class="form-control-label">{{ __('Select Image') }}</label>
                                     <input id="imageInput" type="file" class="form-control" name="image" required=""
                                         onchange="previewFile('imageInput', 'filePreviewImage', 'image')" />
-                                    <small class="text-muted"><i class="fas fa-file-image mr-1"></i> {{__('Allowed formats: jpg, jpeg, png')}}</small>
+                                    <small class="text-muted"><i class="fas fa-file-image mr-1"></i>
+                                        {{__('Allowed formats: jpg, jpeg, png')}}</small>
                                 </div>
                             </div>
 
                             <div class="col-sm-12 p-0">
                                 <div class="form-group mb-0">
                                     <div class="mb-2">
-                                        <button type="button" class="btn btn-sm btn-light border" onclick="insertTag('myTextarea3', '*', '*')"><b>B</b></button>
-                                        <button type="button" class="btn btn-sm btn-light border" onclick="insertTag('myTextarea3', '_', '_')"><i>I</i></button>
-                                        <button type="button" class="btn btn-sm btn-light border" onclick="insertTag('myTextarea3', '~', '~')"><strike>S</strike></button>
-                                        <button type="button" class="emojipick btn btn-sm btn-light border"><i class="far fa-smile"></i></button>
+                                        <button type="button" class="btn btn-sm btn-light border"
+                                            onclick="insertTag('myTextarea3', '*', '*')"><b>B</b></button>
+                                        <button type="button" class="btn btn-sm btn-light border"
+                                            onclick="insertTag('myTextarea3', '_', '_')"><i>I</i></button>
+                                        <button type="button" class="btn btn-sm btn-light border"
+                                            onclick="insertTag('myTextarea3', '~', '~')"><strike>S</strike></button>
+                                        <button type="button" class="emojipick btn btn-sm btn-light border"><i
+                                                class="far fa-smile"></i></button>
                                     </div>
                                     <textarea id="myTextarea3" class="form-control mt-1" name="message" required=""
                                         maxlength="1000" rows="4" placeholder="{{ __('Type your caption here...') }}"
@@ -364,29 +347,40 @@
                 <div class="col-xl-4">
                     <div class="card premium-card">
                         <div class="card-header bg-white border-0 py-3">
-                            <h3 class="mb-0 font-weight-bold"><i class="fas fa-eye text-primary mr-2"></i>{{__('Preview')}}</h3>
+                            <h3 class="mb-0 font-weight-bold"><i
+                                    class="fas fa-eye text-primary mr-2"></i>{{__('Preview')}}</h3>
                         </div>
                         <div class="card-body p-0" style="background: #e5ddd5; min-height: 250px; position: relative;">
-                            <div style="background-image: url('{{ asset('assets/img/whatsapp-bg.png') }}'); opacity: 0.1; position: absolute; inset: 0;"></div>
+                            <div
+                                style="background-image: url('{{ asset('assets/img/whatsapp-bg.png') }}'); opacity: 0.1; position: absolute; inset: 0;">
+                            </div>
                             <div class="p-3" style="position: relative; z-index: 1;">
-                                <div style="background: white; border-radius: 8px; padding: 5px; max-width: 85%; margin-left: auto; box-shadow: 0 1px 2px rgba(0,0,0,0.1); position: relative;">
+                                <div
+                                    style="background: white; border-radius: 8px; padding: 5px; max-width: 85%; margin-left: auto; box-shadow: 0 1px 2px rgba(0,0,0,0.1); position: relative;">
                                     <div class="p-1">
-                                        <img id="filePreviewImage" class="img-fluid" style="border-radius: 6px; width: 100%; object-fit: cover;"
+                                        <img id="filePreviewImage" class="img-fluid"
+                                            style="border-radius: 6px; width: 100%; object-fit: cover;"
                                             src="{{ asset('assets/img/img.jpg') }}" alt="Preview">
                                     </div>
                                     <div class="px-2 py-1">
-                                        <p class="mb-1" id="previewText3" style="white-space: pre-wrap; word-break: break-word; color: #111b21;">Image caption example.</p>
+                                        <p class="mb-1" id="previewText3"
+                                            style="white-space: pre-wrap; word-break: break-word; color: #111b21;">Image
+                                            caption example.</p>
                                         <div class="text-right">
-                                            <small class="text-muted" style="font-size: 10px;">{{ date('H:i') }} <i class="fas fa-check-double text-primary ml-1"></i></small>
+                                            <small class="text-muted" style="font-size: 10px;">{{ date('H:i') }} <i
+                                                    class="fas fa-check-double text-primary ml-1"></i></small>
                                         </div>
                                     </div>
-                                    <div style="position: absolute; right: -8px; top: 0; width: 0; height: 0; border-top: 10px solid white; border-right: 10px solid transparent;"></div>
+                                    <div
+                                        style="position: absolute; right: -8px; top: 0; width: 0; height: 0; border-top: 10px solid white; border-right: 10px solid transparent;">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="card-footer bg-white border-0 text-center py-4">
                             <button id="submitBtn" type="submit"
-                                class="premium-btn premium-btn-primary w-100">{{ __('Send Message') }} <i class="fas fa-paper-plane ml-2"></i></button>
+                                class="premium-btn premium-btn-primary w-100">{{ __('Send Message') }} <i
+                                    class="fas fa-paper-plane ml-2"></i></button>
                         </div>
                     </div>
                 </div>
@@ -404,7 +398,8 @@
                 <div class="col-xl-4">
                     <div class="card premium-card">
                         <div class="card-header bg-white border-0 py-3">
-                            <h3 class="mb-0 font-weight-bold"><i class="fas fa-user-tag text-primary mr-2"></i>{{__('Recipient')}}</h3>
+                            <h3 class="mb-0 font-weight-bold"><i
+                                    class="fas fa-user-tag text-primary mr-2"></i>{{__('Recipient')}}</h3>
                         </div>
                         <div class="card-body">
                             <div class="campign_elements">
@@ -424,10 +419,11 @@
                     </div>
 
                     <div class="card premium-card mt-4">
-                        <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
-                            <h3 class="mb-0 font-weight-bold"><i class="fas fa-list-ul text-primary mr-2"></i>{{ __('List Options') }}</h3>
-                            <a href="javascript:void(0)" id="add-more-option"
-                                class="btn btn-sm btn-neutral"><i
+                        <div
+                            class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                            <h3 class="mb-0 font-weight-bold"><i class="fas fa-list-ul text-primary mr-2"></i>{{
+                                __('List Options') }}</h3>
+                            <a href="javascript:void(0)" id="add-more-option" class="btn btn-sm btn-neutral"><i
                                     class="fa fa-plus-circle mr-1"></i> {{ __('Add Card') }}</a>
                         </div>
                         <div class="card-body list-area px-3">
@@ -437,26 +433,28 @@
                                 </div>
                                 <div class="card-body p-3">
                                     <div class="form-group mb-3">
-                                        <label class="small font-weight-bold text-muted text-uppercase">{{ __('Group Title') }}</label>
+                                        <label class="small font-weight-bold text-muted text-uppercase">{{ __('Group
+                                            Title') }}</label>
                                         <input type="text" class="form-control form-control-sm" name="section[1][title]"
-                                            placeholder="{{ __('Fruit Selection') }}" value=""
-                                            required="" maxlength="50" />
+                                            placeholder="{{ __('Fruit Selection') }}" value="" required=""
+                                            maxlength="50" />
                                     </div>
                                     <div class="list-item-area1">
                                         <div class="row no-gutters mb-2">
                                             <div class="col-6 pr-1">
-                                                <input type="text" class="form-control form-control-sm" name="section[1][value][1][title]"
-                                                    placeholder="{{ __('Banana') }}" required="" />
+                                                <input type="text" class="form-control form-control-sm"
+                                                    name="section[1][value][1][title]" placeholder="{{ __('Banana') }}"
+                                                    required="" />
                                             </div>
                                             <div class="col-6 pl-1">
-                                                <input type="text" class="form-control form-control-sm" name="section[1][value][1][description]"
+                                                <input type="text" class="form-control form-control-sm"
+                                                    name="section[1][value][1][description]"
                                                     placeholder="{{ __('Healthy fruit') }}" />
                                             </div>
                                         </div>
                                     </div>
                                     <div class="text-right">
-                                        <a href="javascript:void(0)"
-                                            class="small font-weight-bold add-more-option-item"
+                                        <a href="javascript:void(0)" class="small font-weight-bold add-more-option-item"
                                             data-target=".list-item-area1" data-key="1"><i
                                                 class="fas fa-plus mr-1"></i>{{ __('Add Item') }}</a>
                                     </div>
@@ -469,22 +467,24 @@
                 <div class="col-xl-4">
                     <div class="card premium-card">
                         <div class="card-header bg-white border-0 py-3">
-                            <h3 class="mb-0 font-weight-bold"><i class="fas fa-tasks text-primary mr-2"></i>{{__('List Content')}}</h3>
+                            <h3 class="mb-0 font-weight-bold"><i class="fas fa-tasks text-primary mr-2"></i>{{__('List
+                                Content')}}</h3>
                         </div>
                         <div class="card-body">
                             <div class="form-group mb-3">
                                 <label class="form-control-label">{{ __('Header Title') }}</label>
                                 <input id="heading4" type="text" class="form-control" name="header_title"
-                                    placeholder="{{ __('Choose an option') }}" value=""
-                                    required="" maxlength="50"
+                                    placeholder="{{ __('Choose an option') }}" value="" required="" maxlength="50"
                                     oninput="updatePreview('heading4', 'previewheader4')" />
                             </div>
 
                             <div class="form-group mb-3">
                                 <label class="form-control-label">{{ __('Description Body') }}</label>
                                 <div class="mb-2">
-                                    <button type="button" class="btn btn-sm btn-light border p-1 px-2" onclick="insertTag('myTextarea4', '*', '*')"><b>B</b></button>
-                                    <button type="button" class="btn btn-sm btn-light border p-1 px-2" onclick="insertTag('myTextarea4', '_', '_')"><i>I</i></button>
+                                    <button type="button" class="btn btn-sm btn-light border p-1 px-2"
+                                        onclick="insertTag('myTextarea4', '*', '*')"><b>B</b></button>
+                                    <button type="button" class="btn btn-sm btn-light border p-1 px-2"
+                                        onclick="insertTag('myTextarea4', '_', '_')"><i>I</i></button>
                                 </div>
                                 <textarea id="myTextarea4" class="form-control" required="" name="message" rows="3"
                                     placeholder="{{ __('Select from the list below...') }}"
@@ -501,8 +501,7 @@
                             <div class="form-group mb-0">
                                 <label class="form-control-label">{{ __('Select Button Label') }}</label>
                                 <input id="buttonText4" type="text" class="form-control" name="button_text"
-                                    placeholder="{{ __('Show Options') }}"
-                                    value="" required="" maxlength="50"
+                                    placeholder="{{ __('Show Options') }}" value="" required="" maxlength="50"
                                     oninput="updatePreview('buttonText4', 'buttonlist4')" />
                             </div>
                         </div>
@@ -512,29 +511,40 @@
                 <div class="col-xl-4">
                     <div class="card premium-card">
                         <div class="card-header bg-white border-0 py-3">
-                            <h3 class="mb-0 font-weight-bold"><i class="fas fa-eye text-primary mr-2"></i>{{__('Preview')}}</h3>
+                            <h3 class="mb-0 font-weight-bold"><i
+                                    class="fas fa-eye text-primary mr-2"></i>{{__('Preview')}}</h3>
                         </div>
                         <div class="card-body p-0" style="background: #e5ddd5; min-height: 250px; position: relative;">
-                            <div style="background-image: url('{{ asset('assets/img/whatsapp-bg.png') }}'); opacity: 0.1; position: absolute; inset: 0;"></div>
+                            <div
+                                style="background-image: url('{{ asset('assets/img/whatsapp-bg.png') }}'); opacity: 0.1; position: absolute; inset: 0;">
+                            </div>
                             <div class="p-3" style="position: relative; z-index: 1;">
-                                <div style="background: white; border-radius: 8px; overflow: hidden; max-width: 85%; margin-left: auto; box-shadow: 0 1px 2px rgba(0,0,0,0.1); position: relative;">
+                                <div
+                                    style="background: white; border-radius: 8px; overflow: hidden; max-width: 85%; margin-left: auto; box-shadow: 0 1px 2px rgba(0,0,0,0.1); position: relative;">
                                     <div class="p-2 border-bottom bg-light">
-                                        <h5 class="mb-0 text-primary" id="previewheader4" style="font-size: 14px; font-weight: 700;">List Header</h5>
+                                        <h5 class="mb-0 text-primary" id="previewheader4"
+                                            style="font-size: 14px; font-weight: 700;">List Header</h5>
                                     </div>
                                     <div class="p-2 text-dark">
-                                        <p class="mb-1" id="previewText4" style="font-size: 13px; white-space: pre-wrap;">Select an option...</p>
-                                        <small id="previewFooter4" class="text-muted" style="font-size: 10px;">Footer text here</small>
+                                        <p class="mb-1" id="previewText4"
+                                            style="font-size: 13px; white-space: pre-wrap;">Select an option...</p>
+                                        <small id="previewFooter4" class="text-muted" style="font-size: 10px;">Footer
+                                            text here</small>
                                     </div>
                                     <div class="p-2 border-top text-center bg-white">
-                                        <span id="buttonlist4" class="font-weight-bold" style="color: #008069; font-size: 13px;"><i class="fas fa-list mr-1"></i>Show Options</span>
+                                        <span id="buttonlist4" class="font-weight-bold"
+                                            style="color: #008069; font-size: 13px;"><i
+                                                class="fas fa-list mr-1"></i>Show Options</span>
                                     </div>
-                                    <div style="position: absolute; right: -8px; top: 0; width: 0; height: 0; border-top: 10px solid #f8f9fa; border-right: 10px solid transparent;"></div>
+                                    <div
+                                        style="position: absolute; right: -8px; top: 0; width: 0; height: 0; border-top: 10px solid #f8f9fa; border-right: 10px solid transparent;">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="card-footer bg-white border-0 text-center py-4">
-                            <button id="submitBtn" type="submit"
-                                class="premium-btn premium-btn-primary w-100">{{ __('Send Message') }} <i class="fas fa-paper-plane ml-2"></i></button>
+                            <button id="submitBtn" type="submit" class="premium-btn premium-btn-primary w-100">{{
+                                __('Send Message') }} <i class="fas fa-paper-plane ml-2"></i></button>
                         </div>
                     </div>
                 </div>

@@ -56,25 +56,6 @@
                         </div>
                     </div>
 
-                    <!-- Meta / Tech Provider Badge (Premium Touch) -->
-                    <div class="d-none d-lg-block text-right">
-                        <div class="d-flex align-items-center justify-content-end mb-2">
-                            <span class="text-white-50 mr-2 text-xs font-weight-bold text-uppercase tracking-wider">Powered
-                                By</span>
-                            <img src="{{ asset('assets/img/meta.png') }}" alt="Meta"
-                                style="height: 24px; filter: brightness(0) invert(1);">
-                        </div>
-                        <div class="bg-white-10 rounded-lg p-3 backdrop-blur"
-                            style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);">
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-shield-alt text-success mr-2 fa-lg"></i>
-                                <div>
-                                    <h6 class="text-white mb-0 font-weight-bold">Meta Tech Provider</h6>
-                                    <small class="text-white-50" style="font-size: 0.7rem;">Official API Partner</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
