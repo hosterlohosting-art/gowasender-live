@@ -11,6 +11,8 @@
     {!! OpenGraph::generate() !!}
     {!! Twitter::generate() !!}
     {!! JsonLd::generate() !!}
+    <meta name="theme-color" content="#16A34A">
+    <link rel="canonical" href="{{ url()->current() }}">
 
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/img/brand/favicon.png') }}">
 

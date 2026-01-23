@@ -13,63 +13,78 @@ use Artesaos\SEOTools\Facades\SEOTools;
 
 trait Seo
 {
-   
-   public function metadata($key)
-   {
-       $seo=get_option($key,true);
 
-       if ($key == 'seo_home') {
-           JsonLdMulti::setTitle($seo->site_name ?? env('APP_NAME'));
-           JsonLdMulti::setDescription($seo->matadescription ?? null);
-           JsonLdMulti::addImage(asset($seo->preview ?? null));
+    public function metadata($key)
+    {
+        $seo = get_option($key, true);
+        $siteName = $seo->site_name ?? env('APP_NAME');
+        $description = $seo->matadescription ?? '';
+        $preview = !empty($seo->preview) ? asset($seo->preview) : asset('assets/img/brand/logo.png');
+        $keywords = $seo->matatag ?? '';
 
-           SEOMeta::setTitle($seo->site_name ?? env('APP_NAME'));
-           SEOMeta::setDescription($seo->matadescription ?? null);
-           SEOMeta::addKeyword($seo->matatag ?? null);
+        SEOMeta::setTitle($siteName);
+        SEOMeta::setDescription($description);
+        SEOMeta::addKeyword($keywords);
+        SEOMeta::setCanonical(url()->current());
 
-           SEOTools::setTitle($seo->site_name ?? env('APP_NAME'));
-           SEOTools::setDescription($seo->matadescription ?? null);
-           SEOTools::opengraph()->addProperty('keywords', $seo->matatag ?? null);
-           SEOTools::opengraph()->addProperty('image', asset($seo->preview ?? null));
-           SEOTools::twitter()->setTitle($seo->site_name ?? env('APP_NAME'));
-           SEOTools::twitter()->setSite($seo->twitter_site_title ?? null);
-           SEOTools::jsonLd()->addImage(asset($seo->preview ?? null));
-       }
-       else{
-           JsonLdMulti::setTitle($seo->site_name ?? env('APP_NAME'));
-           JsonLdMulti::setDescription($seo->matadescription ?? null);
-           JsonLdMulti::addImage(asset($seo->preview ?? null));
+        OpenGraph::setTitle($siteName);
+        OpenGraph::setDescription($description);
+        OpenGraph::setUrl(url()->current());
+        OpenGraph::addProperty('type', 'website');
+        OpenGraph::addProperty('site_name', $siteName);
+        if ($preview) {
+            OpenGraph::addImage($preview);
+        }
 
-           SEOMeta::setTitle($seo->site_name ?? env('APP_NAME'));
-           SEOMeta::setDescription($seo->matadescription ?? null);
-           SEOMeta::addKeyword($seo->matatag ?? null);
+        TwitterCard::setTitle($siteName);
+        TwitterCard::setDescription($description);
+        TwitterCard::setType('summary_large_image');
+        if ($preview) {
+            TwitterCard::setImage($preview);
+        }
 
-           SEOTools::setTitle($seo->site_name ?? env('APP_NAME'));
-           SEOTools::setDescription($seo->matadescription ?? null);
-           SEOTools::opengraph()->addProperty('keywords', $seo->matatag ?? null);
-           SEOTools::opengraph()->addProperty('image', asset($seo->preview ?? null));
-           SEOTools::twitter()->setTitle($seo->site_name ?? env('APP_NAME'));
-           SEOTools::jsonLd()->addImage(asset($seo->preview ?? null));
-       }
-   }
+        JsonLd::setTitle($siteName);
+        JsonLd::setDescription($description);
+        JsonLd::setType('WebPage');
+        if ($preview) {
+            JsonLd::addImage($preview);
+        }
+    }
 
 
-   public function pageMetaData($data)
-   {
-         JsonLdMulti::setTitle($data['title'] ?? env('APP_NAME'));
-         JsonLdMulti::setDescription($data['description'] ?? null);
-         JsonLdMulti::addImage($data['preview'] ?? null);
+    public function pageMetaData($data)
+    {
+        $title = $data['title'] ?? env('APP_NAME');
+        $description = $data['description'] ?? '';
+        $preview = !empty($data['preview']) ? $data['preview'] : asset('assets/img/brand/logo.png');
+        $tags = $data['tags'] ?? '';
 
-         SEOMeta::setTitle($data['title'] ?? env('APP_NAME'));
-         SEOMeta::setDescription($data['description'] ?? null);
-         SEOTools::setTitle($data['title'] ?? env('APP_NAME'));
-         SEOTools::setDescription($data['description'] ?? null);
-         SEOMeta::addKeyword($data['tags'] ?? null);
+        SEOMeta::setTitle($title);
+        SEOMeta::setDescription($description);
+        SEOMeta::addKeyword($tags);
+        SEOMeta::setCanonical(url()->current());
 
-         SEOTools::opengraph()->addProperty('keywords', $data['tags'] ?? null);
-         SEOTools::opengraph()->addProperty('image', $data['preview'] ?? null);
-         SEOTools::twitter()->setTitle($data['title'] ?? env('APP_NAME'));
-         SEOTools::jsonLd()->addImage($data['preview'] ?? null);  
-   }
+        OpenGraph::setTitle($title);
+        OpenGraph::setDescription($description);
+        OpenGraph::setUrl(url()->current());
+        OpenGraph::addProperty('type', 'article');
+        if ($preview) {
+            OpenGraph::addImage($preview);
+        }
 
-}    
+        TwitterCard::setTitle($title);
+        TwitterCard::setDescription($description);
+        TwitterCard::setType('summary_large_image');
+        if ($preview) {
+            TwitterCard::setImage($preview);
+        }
+
+        JsonLd::setTitle($title);
+        JsonLd::setDescription($description);
+        JsonLd::setType('WebPage');
+        if ($preview) {
+            JsonLd::addImage($preview);
+        }
+    }
+
+}

@@ -71,8 +71,8 @@
                   data-aos="fade-up">
                   <button class="w-full p-6 text-left flex justify-between items-center"
                     onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('.icon').classList.toggle('rotate-180')">
-                    <span
-                      class="text-lg font-bold text-gray-900 group-hover:text-brand-600 transition faq-title">{{ $faq->title }}</span>
+                    <h3 class="text-lg font-bold text-gray-900 group-hover:text-brand-600 transition faq-title">
+                      {{ $faq->title }}</h3>
                     <i
                       class="fas fa-chevron-down text-brand-500 transition-transform icon bg-brand-50 p-2 rounded-full"></i>
                   </button>

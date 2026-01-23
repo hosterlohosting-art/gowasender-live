@@ -21,6 +21,7 @@ class SitemapController extends Controller
             ['loc' => url('/features'), 'lastmod' => date('Y-m-d'), 'priority' => '0.8'],
             ['loc' => url('/faq'), 'lastmod' => date('Y-m-d'), 'priority' => '0.7'],
             ['loc' => url('/contact'), 'lastmod' => date('Y-m-d'), 'priority' => '0.7'],
+            ['loc' => url('/privacy'), 'lastmod' => date('Y-m-d'), 'priority' => '0.5'],
         ];
 
         foreach ($posts as $post) {
