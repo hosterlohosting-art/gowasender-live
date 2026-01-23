@@ -511,43 +511,6 @@ class BulkController extends Controller
         $contact = Contact::where('user_id', Auth::id())->findOrFail($request->contact);
         $user = User::where('id', Auth::id())->first();
 
-        /*
-        // Handle Unofficial Device
-        if (!$cloudapi) {
-            $device = Device::where('user_id', Auth::id())->where('uuid', $request->cloudapi)->first();
-            if ($device) {
-                if ($device->status != 1) {
-                    return response()->json([
-                        'message' => __('Selected device is disconnected.')
-                    ], 401);
-                }
-
-                $response = $this->sendDeviceMessage($device->uuid, $contact->phone, $request->body);
-
-                if (isset($response['success']) && $response['success']) {
-                    $logs['user_id'] = Auth::id();
-                    $logs['from'] = $device->name;
-                    $logs['to'] = $contact->phone;
-                    $logs['type'] = 'bulk-message';
-                    $logs['template_id'] = $template->id > 0 ? $template->id : null;
-                    $this->saveLog($logs);
-
-                    return response()->json([
-                        'message_status' => 'Success',
-                        'data' => [
-                            'from' => $device->name,
-                            'to' => $contact->phone,
-                            'status_code' => 200,
-                        ]
-                    ], 200);
-                }
-
-                return response()->json([
-                    'message' => $response['message'] ?? __('Failed to send message via device')
-                ], 500);
-            }
-        }
-        */
 
         abort_if(empty($cloudapi), 404);
 
