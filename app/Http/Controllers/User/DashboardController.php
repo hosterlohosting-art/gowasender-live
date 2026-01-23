@@ -27,35 +27,27 @@ class DashboardController extends Controller
 
         // --- 2. FETCH MESSAGES SECURELY (The Fix) ---
         try {
-            // Logic: Find the WhatsApp numbers (CloudApi) that belong to YOU.
-            // Then, only show messages related to those numbers.
             $myCloudApiIds = CloudApi::where('user_id', Auth::id())->pluck('id');
 
             $chatMessages = ChatMessage::whereIn('cloudapi_id', $myCloudApiIds)
+                ->with('contact') // Eager load contact to prevent crash
                 ->orderBy('updated_at', 'desc')
                 ->take(4)
                 ->get();
 
         } catch (\Exception $e) {
-            // BACKUP LOGIC: If 'cloudapi_id' column doesn't exist, try 'user_id' directly
-            try {
-                $chatMessages = ChatMessage::where('user_id', Auth::id())
-                    ->orderBy('updated_at', 'desc')
-                    ->take(4)
-                    ->get();
-            } catch (\Exception $ex) {
-                // If both fail, we show 0 messages instead of crashing the site.
-            }
+            // If both fail, we show 0 messages instead of crashing the site.
         }
 
         // --- 3. PLAN & EXPIRY LOGIC ---
-        // We only run this if the user has an expiry date set
         if (Auth::user()->will_expire != null) {
             $nextDate = Carbon::now()->addDays(7)->format('Y-m-d');
 
-            if (!empty(Auth::user()->plan)) {
-                $plan = json_decode(Auth::user()->plan);
+            $plan = Auth::user()->plan;
+            if (is_string($plan)) {
+                $plan = json_decode($plan);
             }
+            $plan = (object) $plan;
 
             try {
                 $mostUsedTemplateId = Smstransaction::where('user_id', Auth::id())

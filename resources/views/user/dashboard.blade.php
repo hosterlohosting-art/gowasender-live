@@ -252,28 +252,30 @@
                         </thead>
                         <tbody>
                             @forelse($chatMessages as $message)
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="avatar avatar-xs rounded-circle bg-soft-primary text-primary mr-2 font-weight-bold">
-                                            {{ strtoupper(substr($message->contact->name ?? 'U', 0, 1)) }}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div
+                                                class="avatar avatar-xs rounded-circle bg-soft-primary text-primary mr-2 font-weight-bold">
+                                                {{ strtoupper(substr($message->contact?->name ?? 'U', 0, 1)) }}
+                                            </div>
+                                            <span
+                                                class="text-sm font-weight-700 text-dark">{{ $message->contact?->phone ?? 'New User' }}</span>
                                         </div>
-                                        <span class="text-sm font-weight-700 text-dark">{{ $message->contact->phone ?? 'New User' }}</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="text-sm text-muted text-truncate d-inline-block" style="max-width: 200px;">
-                                        {{ $message->message }}
-                                    </span>
-                                </td>
-                                <td class="text-right text-xs font-weight-600 text-muted">
-                                    {{ \Carbon\Carbon::parse($message->updated_at)->diffForHumans() }}
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td>
+                                        <span class="text-sm text-muted text-truncate d-inline-block" style="max-width: 200px;">
+                                            {{ $message->message }}
+                                        </span>
+                                    </td>
+                                    <td class="text-right text-xs font-weight-600 text-muted">
+                                        {{ \Carbon\Carbon::parse($message->updated_at)->diffForHumans() }}
+                                    </td>
+                                </tr>
                             @empty
-                            <tr>
-                                <td colspan="3" class="text-center py-4 text-muted small">No recent activity</td>
-                            </tr>
+                                <tr>
+                                    <td colspan="3" class="text-center py-4 text-muted small">No recent activity</td>
+                                </tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -303,18 +305,20 @@
             </div>
 
             @if($templates)
-            <div class="card premium-card border-0 bg-gradient-success">
-                <div class="card-body p-4">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="icon icon-shape bg-white text-success rounded-circle mr-3">
-                            <i class="fas fa-trophy"></i>
+                <div class="card premium-card border-0 bg-gradient-success">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="icon icon-shape bg-white text-success rounded-circle mr-3">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <h6 class="text-white text-uppercase ls-1 mb-0 font-weight-bold">Top Performing Template</h6>
                         </div>
-                        <h6 class="text-white text-uppercase ls-1 mb-0 font-weight-bold">Top Performing Template</h6>
+                        <h3 class="text-white font-weight-800 mb-1">{{ $templates->title }}</h3>
+                        <p class="text-white-50 small mb-0">{{ __('Used') }} {{ $mostUsedTemplateId->template_count }}
+                            {{ __('times in the last 30 days') }}
+                        </p>
                     </div>
-                    <h3 class="text-white font-weight-800 mb-1">{{ $templates->title }}</h3>
-                    <p class="text-white-50 small mb-0">{{ __('Used') }} {{ $mostUsedTemplateId->template_count }} {{ __('times in the last 30 days') }}</p>
                 </div>
-            </div>
             @endif
         </div>
     </div>

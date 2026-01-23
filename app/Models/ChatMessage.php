@@ -36,4 +36,15 @@ class ChatMessage extends Model
     {
         return $this->belongsTo('App\Models\Contact', 'phone_number', 'phone');
     }
+
+    public function getMessageAttribute()
+    {
+        $history = json_decode($this->message_history, true);
+        if (is_array($history) && count($history) > 0) {
+            $lastMessage = end($history);
+            return $lastMessage['message'] ?? '';
+        }
+
+        return __('No Message Found');
+    }
 }
