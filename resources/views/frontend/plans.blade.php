@@ -19,14 +19,14 @@
       <!-- Pricing Grid -->
       <section class="py-24 bg-white -mt-10 lg:-mt-20">
          <div class="container mx-auto px-6 relative z-10">
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+            <div class="flex flex-wrap justify-center gap-8">
                @foreach($plans ?? [] as $plan)
                   @php
                      $details = (object) (is_array($plan->data) ? $plan->data : json_decode($plan->data ?? '{}', true));
                      $isFeatured = $plan->is_recommended == 1;
                      $title = strtoupper($plan->title);
-                   @endphp
-                  <div class="relative group h-full">
+                  @endphp
+                  <div class="relative group h-full w-full md:w-[calc(50%-1rem)] xl:w-[calc(25%-1.5rem)] max-w-sm">
                      @if($isFeatured)
                         <div
                            class="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand-600 text-white px-6 py-1 rounded-full text-xs font-bold uppercase tracking-widest z-20 shadow-lg whitespace-nowrap">
