@@ -16,9 +16,35 @@
       @if(Session::has('error'))
          <div class="col-12">
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-               <span class="alert-icon"><i class="fas fa-sad-tear"></i></span>
-               <span
-                  class="alert-text">{{ __('Transaction failed if you make payment successfully please contact us.') }}</span>
+               <span class="alert-icon"><i class="fas fa-exclamation-triangle"></i></span>
+               <span class="alert-text"><strong>{{ __('Payment Error') }}:</strong> {{ __('Transaction failed. If you were charged, please contact our support team immediately.') }}</span>
+               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+               </button>
+            </div>
+         </div>
+      @endif
+
+      @if(Session::has('min-max'))
+         <div class="col-12">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+               <span class="alert-icon"><i class="fas fa-info-circle"></i></span>
+               <span class="alert-text">{{ Session::get('min-max') }}</span>
+               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+               </button>
+            </div>
+         </div>
+      @endif
+
+      @if($errors->any())
+         <div class="col-12">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+               <ul class="mb-0 pl-3">
+                  @foreach ($errors->all() as $error)
+                     <li>{{ $error }}</li>
+                  @endforeach
+               </ul>
                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">×</span>
                </button>
@@ -141,11 +167,19 @@
                </div>
             </div>
             <div class="col-md-6">
-               <div class="addressbox p-3 border rounded bg-white h-100">
-                  <strong>{{ __('Plan Details') }}</strong>
-                  <div class="mt-2" style="font-size: 0.85rem;">
-                     <span class="d-block font-weight-bold text-dark">{{ $plan->title }}</span>
-                     <span class="d-block text-muted mt-1">{{ __('Duration') }}: {{ $plan->days }} {{ __('Days') }}</span>
+               <div class="addressbox p-3 border rounded bg-white h-100 shadow-sm border-primary">
+                  <strong>{{ __('Official Merchant') }}</strong>
+                  <div class="text-muted mt-2" style="font-size: 0.85rem;">
+                     <span class="d-block font-weight-bold text-primary">{{ env('APP_NAME') }}</span>
+                     @if($primary_data->address)
+                        <span class="d-block mt-1"><i class="fas fa-map-marker-alt mr-1"></i> {{ $primary_data->address }}</span>
+                     @endif
+                     @if($primary_data->contact_email)
+                        <span class="d-block mt-1"><i class="fas fa-envelope mr-1"></i> {{ $primary_data->contact_email }}</span>
+                     @endif
+                     @if($primary_data->contact_phone)
+                        <span class="d-block mt-1"><i class="fas fa-phone mr-1"></i> {{ $primary_data->contact_phone }}</span>
+                     @endif
                   </div>
                </div>
             </div>
