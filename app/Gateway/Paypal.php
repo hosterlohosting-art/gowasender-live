@@ -52,8 +52,11 @@ class Paypal
         if ($test_mode == 0) {
             $data['env'] = false;
             $test_mode = false;
-            $final = str_replace(',', '', number_format($amount, 3, '.', ''));
+        } else {
+            $data['env'] = true;
+            $test_mode = true;
         }
+        $final = str_replace(',', '', number_format($amount, 2, '.', ''));
 
 
 
