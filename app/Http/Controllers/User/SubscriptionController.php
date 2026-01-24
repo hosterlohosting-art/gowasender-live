@@ -128,7 +128,7 @@ class SubscriptionController extends Controller
         $payment_data['amount'] = $total;
         $payment_data['test_mode'] = $gateway->test_mode;
         $payment_data['charge'] = $gateway->charge ?? 0;
-        $payment_data['pay_amount'] = str_replace(',', '', number_format($payable));
+        $payment_data['pay_amount'] = str_replace(',', '', number_format($payable, 2, '.', ''));
         $payment_data['getway_id'] = $gateway->id;
 
         $callback['success'] = url('user/subscription/plan/success');

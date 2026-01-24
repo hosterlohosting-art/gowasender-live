@@ -170,15 +170,23 @@
                <div class="addressbox p-3 border rounded bg-white h-100 shadow-sm border-primary">
                   <strong>{{ __('Official Merchant') }}</strong>
                   <div class="text-muted mt-2" style="font-size: 0.85rem;">
-                     <span class="d-block font-weight-bold text-primary">{{ env('APP_NAME') }}</span>
-                     @if($primary_data->address)
-                        <span class="d-block mt-1"><i class="fas fa-map-marker-alt mr-1"></i> {{ $primary_data->address }}</span>
+                     <span class="d-block font-weight-bold text-primary">{{ $invoice_data->company_name ?? env('APP_NAME') }}</span>
+                     @if($invoice_data->address)
+                     <span class="d-block mt-1"><i class="fas fa-map-marker-alt mr-1"></i> {{ $invoice_data->address }}</span>
                      @endif
+                     @if($invoice_data->city || $invoice_data->post_code)
+                     <span class="d-block mt-1">{{ $invoice_data->city }}{{ $invoice_data->city && $invoice_data->post_code ? ', ' : '' }}{{ $invoice_data->post_code }}</span>
+                     @endif
+                     @if($invoice_data->country)
+                     <span class="d-block mt-1">{{ $invoice_data->country }}</span>
+                     @endif
+
+                     <hr class="my-2">
                      @if($primary_data->contact_email)
-                        <span class="d-block mt-1"><i class="fas fa-envelope mr-1"></i> {{ $primary_data->contact_email }}</span>
+                     <span class="d-block mt-1 text-xs"><i class="fas fa-envelope mr-1"></i> {{ $primary_data->contact_email }}</span>
                      @endif
                      @if($primary_data->contact_phone)
-                        <span class="d-block mt-1"><i class="fas fa-phone mr-1"></i> {{ $primary_data->contact_phone }}</span>
+                     <span class="d-block mt-1 text-xs"><i class="fas fa-phone mr-1"></i> {{ $primary_data->contact_phone }}</span>
                      @endif
                   </div>
                </div>
