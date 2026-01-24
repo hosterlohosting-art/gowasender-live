@@ -66,8 +66,12 @@ class CloudApiController extends Controller
         $data['total'] = CloudApi::where('user_id', Auth::id())->count();
         $data['active'] = CloudApi::where('user_id', Auth::id())->where('status', 1)->count();
         $data['inActive'] = CloudApi::where('user_id', Auth::id())->where('status', 0)->count();
-        $limit = json_decode(Auth::user()->plan);
-        $limit = $limit->cloudapi_limit ?? 0;
+        $plan = Auth::user()->plan;
+        if (is_string($plan)) {
+            $plan = json_decode($plan);
+        }
+        $plan = (object) $plan;
+        $limit = $plan->cloudapi_limit ?? 0;
 
         if ($limit == '-1') {
             $data['total'] = $data['total'];

@@ -15,8 +15,8 @@ trait HasCustomForeignKeyConvention
      */
     public function getForeignKey($related = '', $owner = null, $relation = null)
     {
-        if (! isset($this->foreignKey)) {
-            $this->foreignKey = snake_case(class_basename($related)).'_id';
+        if (!isset($this->foreignKey)) {
+            $this->foreignKey = Str::snake(class_basename($related)) . '_id';
         }
 
         return $this->foreignKey;

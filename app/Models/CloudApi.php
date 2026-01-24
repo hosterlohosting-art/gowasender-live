@@ -2,7 +2,7 @@
 
 namespace App\Models;
 use App\Autoload\HasUid;
-use App\Autoload\Foreign;
+use App\Models\HasCustomForeignKeyConvention;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Str;
@@ -11,7 +11,7 @@ class CloudApi extends Model
 {
     use HasCustomForeignKeyConvention, HasFactory, HasUid;
 
-    protected $table ="cloudapis";
+    protected $table = "cloudapis";
 
     public $timestamps = false;
 
@@ -20,13 +20,13 @@ class CloudApi extends Model
      * This tells Laravel to allow ALL columns to be updated mass-assigned.
      * This will fix your "keys remain same" issue.
      */
-    protected $guarded = []; 
+    protected $guarded = [];
 
     protected static function boot()
     {
         parent::boot();
 
-        static::creating(function($model){
+        static::creating(function ($model) {
             $model->uuid = Str::uuid()->toString();
         });
     }

@@ -33,8 +33,12 @@ class ContactController extends Controller
         $contacts = Contact::where('user_id', Auth::id())->with('groupcontact')->latest()->paginate(20);
         $templates = Template::where('user_id', Auth::id())->where('status', 1)->latest()->get();
         $cloudapis = CloudApi::where('user_id', Auth::id())->where('status', 1)->latest()->get();
-        $limit = json_decode(Auth::user()->plan);
-        $limit = $limit->contact_limit ?? 0;
+        $plan = Auth::user()->plan;
+        if (is_string($plan)) {
+            $plan = json_decode($plan);
+        }
+        $plan = (object) $plan;
+        $limit = $plan->contact_limit ?? 0;
 
         if ($limit == '-1') {
             $limit = number_format($total_contacts);

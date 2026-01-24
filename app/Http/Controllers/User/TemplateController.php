@@ -28,8 +28,12 @@ class TemplateController extends Controller
         $active_templates = Template::where('user_id', Auth::id())->where('status', 1)->count();
         $inactive_templates = Template::where('user_id', Auth::id())->where('status', 0)->count();
         $total_templates = Template::where('user_id', Auth::id())->count();
-        $limit = json_decode(Auth::user()->plan);
-        $limit = $limit->template_limit ?? 0;
+        $plan = Auth::user()->plan;
+        if (is_string($plan)) {
+            $plan = json_decode($plan);
+        }
+        $plan = (object) $plan;
+        $limit = $plan->template_limit ?? 0;
         if ($limit == '-1') {
             $limit = number_format($total_templates);
         } else {
